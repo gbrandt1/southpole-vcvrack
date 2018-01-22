@@ -29,30 +29,26 @@ After checking out in the `plugins/` directory, get external dependencies with
 ### Cornrows - Macro Oscillator
 Based on [Braids](https://mutable-instruments.net/modules/braids), [Manual](https://mutable-instruments.net/modules/braids/manual/)
 
-### Splash - Tidal Modulator
+### Splash - Tidal Modulator / Lambs - Wavetable Oscillator
+
 Based on [Tides](https://mutable-instruments.net/modules/tides), [Manual](https://mutable-instruments.net/modules/tides/manual/)
-
-- eurorack firmware
-- does not compile against parasites for now, need to use Makefile.eurorack
-
-### Lambs - Wavetable Oscillator
 Based on [Sheep](https://mutable-instruments.net/modules/tides/firmware/) (Tides alternative firmware)
 
-- eurorack firmware
-- does not compile against parasites for now, need to use Makefile.eurorack
+- Uses eurorack firmware, no parasites interface yet
+- does not compile against parasites, need to use Makefile.eurorack then copy the library to an extra directory in /plugins
 
 ### Smoke - Texture Synthesizer
 Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](https://mutable-instruments.net/modules/clouds/manual/)
 
-- parasites firmware
+- parasites firmware (Neil)
 
-### Resonator
+### Annuli - Resonator
 Based on [Rings](https://mutable-instruments.net/modules/rings), [Manual](https://mutable-instruments.net/modules/rings/manual/)
 
-### Quad VC-polarizer
+### Bandana - Quad VC-polarizer
 Based on [Blinds](https://mutable-instruments.net/modules/blinds), [Manual](https://mutable-instruments.net/modules/blinds/manual/)
 
-### Quad VCA
+### Balaclava - Quad VCA
 Based on [Veils](https://mutable-instruments.net/modules/veils), [Manual](https://mutable-instruments.net/modules/veils/manual/)
 
 ## New modules
