@@ -31,8 +31,11 @@ SOURCES += parasites/rings/dsp/string.cc
 SOURCES += parasites/rings/dsp/resonator.cc
 SOURCES += parasites/rings/resources.cc
 
-SOURCES += src/Cornrows.cpp	
+SOURCES += src/Cornrows.cpp
+SOURCES += parasites/braids/analog_oscillator.cc
+SOURCES += parasites/braids/digital_oscillator.cc
 SOURCES += parasites/braids/macro_oscillator.cc
+SOURCES += parasites/braids/resources.cc
 SOURCES += parasites/stmlib/utils/random.cc
 SOURCES += parasites/stmlib/dsp/atan.cc
 SOURCES += parasites/stmlib/dsp/units.cc
