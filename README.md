@@ -1,6 +1,6 @@
 # southpole-vcvrack
 
-![All](sp-all-2018-01-22.png)
+![All](docs/sp-all-2018-01-22.png)
 
 Southpole VCV Rack Modules
 
