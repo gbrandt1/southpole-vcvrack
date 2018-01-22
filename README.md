@@ -3,12 +3,14 @@ Southpole VCV Rack Modules
 
 These modules are mainly reskins of the existing Audible Instruments /
 Arable Instruments VCV Rack versions of Mutable Instruments eurorack modules.
-The skins are inspired by hardware micro versions of various MI modules.
-Some skins do not exist yet in hardware.
-Other modules did not yet exist in VCV Rack versions.
-Compiled agaist parasites firmware where possible.
+- The skins are inspired by hardware micro versions of various MI modules.
+- Some skins do not exist yet in hardware.
+- Other modules did not yet exist in VCV Rack versions.
+- Compiled agaist parasites firmware where possible. (Required a few fixes which is why it is checked in here) 
 
-[Mutable Instruments](https://mutable-instruments.net/)
+- [Mutable Instruments](https://mutable-instruments.net/)
+- [Audible Instruments](https://github.com/VCVRack/AudibleInstruments/)
+- [ArableInstruments](https://github.com/adbrant/ArableInstruments/)
 
 ## Building
 
