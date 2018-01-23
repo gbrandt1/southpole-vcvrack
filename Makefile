@@ -19,6 +19,8 @@ LDFLAGS +=
 SOURCES += src/Southpole.cpp
 SOURCES += src/Balaclava.cpp	
 SOURCES += src/Bandana.cpp
+SOURCES += src/But.cpp
+SOURCES += src/Tub.cpp
 
 SOURCES += src/Etagere.cpp
 SOURCES += src/VAStateVariableFilter.cpp

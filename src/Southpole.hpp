@@ -34,6 +34,14 @@ struct BandanaWidget : ModuleWidget {
 	BandanaWidget();
 };
 
+struct ButWidget : ModuleWidget {
+	ButWidget();
+};
+
+struct TubWidget : ModuleWidget {
+	TubWidget();
+};
+
 struct EtagereWidget : ModuleWidget {
 	EtagereWidget();
 };
@@ -54,6 +62,21 @@ struct SplashWidget : ModuleWidget {
 };
 
 #endif
+
+struct sp_Port : SVGPort {
+	sp_Port() {
+		background->svg = SVG::load(assetPlugin(plugin, "res/sp-Port18.svg"));
+		background->wrap();
+		box.size = background->box.size;
+	}
+};
+
+struct sp_Switch : SVGSwitch, ToggleSwitch {
+	sp_Switch() {
+		addFrame(SVG::load(assetPlugin(plugin,"res/sp-switchv_0.svg")));
+		addFrame(SVG::load(assetPlugin(plugin,"res/sp-switchv_1.svg")));
+	}
+};
 
 struct sp_Encoder : SVGKnob {
 	sp_Encoder() {

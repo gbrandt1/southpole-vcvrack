@@ -53,8 +53,26 @@ Based on [Veils](https://mutable-instruments.net/modules/veils), [Manual](https:
 
 ## New modules
 
-### ETAGERE EQ Filter - inspired by [Shelves](https://mutable-instruments.net/modules/shelves)
+### Etagère - EQ Filter
+Inspired by [Shelves](https://mutable-instruments.net/modules/shelves)
 [Manual](https://mutable-instruments.net/modules/shelves/manual/)
 
 - experimental - does not fully reproduce all characteristics of Shelves!
 - filter code copied from RJModules Filters
+
+### But - Manual A/B Buss 
+- inspired by DJ Steevio's modular method
+- Either input A or B go to the output and the A/B busses
+- Two summed identical outputs for A and B buss are provided.
+
+### Tub - Manual A/B Switch 
+- Inverse of But, either input A or B goes to output
+- Sums of inputs set to A or B provided
+
+### Slope - Drum Processor
+- inspired by Bastl Skis
+- one-stop module to turn oscillators into drums / percussion 
+- input gain + eq
+- 2 independent decay envelopes (eg. body and accent) the sum of which is applied to input signal via internal VCA
+- triggers are scalable
+- overdrive in output stage
