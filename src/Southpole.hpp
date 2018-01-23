@@ -16,11 +16,6 @@ extern Plugin *plugin;
 
 #ifdef PARASITES
 
-struct CornrowsWidget : ModuleWidget {
-	CornrowsWidget();
-	Menu *createContextMenu() override;
-};
-
 struct SmokeWidget : ModuleWidget {
 	SmokeWidget();
 	Menu *createContextMenu() override;
@@ -44,6 +39,11 @@ struct EtagereWidget : ModuleWidget {
 };
 
 #else
+
+struct CornrowsWidget : ModuleWidget {
+	CornrowsWidget();
+	Menu *createContextMenu() override;
+};
 
 struct SplashWidget : ModuleWidget {
 	SVGPanel *tidesPanel;

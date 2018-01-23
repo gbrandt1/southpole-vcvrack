@@ -24,6 +24,10 @@ SOURCES += eurorack/stmlib/dsp/units.cc
 SOURCES += eurorack/tides/generator.cc 
 SOURCES += eurorack/tides/resources.cc 
 
+SOURCES += src/Cornrows.cpp	
+SOURCES += eurorack/braids/macro_oscillator.cc
+SOURCES += eurorack/stmlib/utils/random.cc
+
 # Add files to the ZIP package when running `make dist`
 # The compiled plugin is automatically added.
 DISTRIBUTABLES += $(wildcard LICENSE*) res
