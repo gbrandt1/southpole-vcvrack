@@ -46,6 +46,10 @@ struct EtagereWidget : ModuleWidget {
 	EtagereWidget();
 };
 
+struct SnsWidget : ModuleWidget {
+	SnsWidget();
+};
+
 #else
 
 struct CornrowsWidget : ModuleWidget {

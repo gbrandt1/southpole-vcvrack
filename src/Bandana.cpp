@@ -95,20 +95,20 @@ BandanaWidget::BandanaWidget() {
 	addParam(createParam<sp_Trimpot>(Vec(x3-10, 238+8), module, Bandana::MOD3_PARAM, -1.0, 1.0, 0.0));
 	addParam(createParam<sp_Trimpot>(Vec(x3-10, 316+8), module, Bandana::MOD4_PARAM, -1.0, 1.0, 0.0));
 
-	addInput(createInput<PJ301MPort>(Vec(x1, 41), module, Bandana::IN1_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 120), module, Bandana::IN2_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 198), module, Bandana::IN3_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 277), module, Bandana::IN4_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 41), module, Bandana::IN1_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 120), module, Bandana::IN2_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 198), module, Bandana::IN3_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 277), module, Bandana::IN4_INPUT));
 
-	addInput(createInput<PJ301MPort>(Vec(x1, 80), module, Bandana::CV1_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 159), module, Bandana::CV2_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 238), module, Bandana::CV3_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 316), module, Bandana::CV4_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 80), module, Bandana::CV1_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 159), module, Bandana::CV2_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 238), module, Bandana::CV3_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 316), module, Bandana::CV4_INPUT));
 
-	addOutput(createOutput<PJ301MPort>(Vec(x3, 41), module, Bandana::OUT1_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x3, 120), module, Bandana::OUT2_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x3, 198), module, Bandana::OUT3_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x3, 277), module, Bandana::OUT4_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, 41), module, Bandana::OUT1_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, 120), module, Bandana::OUT2_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, 198), module, Bandana::OUT3_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, 277), module, Bandana::OUT4_OUTPUT));
 
 	addChild(createLight<SmallLight<GreenRedLight>>(Vec(x2+9,  96-46), module, Bandana::CV1_POS_LIGHT));
 	addChild(createLight<SmallLight<GreenRedLight>>(Vec(x2+9, 175-46), module, Bandana::CV2_POS_LIGHT));

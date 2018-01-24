@@ -282,18 +282,18 @@ AnnuliWidget::AnnuliWidget() {
 	addParam(createParam<sp_Trimpot>(Vec(x2, y1+5*yh+6), module, Annuli::STRUCTURE_MOD_PARAM, -1.0, 1.0, 0.0));
 	addParam(createParam<sp_Trimpot>(Vec(x2, y1+6*yh+6), module, Annuli::POSITION_MOD_PARAM, -1.0, 1.0, 0.0));
 
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+2*yh), module, Annuli::BRIGHTNESS_MOD_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+3*yh), module, Annuli::FREQUENCY_MOD_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+4*yh), module, Annuli::DAMPING_MOD_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+5*yh), module, Annuli::STRUCTURE_MOD_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+6*yh), module, Annuli::POSITION_MOD_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+2*yh), module, Annuli::BRIGHTNESS_MOD_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+3*yh), module, Annuli::FREQUENCY_MOD_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+4*yh), module, Annuli::DAMPING_MOD_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+5*yh), module, Annuli::STRUCTURE_MOD_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+6*yh), module, Annuli::POSITION_MOD_INPUT));
 
-	addInput(createInput<PJ301MPort>(Vec(x1+10, y1+7*yh), module, Annuli::STRUM_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x3-10, y1+7*yh), module, Annuli::PITCH_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1+10, y1+7*yh), module, Annuli::STRUM_INPUT));
+	addInput(createInput<sp_Port>(Vec(x3-10, y1+7*yh), module, Annuli::PITCH_INPUT));
 	
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+8.875*yh), module, Annuli::IN_INPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x3, y1+8.25*yh), module, Annuli::ODD_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x3, y1+9.125*yh), module, Annuli::EVEN_OUTPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+8.875*yh), module, Annuli::IN_INPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, y1+8.25*yh), module, Annuli::ODD_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, y1+9.125*yh), module, Annuli::EVEN_OUTPUT));
 
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+18, y1+.25*yh+3), module, Annuli::POLYPHONY_GREEN_LIGHT));
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+18, y1+yh+3), module, Annuli::RESONATOR_GREEN_LIGHT));

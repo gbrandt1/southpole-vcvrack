@@ -318,13 +318,13 @@ CornrowsWidget::CornrowsWidget() {
 	addParam(createParam<sp_Trimpot>(Vec(x2, y1+2.25*yh), module, Cornrows::MODULATION_PARAM, -1.0, 1.0, 0.0));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+3*yh), module, Cornrows::COLOR_PARAM, 0.0, 1.0, 0.5));
 
-	addInput(createInput<PJ301MPort>(Vec(x1, y1-yh), module, Cornrows::TRIG_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y1), module, Cornrows::PITCH_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+yh), module, Cornrows::FM_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+2*yh), module, Cornrows::TIMBRE_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+3*yh), module, Cornrows::COLOR_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1-yh), module, Cornrows::TRIG_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1), module, Cornrows::PITCH_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+yh), module, Cornrows::FM_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+2*yh), module, Cornrows::TIMBRE_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+3*yh), module, Cornrows::COLOR_INPUT));
 
-	addOutput(createOutput<PJ301MPort>(Vec(x2, y1+3.75*yh), module, Cornrows::OUT_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x2, y1+3.75*yh), module, Cornrows::OUT_OUTPUT));
 }
 
 struct CornrowsSettingItem : MenuItem {

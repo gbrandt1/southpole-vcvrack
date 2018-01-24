@@ -245,23 +245,23 @@ SplashWidget::SplashWidget() {
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, Splash::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
 
 
-	addInput(createInput<PJ301MPort>(Vec(x1, y1), module, Splash::TRIG_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x2, y1), module, Splash::FREEZE_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1), module, Splash::TRIG_INPUT));
+	addInput(createInput<sp_Port>(Vec(x2, y1), module, Splash::FREEZE_INPUT));
 
-	addInput(createInput<PJ301MPort>(Vec(x1, y2+2*yh), module, Splash::PITCH_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y2+3*yh), module, Splash::FM_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y2+2*yh), module, Splash::PITCH_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y2+3*yh), module, Splash::FM_INPUT));
 
-	addInput(createInput<PJ301MPort>(Vec(x1, y2+4*yh), module, Splash::SHAPE_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y2+4.75*yh), module, Splash::SLOPE_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y2+5.5*yh), module, Splash::SMOOTHNESS_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y2+4*yh), module, Splash::SHAPE_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y2+4.75*yh), module, Splash::SLOPE_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y2+5.5*yh), module, Splash::SMOOTHNESS_INPUT));
 
-	addInput(createInput<PJ301MPort>(Vec(x3, y1+6*yh), module, Splash::LEVEL_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, y1+6*yh), module, Splash::CLOCK_INPUT));
+	addInput(createInput<sp_Port>(Vec(x3, y1+6*yh), module, Splash::LEVEL_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+6*yh), module, Splash::CLOCK_INPUT));
 
-	addOutput(createOutput<PJ301MPort>(Vec(x1, y1+7*yh), module, Splash::HIGH_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x1+1*28., y1+7*yh), module, Splash::LOW_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x1+2*28., y1+7*yh), module, Splash::UNI_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x1+3*28., y1+7*yh), module, Splash::BI_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x1, y1+7*yh), module, Splash::HIGH_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x1+1*28., y1+7*yh), module, Splash::LOW_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x1+2*28., y1+7*yh), module, Splash::UNI_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x1+3*28., y1+7*yh), module, Splash::BI_OUTPUT));
 
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, y1+10), module, Splash::MODE_GREEN_LIGHT));
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, y1+3*yh), module, Splash::PHASE_GREEN_LIGHT));

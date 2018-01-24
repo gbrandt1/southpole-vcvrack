@@ -97,20 +97,20 @@ BalaclavaWidget::BalaclavaWidget() {
 	addParam(createParam<sp_Trimpot>(Vec(x3-4, 238+8), module, Balaclava::RESPONSE3_PARAM, 0.0, 1.0, 1.0));
 	addParam(createParam<sp_Trimpot>(Vec(x3-4, 316+8), module, Balaclava::RESPONSE4_PARAM, 0.0, 1.0, 1.0));
 
-	addInput(createInput<PJ301MPort>(Vec(x1, 41), module, Balaclava::IN1_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 120), module, Balaclava::IN2_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 198), module, Balaclava::IN3_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 277), module, Balaclava::IN4_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 41), module, Balaclava::IN1_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 120), module, Balaclava::IN2_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 198), module, Balaclava::IN3_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 277), module, Balaclava::IN4_INPUT));
 
-	addInput(createInput<PJ301MPort>(Vec(x1, 80), module, Balaclava::CV1_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 159), module, Balaclava::CV2_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 238), module, Balaclava::CV3_INPUT));
-	addInput(createInput<PJ301MPort>(Vec(x1, 316), module, Balaclava::CV4_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 80), module, Balaclava::CV1_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 159), module, Balaclava::CV2_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 238), module, Balaclava::CV3_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, 316), module, Balaclava::CV4_INPUT));
 
-	addOutput(createOutput<PJ301MPort>(Vec(x3, 41), module, Balaclava::OUT1_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x3, 120), module, Balaclava::OUT2_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x3, 198), module, Balaclava::OUT3_OUTPUT));
-	addOutput(createOutput<PJ301MPort>(Vec(x3, 277), module, Balaclava::OUT4_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, 41), module, Balaclava::OUT1_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, 120), module, Balaclava::OUT2_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, 198), module, Balaclava::OUT3_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, 277), module, Balaclava::OUT4_OUTPUT));
 
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+12, 87-6), module, Balaclava::OUT1_POS_LIGHT));
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+12, 166-6), module, Balaclava::OUT2_POS_LIGHT));

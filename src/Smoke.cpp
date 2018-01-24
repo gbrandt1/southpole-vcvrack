@@ -343,26 +343,26 @@ SmokeWidget::SmokeWidget() {
   addParam(createParam<sp_SmallBlackKnob>(Vec(x3, 7.5*yh+y1), module, Smoke::REVERB_PARAM, 0.0, 1.0, 0.5));
 
 
-  addInput(createInput<PJ301MPort>(Vec(x1, y1), module, Smoke::TRIG_INPUT));
+  addInput(createInput<sp_Port>(Vec(x1, y1), module, Smoke::TRIG_INPUT));
   
-  addInput(createInput<PJ301MPort>(Vec(x1, yh+y1), module, Smoke::FREEZE_INPUT));
+  addInput(createInput<sp_Port>(Vec(x1, yh+y1), module, Smoke::FREEZE_INPUT));
 
-  addInput(createInput<PJ301MPort>(Vec(x1, 3.5*yh+y1), module, Smoke::POSITION_INPUT));
-  addInput(createInput<PJ301MPort>(Vec(x2, 3.5*yh+y1), module, Smoke::SIZE_INPUT));
-  addInput(createInput<PJ301MPort>(Vec(x3, 3.5*yh+y1), module, Smoke::PITCH_INPUT));
+  addInput(createInput<sp_Port>(Vec(x1, 3.5*yh+y1), module, Smoke::POSITION_INPUT));
+  addInput(createInput<sp_Port>(Vec(x2, 3.5*yh+y1), module, Smoke::SIZE_INPUT));
+  addInput(createInput<sp_Port>(Vec(x3, 3.5*yh+y1), module, Smoke::PITCH_INPUT));
 
-  addInput(createInput<PJ301MPort>(Vec(x1, 6*yh+y1), module, Smoke::DENSITY_INPUT));
-  addInput(createInput<PJ301MPort>(Vec(x2, 6*yh+y1), module, Smoke::TEXTURE_INPUT));
-  addInput(createInput<PJ301MPort>(Vec(x3, 6*yh+y1), module, Smoke::BLEND_INPUT));
+  addInput(createInput<sp_Port>(Vec(x1, 6*yh+y1), module, Smoke::DENSITY_INPUT));
+  addInput(createInput<sp_Port>(Vec(x2, 6*yh+y1), module, Smoke::TEXTURE_INPUT));
+  addInput(createInput<sp_Port>(Vec(x3, 6*yh+y1), module, Smoke::BLEND_INPUT));
  
-  addInput(createInput<PJ301MPort>(Vec(x1, 8.5*yh+y1), module, Smoke::SPREAD_INPUT));
-  addInput(createInput<PJ301MPort>(Vec(x2, 8.5*yh+y1), module, Smoke::FEEDBACK_INPUT));
-  addInput(createInput<PJ301MPort>(Vec(x3, 8.5*yh+y1), module, Smoke::REVERB_INPUT));
+  addInput(createInput<sp_Port>(Vec(x1, 8.5*yh+y1), module, Smoke::SPREAD_INPUT));
+  addInput(createInput<sp_Port>(Vec(x2, 8.5*yh+y1), module, Smoke::FEEDBACK_INPUT));
+  addInput(createInput<sp_Port>(Vec(x3, 8.5*yh+y1), module, Smoke::REVERB_INPUT));
 
-  addInput(createInput<PJ301MPort>(Vec(x1, 9.5*yh+y1), module, Smoke::IN_L_INPUT));
-  addInput(createInput<PJ301MPort>(Vec(x1, 10.5*yh+y1), module, Smoke::IN_R_INPUT));
-  addOutput(createOutput<PJ301MPort>(Vec(x3, 9.5*yh+y1), module, Smoke::OUT_L_OUTPUT));
-  addOutput(createOutput<PJ301MPort>(Vec(x3, 10.5*yh+y1), module, Smoke::OUT_R_OUTPUT));
+  addInput(createInput<sp_Port>(Vec(x1, 9.5*yh+y1), module, Smoke::IN_L_INPUT));
+  addInput(createInput<sp_Port>(Vec(x1, 10.5*yh+y1), module, Smoke::IN_R_INPUT));
+  addOutput(createOutput<sp_Port>(Vec(x3, 9.5*yh+y1), module, Smoke::OUT_L_OUTPUT));
+  addOutput(createOutput<sp_Port>(Vec(x3, 10.5*yh+y1), module, Smoke::OUT_R_OUTPUT));
   
   //addChild(createLight<MediumLight<GreenRedLight>>(Vec(x1+10, y1), module, Smoke::MIX_GREEN_LIGHT));
 	//addChild(createLight<MediumLight<GreenRedLight>>(Vec(x1+20, y1), module, Smoke::PAN_GREEN_LIGHT));

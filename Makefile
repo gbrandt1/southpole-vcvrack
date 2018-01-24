@@ -26,6 +26,8 @@ SOURCES += src/Etagere.cpp
 SOURCES += src/VAStateVariableFilter.cpp
 SOURCES += src/DSPUtilities.cpp
 
+SOURCES += src/Sns.cpp
+
 SOURCES += src/Annuli.cpp
 SOURCES += parasites/rings/dsp/fm_voice.cc
 SOURCES += parasites/rings/dsp/string_synth_part.cc
