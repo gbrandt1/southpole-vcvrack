@@ -83,8 +83,15 @@ struct Bjorklund
         }
     }
 
+    void rotater(int r) {
+
+        for (int i=0; i<r; i++) {
+            std::rotate(sequence.rbegin(),sequence.rbegin() + 1,sequence.rend());
+        }
+    }
+
     void print() {
-        for (int i = 0; i != sequence.size(); i++) {
+        for (unsigned int i = 0; i != sequence.size(); i++) {
             std::cout << sequence.at(i);
         }
         std::cout << '\n';

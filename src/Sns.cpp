@@ -1,4 +1,6 @@
-#include <string.h>
+//#include <string.h>
+#include <array>
+
 #include "Southpole.hpp"
 #include "dsp/digital.hpp"
 
@@ -15,6 +17,10 @@ struct Sns : Module {
 		NUM_PARAMS
 	};
 	enum InputIds {
+		K_INPUT,
+		L_INPUT,
+		S_INPUT,
+		ACCENT_INPUT,
 		CLK_INPUT,
 		RESET_INPUT,
 		NUM_INPUTS
@@ -34,6 +40,7 @@ struct Sns : Module {
 
 	void step() override;
 	void reset() override;
+/*
 	void onSampleRateChange() override;
 
 	json_t *toJson() override {
@@ -43,52 +50,74 @@ struct Sns : Module {
 
 	void fromJson(json_t *rootJ) override {
 	}
-};
+*/
 
 	Bjorklund euclid;
-	Bjorklund accents;
+	Bjorklund euclid2;
+	//std::vector<bool> 
+	std::array<bool,32> sequence;
+	std::array<bool,32> accents;
+
 	bool calculate;
 	bool from_reset;
 
-	int par_k = 1; // fill
-	int par_l = 1; // pattern length		
-	int par_s = 1; // shift
-	int par_a = 1; // accent
-	int par_last;
+	uint par_k = 1; // fill
+	uint par_l = 1; // pattern length		
+	uint par_s = 1; // shift
+	uint par_a = 1; // accent
+	uint par_last;
 
-  	SchmittTrigger clockTrigger;  // external clock
-  	SchmittTrigger resetTrigger;  // reset button
+  	SchmittTrigger clockTrigger;
+  	SchmittTrigger resetTrigger;
 	PulseGenerator gatePulse;
 	PulseGenerator accentPulse;
 
-	int currentStep = 0;
-	int currentIndex;
-	int accentIndex;
+	uint currentStep = 0;
+};
 
 void Sns::reset() {
 
 	euclid.reset();	
 	euclid.init(par_l,par_k);
 	euclid.iter();
-   	euclid.print();
-   	calculate = false;
+	euclid.rotater(par_s);
+//  euclid.print();
     
+	euclid2.reset();	
 	if (par_a>0) {
-		accents.reset();	
-		accents.init(par_k,par_a);
-		accents.iter();
-		accents.print();
+		euclid2.init(par_k,par_a);
+		euclid2.iter();
+		//euclid2.print();
 	}
+
+	std::vector<bool>::iterator it = euclid2.sequence.begin();
+	for (unsigned int i = 0; i != euclid.sequence.size(); i++) {
+    	sequence[i] = euclid.sequence.at(i);
+    	if (par_a && euclid.sequence.at(i)) {
+			accents[i] = *it;
+			std::advance(it,1); 
+		} else accents[i] = 0;
+	}
+/*
+    for (unsigned int i = 0; i != accents.size(); i++) {
+        std::cout << sequence[i];
+    }
+    std::cout << '\n';
+    for (unsigned int i = 0; i != accents.size(); i++) {
+        std::cout << accents[i];
+    }
+    std::cout << '\n';
+*/
+	//std::copy(euclid.sequence.begin(), euclid.sequence.end(), sequence);
+
+   	calculate = false;
 	from_reset = true;
 }
-
+/*
 void Sns::onSampleRateChange() {
 }
-
+*/
 void Sns::step() {
-
-	// no processing during recalculation
-	if (calculate) return;
 
   	bool nextStep = false;
 
@@ -101,7 +130,7 @@ void Sns::step() {
 
 	// reset sequence
 	if (from_reset) { 
-		currentStep = par_l;
+		//currentStep = par_l;
 		//nextStep = true;
 		from_reset = false;
 	}
@@ -117,19 +146,17 @@ void Sns::step() {
 		currentStep++;
 		if (currentStep >= par_l) {
 		   currentStep = 0;
-		   accentIndex = 0;
 		}
 		
-		currentIndex = ( currentStep + par_s ) % par_l;
-	    if (euclid.sequence.at( currentIndex )) {
+		// no processing during recalculation
+		if ( !calculate)
+	    if (sequence[currentStep] ) {
 		  	gatePulse.trigger(1e-3);
-		  	if (par_a) {
-		      if (accents.sequence.at( accentIndex )) {
-			    accentPulse.trigger(1e-3);
-			  }					
-			  accentIndex ++;
-			} 
 		} 
+//		  	if (par_a) {
+      //	if (accents.at( currentStep )) {
+	//	    accentPulse.trigger(1e-3);
+	  //	}					
 	} 
 
 
@@ -139,10 +166,15 @@ void Sns::step() {
 	outputs[GATE_OUTPUT].value = gpulse ? 10.0 : 0.0;
 	outputs[ACCENT_OUTPUT].value = apulse ? 10.0 : 0.0;
 
-	par_l = int(1.+15.*params[Sns::L_PARAM].value);		
-	par_s = par_l-int((par_l-1.)*params[Sns::S_PARAM].value);
-	par_k = int(1.+(par_l-1.)*params[Sns::K_PARAM].value);
-	par_a = float(par_k)*params[Sns::ACCENT_PARAM].value;
+	par_l = uint( 1. +       15.  * ( clampf( params[L_PARAM].value + inputs[L_INPUT].normalize(0.) / 9., 0.0f, 1.0f)));
+	par_s = uint(      (par_l-1.) * ( clampf( params[S_PARAM].value + inputs[S_INPUT].normalize(0.) / 9., 0.0f, 1.0f)));
+	par_k = uint( 1. + (par_l-1.) * ( clampf( params[K_PARAM].value + inputs[K_INPUT].normalize(0.) / 9., 0.0f, 1.0f)));
+	par_a = float( par_k ) * ( clampf( params[ACCENT_PARAM].value + inputs[ACCENT_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
+
+	//par_l = uint(1.+15.*params[Sns::L_PARAM].value);		
+	//par_s = int((par_l-1.)*params[Sns::S_PARAM].value);
+	//par_k = int(1.+(par_l-1.)*params[Sns::K_PARAM].value);
+	//par_a = float(par_k)*params[Sns::ACCENT_PARAM].value;
 	
 	// new sequence in case of change to parameters
 	if (par_l+par_s+par_a+par_k != par_last) {
@@ -150,15 +182,18 @@ void Sns::step() {
 //		printf("%d %d",par_k,par_a);	
 	   par_last = par_l+par_s+par_a+par_k;
 	   calculate = true;
-	   reset();		// to do: don't call in step ...
 	}	
 }
 
 
 struct SnsDisplay : TransparentWidget {
+
 	Sns *module;
 	int frame = 0;
 	std::shared_ptr<Font> font;
+
+	const float y1 = 180;
+	const float yh = 30;
 
 	SnsDisplay() {
 	  //font = Font::load(assetPlugin(plugin, "res/fonts/Sudo.ttf"));
@@ -167,62 +202,60 @@ struct SnsDisplay : TransparentWidget {
 
 	void drawPolygon(NVGcontext *vg) {
 		
-		//nvgSave(vg);
 		Rect b = Rect(Vec(2, 2), box.size.minus(Vec(2, 2)));
-		//nvgScissor(vg, b.pos.x, b.pos.y, b.size.x, b.size.y);
 
 		float cx = 0.5*b.size.x;
 		float cy = 0.5*b.size.y;
-		float  r = 40.;
+		const float r1 = .45*b.size.x;
+		const float r2 = .35*b.size.x;
 
-		// empty circles for l total steps
 		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0x7f));
-		nvgBeginPath(vg);
-	    nvgCircle(vg, cx, cy, r);
-	    nvgCircle(vg, cx, cy, 0.5*r);
-		for (int i = 0; i < par_l; i++) {
-			float x = cx + r * cosf(2.*M_PI*i/par_l-.5*M_PI);
-			float y = cy + r * sinf(2.*M_PI*i/par_l-.5*M_PI);
-    	    nvgCircle(vg, x, y, 3.);
-		}
-		nvgStroke(vg);
-
-		// circle for current step, filled if active step
-
-		int acc = 0;
-		float x = cx + r * cosf(2.*M_PI*currentStep/par_l-.5*M_PI);
-		float y = cy + r * sinf(2.*M_PI*currentStep/par_l-.5*M_PI);
-		nvgStrokeWidth(vg, 1.5);
 		nvgFillColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
 		nvgBeginPath(vg);
-		nvgCircle(vg, x, y, 3.);				
-		if ( euclid.sequence.at( currentIndex )) nvgFill(vg);
+	    nvgCircle(vg, cx, cy, r1);
+	    nvgCircle(vg, cx, cy, r2);
 		nvgStroke(vg);
+//		std::vector<bool>::iterator it = euclid.sequence.begin();
+		unsigned len = module->par_l;
+		//printf("%d \n", len);
+		for (unsigned i = 0; i < len; i++) {
+			float r = module->accents[i] ? r1 : r2;
+			float x = cx + r * cosf(2.*M_PI*i/len-.5*M_PI);
+			float y = cy + r * sinf(2.*M_PI*i/len-.5*M_PI);
 
+			nvgBeginPath(vg);
+			nvgStrokeWidth(vg, 1.);
+			nvgCircle(vg, x, y, 3.);
+			if ( i == module->currentStep  ) {
+				nvgStrokeWidth(vg, 1.5);
+				if ( module->sequence[i] ) 	nvgFill(vg);
+			}	
+			nvgStroke(vg);
+		}
 
 		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
 		nvgBeginPath(vg);
 		bool first = true;
-		int acc = 0;
-		for (int i = 0; i < par_l; i++) {
-			float a = i/float(par_l);
-			float x = cx + .5*r * cosf(2.*M_PI*a-.5*M_PI);
-			float y = cy + .5*r * sinf(2.*M_PI*a-.5*M_PI);
-			if ( euclid.sequence.at( (i+par_s) % par_l )) {
-				if (par_a) {
-					if (accents.sequence.at( acc++ )) {
-						x = cx + r * cosf(2.*M_PI*a-.5*M_PI);
-						y = cy + r * sinf(2.*M_PI*a-.5*M_PI);
-					}	
-				}	
+		//std::vector<bool>::iterator it = euclid.sequence.begin();
+		for (uint i = 0; i < module->par_l; i++) {
+			float a = i/float(module->par_l);
+			float r = module->accents[i] ? r1 : r2;
+			float x = cx + r * cosf(2.*M_PI*a-.5*M_PI);
+			float y = cy + r * sinf(2.*M_PI*a-.5*M_PI);
+			if ( module->sequence[i] ) {
+				//if (accents[i]) {
+				//	x = cx + r1 * cosf(2.*M_PI*a-.5*M_PI);
+				//	y = cy + r1 * sinf(2.*M_PI*a-.5*M_PI);
+				//}
 				Vec p(x,y);
-				if (par_k == 1) nvgCircle(vg, x, y, 3.);				
+				if (module->par_k == 1) nvgCircle(vg, x, y, 3.);				
 				if (first) {
 					nvgMoveTo(vg, p.x, p.y);
 				 	first = false;
 				} else 
 					nvgLineTo(vg, p.x, p.y);
 			}
+			//std::advance(it,1);
 		}
 		nvgClosePath(vg);
 		nvgStrokeWidth(vg, 1.5);
@@ -232,23 +265,27 @@ struct SnsDisplay : TransparentWidget {
 	void draw(NVGcontext *vg) override {
 
 		// wait until in defined state
-		if (calculate) return;
+		if (module->calculate) {
+		   module->reset();		
+		}
 
-		drawPolygon(vg); //, par_k, par_n, par_l, par_s);
+		drawPolygon(vg);
 
-		nvgFontSize(vg, 11);
+		nvgFontSize(vg, 8);
 		nvgFontFaceId(vg, font->handle);
-		nvgTextLetterSpacing(vg, 2.);
+//		nvgTextLetterSpacing(vg, 2.);
 
-		Vec textPos = Vec(8, 146);
+		Vec textPos = Vec(8, 100);
 		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
 		nvgFillColor(vg, nvgTransRGBA(textColor, 16));
 		//nvgText(vg, textPos.x, textPos.y, "~~~~", NULL);
 		nvgFillColor(vg, textColor);
 		char str[20];
-		snprintf(str,sizeof(str),"%d %d %d %d",int(par_k),int(par_l),int(par_l-par_s),int(par_a));
+		snprintf(str,sizeof(str),"%2d %2d",int(module->par_k),int(module->par_l));
 		nvgText(vg, textPos.x, textPos.y, str, NULL);
 
+		snprintf(str,sizeof(str),"%2d %2d",int(module->par_s),int(module->par_a));
+		nvgText(vg, textPos.x, textPos.y+10., str, NULL);
 	}
 };
 
@@ -256,7 +293,7 @@ struct SnsDisplay : TransparentWidget {
 SnsWidget::SnsWidget() {
 	Sns *module = new Sns();
 	setModule(module);
-	box.size = Vec(15*8, 380);
+	box.size = Vec(15*4, 380);
 
 	{
 		SVGPanel *panel = new SVGPanel();
@@ -268,23 +305,26 @@ SnsWidget::SnsWidget() {
 	{
 		SnsDisplay *display = new SnsDisplay();
 		display->module = module;
-		display->box.pos = Vec(4, 30);
-		display->box.size = Vec(14*8, 14*8);
+		display->box.pos = Vec( 0.05*box.size.x, 30);
+		display->box.size = Vec( .9*box.size.x, .9*box.size.x );
 		addChild(display);
 	}
 
-	float yh = 30;
+	addParam(createParam<sp_SmallBlackKnob>(Vec(4   , y1   ), module, Sns::K_PARAM, 0., 1., .25));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(4+25, y1   ), module, Sns::L_PARAM, 0., 1., 1.));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(4   , y1+2*yh), module, Sns::S_PARAM, 0., 1., 0.));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(4+25, y1+2*yh), module, Sns::ACCENT_PARAM, 0., 1., 0.));
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(4   , 209), module, Sns::K_PARAM, 0., 1., .25));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(4+25, 209), module, Sns::L_PARAM, 0., 1., 1.));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(4+50, 209), module, Sns::S_PARAM, 0., 1., 0.));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(4   , 209+yh), module, Sns::ACCENT_PARAM, 0., 1., 0.));
+	addInput(createInput<sp_Port>(Vec(4,    y1+1*yh), module, Sns::K_INPUT));
+	addInput(createInput<sp_Port>(Vec(4+25, y1+1*yh), module, Sns::L_INPUT));
+	addInput(createInput<sp_Port>(Vec(4   , y1+3*yh), module, Sns::S_INPUT));
+	addInput(createInput<sp_Port>(Vec(4+25, y1+3*yh), module, Sns::ACCENT_INPUT));
 
-	addInput(createInput<sp_Port>(Vec(17, 319-30), module, Sns::CLK_INPUT));
-	addInput(createInput<sp_Port>(Vec(17+25, 319-30), module, Sns::RESET_INPUT));
+	addInput(createInput<sp_Port>(Vec(4,    y1+4*yh), module, Sns::CLK_INPUT));
+	addInput(createInput<sp_Port>(Vec(4+25, y1+4*yh), module, Sns::RESET_INPUT));
 
-	addOutput(createOutput<sp_Port>(Vec(17+25, 319), module, Sns::GATE_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(17+50, 319), module, Sns::ACCENT_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(4   , y1+5*yh), module, Sns::GATE_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(4+25, y1+5*yh), module, Sns::ACCENT_OUTPUT));
 
 	//addChild(createLight<SmallLight<RedLight>>(Vec(4, 281), module, Sns::CLK_LIGHT));
 	//addChild(createLight<SmallLight<RedLight>>(Vec(4+25, 281), module, Sns::GATE_LIGHT));
