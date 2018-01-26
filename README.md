@@ -1,5 +1,7 @@
 # southpole-vcvrack
 
+### Please note: Currently no stable / compilable tag is announced yet. Stay tuned!!!
+
 ![All](./doc/sp-all-2018-01-22.png)
 
 Southpole VCV Rack Modules
