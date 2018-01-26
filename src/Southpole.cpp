@@ -27,7 +27,8 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<ButWidget>("Southpole", "But", "But", UTILITY_TAG));
     p->addModel(createModel<TubWidget>("Southpole", "Tub", "Tub", UTILITY_TAG));
     p->addModel(createModel<EtagereWidget>("Southpole", "Etagere", "Etagere", UTILITY_TAG));
-    p->addModel(createModel<SnsWidget>("Southpole", "SNS", "SNS", UTILITY_TAG));
+//  p->addModel(createModel<SnsWidget>("Southpole", "SNS", "SNS", UTILITY_TAG));
+    p->addModel(createModel<BounceWidget>("Southpole", "Bounce", "Bounce", UTILITY_TAG));
 #else
     p->addModel(createModel<CornrowsWidget>("Southpole", "Cornrows", "Cornrows", OSCILLATOR_TAG, WAVESHAPER_TAG));
 	p->addModel(createModel<SplashWidget>("Southpole", "Splash", "Splash", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));

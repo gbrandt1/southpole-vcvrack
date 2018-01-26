@@ -20,13 +20,14 @@ SOURCES += src/Southpole.cpp
 SOURCES += src/Balaclava.cpp	
 SOURCES += src/Bandana.cpp
 SOURCES += src/But.cpp
-SOURCES += src/Tub.cpp
+SOURCES += src/Abr.cpp
 
 SOURCES += src/Etagere.cpp
 SOURCES += src/VAStateVariableFilter.cpp
 SOURCES += src/DSPUtilities.cpp
 
-SOURCES += src/Sns.cpp
+#SOURCES += src/Sns.cpp
+SOURCES += src/Bounce.cpp
 
 SOURCES += src/Annuli.cpp
 SOURCES += parasites/rings/dsp/fm_voice.cc

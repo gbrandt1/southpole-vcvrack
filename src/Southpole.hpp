@@ -45,9 +45,13 @@ struct TubWidget : ModuleWidget {
 struct EtagereWidget : ModuleWidget {
 	EtagereWidget();
 };
-
+/*
 struct SnsWidget : ModuleWidget {
 	SnsWidget();
+};
+*/
+struct BounceWidget : ModuleWidget {
+	BounceWidget();
 };
 
 #else
