@@ -1,9 +1,8 @@
+
+
 #include "Southpole.hpp"
 
 Plugin *plugin;
-
-
-
 
 void init(rack::Plugin *p) {
 	plugin = p;
@@ -25,16 +24,14 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava", UTILITY_TAG));
     p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana", UTILITY_TAG));
     p->addModel(createModel<ButWidget>("Southpole", "But", "But", UTILITY_TAG));
-    p->addModel(createModel<TubWidget>("Southpole", "Tub", "Tub", UTILITY_TAG));
+    p->addModel(createModel<AbrWidget>("Southpole", "Abr", "Abr", UTILITY_TAG));
     p->addModel(createModel<EtagereWidget>("Southpole", "Etagere", "Etagere", UTILITY_TAG));
     p->addModel(createModel<SnsWidget>("Southpole", "SNS", "SNS", UTILITY_TAG));
+    p->addModel(createModel<PisteWidget>("Southpole", "Piste", "Piste", UTILITY_TAG));
 #else
     p->addModel(createModel<CornrowsWidget>("Southpole", "Cornrows", "Cornrows", OSCILLATOR_TAG, WAVESHAPER_TAG));
 	p->addModel(createModel<SplashWidget>("Southpole", "Splash", "Splash", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
 #endif
-
-	//p->addModel(createModel<TidesWidget>("Southpole", "Tides", "Tides", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
-
 }
 
 

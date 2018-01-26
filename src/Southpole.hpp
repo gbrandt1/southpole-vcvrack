@@ -1,18 +1,13 @@
+
 #include "rack.hpp"
 
-
 using namespace rack;
-
 
 extern Plugin *plugin;
 
 ////////////////////
 // module widgets
 ////////////////////
-
-//struct MyModuleWidget : ModuleWidget {
-//	MyModuleWidget();
-//};
 
 #ifdef PARASITES
 
@@ -38,8 +33,8 @@ struct ButWidget : ModuleWidget {
 	ButWidget();
 };
 
-struct TubWidget : ModuleWidget {
-	TubWidget();
+struct AbrWidget : ModuleWidget {
+	AbrWidget();
 };
 
 struct EtagereWidget : ModuleWidget {
@@ -48,6 +43,10 @@ struct EtagereWidget : ModuleWidget {
 
 struct SnsWidget : ModuleWidget {
 	SnsWidget();
+};
+
+struct PisteWidget : ModuleWidget {
+	PisteWidget();
 };
 
 #else

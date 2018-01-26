@@ -65,14 +65,15 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves)
 - Either input A or B go to the output and the A/B busses
 - Two summed identical outputs for A and B buss are provided.
 
-### Tub - Manual A/B Switch 
+### Abr - Manual A/B Switch 
 - Inverse of But, either input A or B goes to output
 - Sums of inputs set to A or B provided
 
-### Slope - Drum Processor
+### Piste - Drum Processor
 - inspired by Bastl Skis
 - one-stop module to turn oscillators into drums / percussion 
 - input gain + eq
 - 2 independent decay envelopes (eg. body and accent) the sum of which is applied to input signal via internal VCA
+- 2nd envelope is scaled to 1st
 - triggers are scalable
 - overdrive in output stage
