@@ -40,9 +40,13 @@ struct AbrWidget : ModuleWidget {
 struct EtagereWidget : ModuleWidget {
 	EtagereWidget();
 };
-
+/*
 struct SnsWidget : ModuleWidget {
 	SnsWidget();
+};
+*/
+struct BounceWidget : ModuleWidget {
+	BounceWidget();
 };
 
 struct WriggleWidget : ModuleWidget {
