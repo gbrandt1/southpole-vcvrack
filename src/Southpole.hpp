@@ -9,7 +9,7 @@ extern Plugin *plugin;
 // module widgets
 ////////////////////
 
-#ifdef PARASITES
+#ifndef PARASITES
 
 struct SmokeWidget : ModuleWidget {
 	SmokeWidget();
@@ -45,8 +45,16 @@ struct SnsWidget : ModuleWidget {
 	SnsWidget();
 };
 
+struct WriggleWidget : ModuleWidget {
+	WriggleWidget();
+};
+
 struct PisteWidget : ModuleWidget {
 	PisteWidget();
+};
+
+struct FuseWidget : ModuleWidget {
+	FuseWidget();
 };
 
 #else
@@ -65,6 +73,8 @@ struct SplashWidget : ModuleWidget {
 };
 
 #endif
+
+// GUI COMPONENTS
 
 struct sp_Port : SVGPort {
 	sp_Port() {
@@ -107,7 +117,7 @@ struct sp_SmallBlackKnob : SVGKnob {
 		maxAngle = 0.83 * M_PI;
 		sw->svg = SVG::load(assetPlugin(plugin, "res/sp-knobBlack.svg"));
 		sw->wrap();
-		box.size = Vec(24,24);
+		box.size = Vec(20,20);
 	}
 };
 
@@ -120,3 +130,4 @@ struct sp_Trimpot : SVGKnob {
 		box.size = Vec(18,18);
 	}
 };
+

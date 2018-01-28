@@ -28,6 +28,8 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<EtagereWidget>("Southpole", "Etagere", "Etagere", UTILITY_TAG));
     p->addModel(createModel<SnsWidget>("Southpole", "SNS", "SNS", UTILITY_TAG));
     p->addModel(createModel<PisteWidget>("Southpole", "Piste", "Piste", UTILITY_TAG));
+    p->addModel(createModel<WriggleWidget>("Southpole", "Wriggle", "Wriggle", UTILITY_TAG));
+    p->addModel(createModel<FuseWidget>("Southpole", "Fuse", "Fuse", UTILITY_TAG));
 #else
     p->addModel(createModel<CornrowsWidget>("Southpole", "Cornrows", "Cornrows", OSCILLATOR_TAG, WAVESHAPER_TAG));
 	p->addModel(createModel<SplashWidget>("Southpole", "Splash", "Splash", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
