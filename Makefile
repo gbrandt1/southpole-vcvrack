@@ -3,7 +3,7 @@ VERSION = 0.5.1
 
 # FLAGS will be passed to both the C and C++ compiler
 FLAGS += \
-	-DTEST -DPARASITES \
+	-DTEST \
 	-I./parasites \
 	-Wno-unused-local-typedefs
 
@@ -28,6 +28,8 @@ SOURCES += src/DSPUtilities.cpp
 
 SOURCES += src/Sns.cpp
 SOURCES += src/Piste.cpp
+SOURCES += src/Wriggle.cpp
+SOURCES += src/Fuse.cpp
 
 SOURCES += src/Annuli.cpp
 SOURCES += parasites/rings/dsp/fm_voice.cc
@@ -44,8 +46,6 @@ SOURCES += parasites/clouds/dsp/pvoc/frame_transformation.cc
 SOURCES += parasites/clouds/dsp/pvoc/phase_vocoder.cc
 SOURCES += parasites/clouds/dsp/pvoc/stft.cc
 SOURCES += parasites/clouds/resources.cc 
-#SOURCES += parasites/tides/generator.cc 
-#SOURCES += parasites/tides/resources.cc 
 
 # Add files to the ZIP package when running `make dist`
 # The compiled plugin is automatically added.
