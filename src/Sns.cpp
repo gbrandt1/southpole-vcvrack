@@ -50,18 +50,18 @@ struct Sns : Module {
 	bool calculate;
 	bool from_reset;
 
-	uint par_k = 1; // fill
-	uint par_l = 1; // pattern length		
-	uint par_s = 1; // shift
-	uint par_a = 1; // accent
-	uint par_last;
+	unsigned int  par_k = 1; // fill
+	unsigned int  par_l = 1; // pattern length		
+	unsigned int  par_s = 1; // shift
+	unsigned int  par_a = 1; // accent
+	unsigned int  par_last;
 
   	SchmittTrigger clockTrigger;
   	SchmittTrigger resetTrigger;
 	PulseGenerator gatePulse;
 	PulseGenerator accentPulse;
 
-	uint currentStep = 0;
+	unsigned int  currentStep = 0;
 };
 
 void Sns::reset() {
@@ -143,12 +143,12 @@ void Sns::step() {
 	outputs[GATE_OUTPUT].value = gpulse ? 10.0 : 0.0;
 	outputs[ACCENT_OUTPUT].value = apulse ? 10.0 : 0.0;
 
-	par_l = uint( 1. +       15.  * ( clampf( params[L_PARAM].value + inputs[L_INPUT].normalize(0.) / 9., 0.0f, 1.0f)));
-	par_s = uint(      (par_l-1.) * ( clampf( params[S_PARAM].value + inputs[S_INPUT].normalize(0.) / 9., 0.0f, 1.0f)));
-	par_k = uint( 1. + (par_l-1.) * ( clampf( params[K_PARAM].value + inputs[K_INPUT].normalize(0.) / 9., 0.0f, 1.0f)));
+	par_l = (unsigned int) ( 1. +       15.  * ( clampf( params[L_PARAM].value + inputs[L_INPUT].normalize(0.) / 9., 0.0f, 1.0f)));
+	par_s = (unsigned int) (      (par_l-1.) * ( clampf( params[S_PARAM].value + inputs[S_INPUT].normalize(0.) / 9., 0.0f, 1.0f)));
+	par_k = (unsigned int) ( 1. + (par_l-1.) * ( clampf( params[K_PARAM].value + inputs[K_INPUT].normalize(0.) / 9., 0.0f, 1.0f)));
 	par_a = float( par_k ) * ( clampf( params[ACCENT_PARAM].value + inputs[ACCENT_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
 
-	//par_l = uint(1.+15.*params[Sns::L_PARAM].value);		
+	//par_l = unsigned int (1.+15.*params[Sns::L_PARAM].value);		
 	//par_s = int((par_l-1.)*params[Sns::S_PARAM].value);
 	//par_k = int(1.+(par_l-1.)*params[Sns::K_PARAM].value);
 	//par_a = float(par_k)*params[Sns::ACCENT_PARAM].value;
@@ -218,7 +218,7 @@ struct SnsDisplay : TransparentWidget {
 		nvgBeginPath(vg);
 		bool first = true;
 		//std::vector<bool>::iterator it = euclid.sequence.begin();
-		for (uint i = 0; i < module->par_l; i++) {
+		for (unsigned int  i = 0; i < module->par_l; i++) {
 			float a = i/float(module->par_l);
 			float r = module->accents[i] ? r1 : r2;
 			float x = cx + r * cosf(2.*M_PI*a-.5*M_PI);

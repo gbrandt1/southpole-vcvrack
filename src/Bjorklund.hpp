@@ -5,6 +5,7 @@
 
 #include<iostream>
 #include<vector>
+#include<algorithm>
 
 struct Bjorklund
 {

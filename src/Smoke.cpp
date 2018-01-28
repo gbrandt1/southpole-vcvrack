@@ -92,7 +92,7 @@ MIX_GREEN_LIGHT, MIX_RED_LIGHT,
 
   Smoke();
   ~Smoke();
-  void step();
+  void step() override;
   
   
 	json_t *toJson() override {
@@ -164,7 +164,7 @@ Smoke::~Smoke() {
 
 void Smoke::step() {
 
-  Frame<2> inputFrame;
+  //Frame<2> inputFrame;
   // Get input
   if (!inputBuffer.full()) {
     Frame<2> inputFrame;
