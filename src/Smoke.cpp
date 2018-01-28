@@ -302,16 +302,16 @@ void Smoke::step() {
 SmokeWidget::SmokeWidget() {
   Smoke *module = new Smoke();
   setModule(module);
-  box.size = Vec(8* RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
+  box.size = Vec(6* RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
 	SVGPanel *panel = new SVGPanel();
-	panel->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke.svg")));
+	panel->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke6HP.svg")));
 	panel->box.size = box.size;
 	addChild(panel);
 
-  const float x1 = 0.5*RACK_GRID_WIDTH;
-  const float x2 = 3.25*RACK_GRID_WIDTH;
-  const float x3 = 5.75*RACK_GRID_WIDTH; 
+  const float x1 = 5;
+  const float x2 = 35;
+  const float x3 = 65; 
   const float y1 = 25.0f;
   const float yh = 29.0f;
 
@@ -319,14 +319,16 @@ SmokeWidget::SmokeWidget() {
 		FreezeLight() {
 			box.size = Vec(28-16, 28-16);
 			bgColor = COLOR_BLACK_TRANSPARENT;
-    }
+    } 
   };
-  addParam(createParam<LEDButton>(Vec(  x2,   .75*yh+y1  ), module, Smoke::FREEZE_PARAM, 0.0, 1.0, 0.0));
-  addChild(createLight<FreezeLight>(Vec(x2+3, .75*yh+y1+3), module,Smoke::FREEZE_LIGHT));
-#ifdef PARASITES 
-  addParam(createParam<LEDButton>(Vec(  x3,   .75*yh+y1  ), module, Smoke::REVERSE_PARAM, 0.0, 1.0, 0.0));
-  addChild(createLight<FreezeLight>(Vec(x3+3, .75*yh+y1+3), module, Smoke::REVERSE_LIGHT));
-#endif
+
+  addInput(createInput<sp_Port>(Vec(x1, .25*yh+y1), module, Smoke::TRIG_INPUT));
+
+  addInput(createInput<sp_Port>(Vec(x1, 1.25*yh+y1), module, Smoke::FREEZE_INPUT));
+  addParam(createParam<LEDButton>(Vec(  x2,   1.35*yh+y1  ), module, Smoke::FREEZE_PARAM, 0.0, 1.0, 0.0));
+  addChild(createLight<FreezeLight>(Vec(x2+3, 1.35*yh+y1+3), module,Smoke::FREEZE_LIGHT));
+  addParam(createParam<LEDButton>(Vec(  x3,   1.35*yh+y1  ), module, Smoke::REVERSE_PARAM, 0.0, 1.0, 0.0));
+  addChild(createLight<FreezeLight>(Vec(x3+3, 1.35*yh+y1+3), module, Smoke::REVERSE_LIGHT));
 
   addParam(createParam<sp_SmallBlackKnob>(Vec(x1, 2.5*yh+y1), module, Smoke::POSITION_PARAM, 0.0, 1.0, 0.5));
   addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 2.5*yh+y1), module, Smoke::SIZE_PARAM, 0.0, 1.0, 0.5));
@@ -336,28 +338,24 @@ SmokeWidget::SmokeWidget() {
   addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 5.0*yh+y1), module, Smoke::TEXTURE_PARAM, 0.0, 1.0, 0.5));
   addParam(createParam<sp_SmallBlackKnob>(Vec(x3, 5.0*yh+y1), module, Smoke::BLEND_PARAM, 0.0, 1.0, 0.5));
   
-  addParam(createParam<sp_SmallBlackKnob>(Vec(x2-12, 10*yh+y1), module, Smoke::IN_GAIN_PARAM, 0.0, 1.0, 0.5));
   
   addParam(createParam<sp_SmallBlackKnob>(Vec(x1, 7.5*yh+y1), module, Smoke::SPREAD_PARAM, 0.0, 1.0, 0.5));
   addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 7.5*yh+y1), module, Smoke::FEEDBACK_PARAM, 0.0, 1.0, 0.5));
   addParam(createParam<sp_SmallBlackKnob>(Vec(x3, 7.5*yh+y1), module, Smoke::REVERB_PARAM, 0.0, 1.0, 0.5));
-
-
-  addInput(createInput<sp_Port>(Vec(x1, y1), module, Smoke::TRIG_INPUT));
   
-  addInput(createInput<sp_Port>(Vec(x1, yh+y1), module, Smoke::FREEZE_INPUT));
+  addInput(createInput<sp_Port>(Vec(x1, 3.25*yh+y1), module, Smoke::POSITION_INPUT));
+  addInput(createInput<sp_Port>(Vec(x2, 3.25*yh+y1), module, Smoke::SIZE_INPUT));
+  addInput(createInput<sp_Port>(Vec(x3, 3.25*yh+y1), module, Smoke::PITCH_INPUT));
 
-  addInput(createInput<sp_Port>(Vec(x1, 3.5*yh+y1), module, Smoke::POSITION_INPUT));
-  addInput(createInput<sp_Port>(Vec(x2, 3.5*yh+y1), module, Smoke::SIZE_INPUT));
-  addInput(createInput<sp_Port>(Vec(x3, 3.5*yh+y1), module, Smoke::PITCH_INPUT));
-
-  addInput(createInput<sp_Port>(Vec(x1, 6*yh+y1), module, Smoke::DENSITY_INPUT));
-  addInput(createInput<sp_Port>(Vec(x2, 6*yh+y1), module, Smoke::TEXTURE_INPUT));
-  addInput(createInput<sp_Port>(Vec(x3, 6*yh+y1), module, Smoke::BLEND_INPUT));
+  addInput(createInput<sp_Port>(Vec(x1, 5.75*yh+y1), module, Smoke::DENSITY_INPUT));
+  addInput(createInput<sp_Port>(Vec(x2, 5.75*yh+y1), module, Smoke::TEXTURE_INPUT));
+  addInput(createInput<sp_Port>(Vec(x3, 5.75*yh+y1), module, Smoke::BLEND_INPUT));
  
-  addInput(createInput<sp_Port>(Vec(x1, 8.5*yh+y1), module, Smoke::SPREAD_INPUT));
-  addInput(createInput<sp_Port>(Vec(x2, 8.5*yh+y1), module, Smoke::FEEDBACK_INPUT));
-  addInput(createInput<sp_Port>(Vec(x3, 8.5*yh+y1), module, Smoke::REVERB_INPUT));
+  addInput(createInput<sp_Port>(Vec(x1, 8.25*yh+y1), module, Smoke::SPREAD_INPUT));
+  addInput(createInput<sp_Port>(Vec(x2, 8.25*yh+y1), module, Smoke::FEEDBACK_INPUT));
+  addInput(createInput<sp_Port>(Vec(x3, 8.25*yh+y1), module, Smoke::REVERB_INPUT));
+
+  addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 10*yh+y1), module, Smoke::IN_GAIN_PARAM, 0.0, 1.0, 0.5));
 
   addInput(createInput<sp_Port>(Vec(x1, 9.5*yh+y1), module, Smoke::IN_L_INPUT));
   addInput(createInput<sp_Port>(Vec(x1, 10.5*yh+y1), module, Smoke::IN_R_INPUT));

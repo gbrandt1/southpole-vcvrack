@@ -9,7 +9,7 @@ extern Plugin *plugin;
 // module widgets
 ////////////////////
 
-#ifndef PARASITES
+#ifdef PARASITES
 
 struct SmokeWidget : ModuleWidget {
 	SmokeWidget();
@@ -20,6 +20,8 @@ struct AnnuliWidget : ModuleWidget {
 	AnnuliWidget();
 	Menu *createContextMenu() override;
 };
+
+#else
 
 struct BalaclavaWidget : ModuleWidget {
 	BalaclavaWidget();
@@ -40,11 +42,11 @@ struct AbrWidget : ModuleWidget {
 struct EtagereWidget : ModuleWidget {
 	EtagereWidget();
 };
-/*
+
 struct SnsWidget : ModuleWidget {
 	SnsWidget();
 };
-*/
+
 struct BounceWidget : ModuleWidget {
 	BounceWidget();
 };
@@ -60,8 +62,6 @@ struct PisteWidget : ModuleWidget {
 struct FuseWidget : ModuleWidget {
 	FuseWidget();
 };
-
-#else
 
 struct CornrowsWidget : ModuleWidget {
 	CornrowsWidget();
@@ -82,9 +82,9 @@ struct SplashWidget : ModuleWidget {
 
 struct sp_Port : SVGPort {
 	sp_Port() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/sp-Port18.svg"));
+		background->svg = SVG::load(assetPlugin(plugin, "res/sp-Port20.svg"));
 		background->wrap();
-		box.size = background->box.size;
+		box.size = background->box.size; 
 	}
 };
 

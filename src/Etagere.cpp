@@ -5,6 +5,7 @@
 #include "dsp/digital.hpp"
 #include "VAStateVariableFilter.h"
 
+
 struct Etagere : Module {
     enum ParamIds {
         FREQ1_PARAM,
@@ -35,16 +36,22 @@ struct Etagere : Module {
 		IN_INPUT,
         NUM_INPUTS
     };
-        //HP2_OUTPUT,
-        //HP3_OUTPUT,
-        //BP2_OUTPUT,
-        //BP3_OUTPUT,
-        //LP2_OUTPUT,
-        //LP3_OUTPUT,
     enum OutputIds {
-		OUT_OUTPUT,
+		LP_OUTPUT,
+        BP2_OUTPUT,
+        BP3_OUTPUT,
+        HP_OUTPUT,
+        OUT_OUTPUT,
         NUM_OUTPUTS
     };
+	enum LightIds {
+		CLIP1_LIGHT,
+		CLIP2_LIGHT,
+		CLIP3_LIGHT,
+		CLIP4_LIGHT,
+		CLIP5_LIGHT,
+		NUM_LIGHTS
+	};
 
     VAStateVariableFilter lpFilter;
     VAStateVariableFilter bp2Filter;
@@ -52,20 +59,24 @@ struct Etagere : Module {
     VAStateVariableFilter hpFilter;
 
     Etagere() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {
-        reset();
+
+        params.resize(NUM_PARAMS);
+        inputs.resize(NUM_INPUTS);
+        outputs.resize(NUM_OUTPUTS);
+        lights.resize(NUM_LIGHTS);
+
+        lpFilter.setFilterType(SVFLowpass);
+        hpFilter.setFilterType(SVFHighpass);        
+		bp2Filter.setFilterType(SVFBandpass);
+        bp3Filter.setFilterType(SVFBandpass);
+        
     }
     void step() override;
 
-    void reset() override {
-        //for (int i = 0; i < NUM_CHANNELS; i++) {
-        //    state[i] = true;
-        //}
-    }
-    void randomize() override {
-        //for (int i = 0; i < NUM_CHANNELS; i++) {
-        //    state[i] = (randomf() < 0.5);
-        //}
-    }
+//    void reset() override {
+//    }
+//    void randomize() override {
+//    }
 
     json_t *toJson() override {
         json_t *rootJ = json_object();
@@ -89,82 +100,110 @@ struct Etagere : Module {
         //    }
         //}
     }
+
+    unsigned timer;
 };
 
 void Etagere::step() {
 
-        lpFilter.setFilterType(SVFLowpass);
-        hpFilter.setFilterType(SVFHighpass);
-        
-		bp2Filter.setFilterType(SVFBandpass);
-        bp3Filter.setFilterType(SVFBandpass);
+		float g_gain   = clampf(inputs[GAIN5_INPUT].normalize(0.), -1.0, 1.0);
+        float gain1 = clampf(g_gain + params[GAIN1_PARAM].value + inputs[GAIN1_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
+        float gain2 = clampf(g_gain + params[GAIN2_PARAM].value + inputs[GAIN2_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
+        float gain3 = clampf(g_gain + params[GAIN3_PARAM].value + inputs[GAIN3_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
+        float gain4 = clampf(g_gain + params[GAIN4_PARAM].value + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
 
-        lpFilter.setResonance(.5);
-        hpFilter.setResonance(.5);
+		float g_cutoff = clampf(inputs[FREQ5_INPUT].normalize(0.), -4.0, 6.0);
+        float freq1 = clampf(g_cutoff + params[FREQ1_PARAM].value + inputs[FREQ1_INPUT].normalize(0.), -4.0, 7.0);
+        float freq2 = clampf(g_cutoff + params[FREQ2_PARAM].value + inputs[FREQ2_INPUT].normalize(0.), -4.0, 7.0);
+        float freq3 = clampf(g_cutoff + params[FREQ3_PARAM].value + inputs[FREQ3_INPUT].normalize(0.), -4.0, 7.0);
+        float freq4 = clampf(g_cutoff + params[FREQ4_PARAM].value + inputs[FREQ4_INPUT].normalize(0.), -4.0, 7.0);
+
+        float reso2 = clampf(g_cutoff + params[Q2_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, .0, 1.0);
+        float reso3 = clampf(g_cutoff + params[Q3_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, .0, 1.0);
+
+        lpFilter.setQ(.5); //Resonance(.5);
+        hpFilter.setQ(.5); //Resonance(.5);
 
         lpFilter.setSampleRate(engineGetSampleRate());
         hpFilter.setSampleRate(engineGetSampleRate());
         bp2Filter.setSampleRate(engineGetSampleRate());
         bp3Filter.setSampleRate(engineGetSampleRate());
 
+        // For reference characteristics quoted from Shelves manual:
+        //
+        // Correction frequency range: 20 Hz to 20kHz.
+        // Correction frequency CV scale: 1V/Oct.
+        // Cut/boost range: -15dB to 15dB (knob), -40dB to 15dB (CV).
+        // Cut/boost CV scale: 3dB/V.
+        // Parametric correction Q: 0.5 to 20 (up to 1000 with external CV offset).
+
         float dry = inputs[IN_INPUT].value;
 
-		const float fmax = 20000.;
-		const float fmin = 30.;
+        //const float fmin = 16.4;
+        const float f0 = 261.626;
+		//const float fmax = log2f(16000./f0);
+		
+        const float rmax = 0.9995; // Qmax = 1000
+        //const float rmax = 0.975; // Qmax = 20
 
-		float g_cutoff = inputs[FREQ5_INPUT].value; 
-		float g_gain   = inputs[GAIN5_INPUT].value; 
 //		float g_cutoff = clampf( inputs[FREQ5_INPUT].value, -4., 4.); 
 //		float g_gain   = clampf( inputs[GAIN5_INPUT].value / 10.0, 0., 1.); 
 
-        const float f0 = 261.626;
+        float lp_cutoff  = f0 * powf(2.f, freq1);
+        float bp2_cutoff = f0 * powf(2.f, freq2);
+        float bp3_cutoff = f0 * powf(2.f, freq3);
+        float hp_cutoff  = f0 * powf(2.f, freq4);
 
-        float lp_cutoff = clampf(f0 * powf(2.f, params[FREQ1_PARAM].value + g_cutoff),fmin,fmax);
         lpFilter.setCutoffFreq(lp_cutoff);
-        lpFilter.setResonance( params[Q2_PARAM].value );
-        float lpout = lpFilter.processAudioSample(dry, 1);
+        //lpFilter.setResonance( params[Q2_PARAM].value );
 
-        float bp2_cutoff = clampf(f0 * powf(2.f, params[FREQ2_PARAM].value + g_cutoff),fmin,fmax);
         bp2Filter.setCutoffFreq(bp2_cutoff);
-        bp2Filter.setResonance( params[Q2_PARAM].value );
-        float bp2out = bp2Filter.processAudioSample(dry, 1);
+        bp2Filter.setResonance( rmax*reso2 );
 
-        float bp3_cutoff = clampf(f0 * powf(2.f, params[FREQ3_PARAM].value + g_cutoff),fmin,fmax);
         bp3Filter.setCutoffFreq(bp3_cutoff);
-        bp3Filter.setResonance( params[Q3_PARAM].value );
-        float bp3out = bp3Filter.processAudioSample(dry, 1);
+        bp3Filter.setResonance( rmax*reso3 );
 
-        float hp_cutoff = clampf(f0 * powf(2.f, params[FREQ4_PARAM].value + g_cutoff),fmin,fmax);
         hpFilter.setCutoffFreq(hp_cutoff);
-        hpFilter.setResonance( params[Q3_PARAM].value );
-        float hpout = hpFilter.processAudioSample(dry, 1);
+        //hpFilter.setResonance( params[Q3_PARAM].value );
 
-        const float gmax = 5.62;
-        //const float gmin = 0.177;
-
-		float lpgain  = clampf(params[GAIN1_PARAM].value + g_gain, 0., gmax);
-		float bp2gain = clampf(params[GAIN2_PARAM].value + g_gain, 0., gmax);
-		float bp3gain = clampf(params[GAIN3_PARAM].value + g_gain, 0., gmax);
-		float hpgain  = clampf(params[GAIN4_PARAM].value + g_gain, 0., gmax);
-		
-        outputs[OUT_OUTPUT].value = lpout*lpgain + hpout*hpgain +  bp2out*bp2gain + bp3out*bp3gain;
-
-}
+        float lpout  = lpFilter.processAudioSample(dry, 1);
+        float bp2out = bp2Filter.processAudioSample(dry, 1);
+        float bp3out = bp3Filter.processAudioSample(dry, 1);
+        float hpout  = hpFilter.processAudioSample(dry, 1);
 
 /*
-template <typename BASE>
-struct MuteLight : BASE {
-    MuteLight() {
-        this->box.size = (Vec(6.0, 6.0));
-    }
-};
+        timer++;
+        if (timer > engineGetSampleRate()/2.) {
+            timer = 0;
+            printf("%f %f %f %f\n", lp_cutoff, bp2_cutoff, bp3_cutoff, hp_cutoff);
+        }
 */
+		float lpgain  = pow(20.,-gain1); //clampf(params[GAIN1_PARAM].value + g_gain, 0., gmax);
+		float bp2gain = pow(20.,-gain2); //clampf(params[GAIN2_PARAM].value + g_gain, 0., gmax);
+		float bp3gain = pow(20.,-gain3); //clampf(params[GAIN3_PARAM].value + g_gain, 0., gmax);
+		float hpgain  = pow(20.,-gain4); //clampf(params[GAIN4_PARAM].value + g_gain, 0., gmax);
+
+        outputs[LP_OUTPUT].value  = lpout*lpgain;
+        outputs[BP2_OUTPUT].value = bp2out*bp2gain;
+        outputs[BP3_OUTPUT].value = bp3out*bp3gain;
+        outputs[HP_OUTPUT].value  = hpout*hpgain;
+		 
+        float sumout = lpout*lpgain + hpout*hpgain +  bp2out*bp2gain + bp3out*bp3gain;
+
+        outputs[OUT_OUTPUT].value = sumout;
+        
+ 
+	// Lights
+	//lights[CLIP5_LIGHT].value = fabs(sumout) > 10. ? 1.0 : 0.0;
+	//lights[CLIP_LIGHT].value = fabs(sumout) ? 1.0 : 0.0;
+    lights[CLIP5_LIGHT].setBrightnessSmooth( fabs(sumout) > 10. ? 1. : 0. );    
+}
 
 EtagereWidget::EtagereWidget() {
 
     Etagere *module = new Etagere();
     setModule(module);
-	box.size = Vec(15*8, 380);
+	box.size = Vec(15*6, 380);
 
     //setPanel(SVG::load(assetPlugin(plugin, "res/Etagere.svg")));
 	{
@@ -175,34 +214,35 @@ EtagereWidget::EtagereWidget() {
 	}
 
     const float x1 = 8;
-	const float x2 = 63;
-	const float x3 = 90;
+    const float x15 = 32;
+	const float x2 = 65;
+	
+    const float y1 = 5.;
+    const float yh = 25.;
 
-    const float y1 = 0;
-    const float yh = 25;
+    const float vfmin = -4.;
+    const float vfmax =  6.;
 
-    const float vfmin = -3.5;
-    const float vfmax = 3.7;
-
-    const float gmax = 5.62;
-    const float gmin = 0.177;
+    const float gmax = -1.;
+    const float gmin =  1.;
 
     // 880, 5000
 
     addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 1*yh), module, Etagere::FREQ1_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, Etagere::GAIN1_PARAM,  gmin,  gmax, 1.0));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, Etagere::GAIN1_PARAM,  gmin,  gmax, 0.));
 
     addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 3*yh), module, Etagere::FREQ2_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 4*yh), module, Etagere::GAIN2_PARAM,  gmin,  gmax, 1.0));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 5*yh), module, Etagere::Q2_PARAM,      0.0,   1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 4*yh), module, Etagere::GAIN2_PARAM,  gmin,  gmax, 0.));
+    addParam(createParam<sp_Trimpot>(Vec(x15, y1+ 5*yh), module, Etagere::Q2_PARAM,      0.0,   1.0, 0.));
     
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 6*yh), module, Etagere::FREQ3_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 7*yh), module, Etagere::GAIN3_PARAM,  gmin,  gmax, 1.0));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 8*yh), module, Etagere::Q3_PARAM,      0.0,   1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 7*yh), module, Etagere::GAIN3_PARAM,  gmin,  gmax, 0.));
+    addParam(createParam<sp_Trimpot>(Vec(x15, y1+ 8*yh), module, Etagere::Q3_PARAM,      0.0,   1.0, 0.));
     
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 9*yh), module, Etagere::FREQ4_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+10*yh), module, Etagere::GAIN4_PARAM,  gmin,  gmax, 1.0));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+10*yh), module, Etagere::GAIN4_PARAM,  gmin,  gmax, 0.));
 
+    addInput(createInput<sp_Port>(Vec(x1, y1+13* yh), module, Etagere::IN_INPUT));
     addInput(createInput<sp_Port>(Vec(x1, y1+ 1* yh), module, Etagere::FREQ1_INPUT));
     addInput(createInput<sp_Port>(Vec(x1, y1+ 2* yh), module, Etagere::GAIN1_INPUT));
 
@@ -217,18 +257,17 @@ EtagereWidget::EtagereWidget() {
     addInput(createInput<sp_Port>(Vec(x1, y1+ 9* yh), module, Etagere::FREQ4_INPUT));
     addInput(createInput<sp_Port>(Vec(x1, y1+10* yh), module, Etagere::GAIN4_INPUT));    
 	
-    addInput(createInput<sp_Port>(Vec(x1, y1+11.5* yh), module, Etagere::FREQ5_INPUT));
-    addInput(createInput<sp_Port>(Vec(x2, y1+11.5* yh), module, Etagere::GAIN5_INPUT));    
+    addInput(createInput<sp_Port>(Vec(x1, y1+11* yh), module, Etagere::FREQ5_INPUT));
+    addInput(createInput<sp_Port>(Vec(x1, y1+12* yh), module, Etagere::GAIN5_INPUT));    
 	
-    addInput(createInput<sp_Port>(Vec(x1, y1+13* yh), module, Etagere::IN_INPUT));
+    addOutput(createOutput<sp_Port>(Vec(x2, y1+0*yh), module, Etagere::LP_OUTPUT + 0));
+    addOutput(createOutput<sp_Port>(Vec(x2, y1+5*yh), module, Etagere::BP2_OUTPUT));
+    addOutput(createOutput<sp_Port>(Vec(x2, y1+8*yh), module, Etagere::BP3_OUTPUT));
+    addOutput(createOutput<sp_Port>(Vec(x2, y1+11*yh), module, Etagere::HP_OUTPUT + 0));
 
-/*
-    addOutput(createOutput<sp_Port>(Vec(x3, y1+3*yh), module, Etagere::LP2_OUTPUT + 0));
-    addOutput(createOutput<sp_Port>(Vec(x3, y1+4*yh), module, Etagere::BP2_OUTPUT + 0));
-    addOutput(createOutput<sp_Port>(Vec(x3, y1+5*yh), module, Etagere::HP2_OUTPUT + 0));
-    addOutput(createOutput<sp_Port>(Vec(x3, y1+6*yh), module, Etagere::LP3_OUTPUT + 0));
-    addOutput(createOutput<sp_Port>(Vec(x3, y1+7*yh), module, Etagere::BP3_OUTPUT + 0));
-    addOutput(createOutput<sp_Port>(Vec(x3, y1+8*yh), module, Etagere::HP3_OUTPUT + 0));
-*/
-    addOutput(createOutput<sp_Port>(Vec(x3, y1+13*yh), module, Etagere::OUT_OUTPUT));
+    addOutput(createOutput<sp_Port>(Vec(x2, y1+13*yh), module, Etagere::OUT_OUTPUT));
+
+	addChild(createLight<SmallLight<RedLight>>(Vec(x2+10., y1+12.5*yh), module, Etagere::CLIP5_LIGHT));
+
+//    printf("ok. %d\n", module->lights.size());
 }

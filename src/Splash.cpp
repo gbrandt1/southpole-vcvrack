@@ -213,20 +213,7 @@ SplashWidget::SplashWidget() {
 		sheepPanel->box.size = box.size;
 		addChild(sheepPanel);
 	}
-/*
-	{
-		tidesPanel = new LightPanel();
-		tidesPanel->backgroundImage = Image::load(assetPlugin(plugin, "res/Tides.png"));
-		tidesPanel->box.size = box.size;
-		addChild(tidesPanel);
-	}
-	{
-		sheepPanel = new LightPanel();
-		sheepPanel->backgroundImage = Image::load(assetPlugin(plugin, "res/Sheep.png"));
-		sheepPanel->box.size = box.size;
-		addChild(sheepPanel);
-	}
-*/	
+
   	const float x1 = 0.5*RACK_GRID_WIDTH;
   	const float x2 = 3.25*RACK_GRID_WIDTH;
   	const float x3 = 5.75*RACK_GRID_WIDTH; 

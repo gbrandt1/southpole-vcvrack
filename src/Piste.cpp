@@ -102,7 +102,7 @@ void Piste::step() {
 	outputs[OUT_OUTPUT].value = v;
 
 	// Lights
-	//lights[DECAY_LIGHT].value = (gated && decaying && !sustaining) ? 1.0 : 0.0;
+	lights[DECAY1_LIGHT].value = (env1 > 0.) ? 1.0 : 0.0;
 }
 
 
@@ -143,5 +143,5 @@ PisteWidget::PisteWidget() {
 	addInput(createInput<sp_Port>(Vec(x1, y1+7*yh), module, Piste::IN_INPUT));
 	addOutput(createOutput<sp_Port>(Vec(x2, y1+7*yh), module, Piste::OUT_OUTPUT));
 
-//	addChild(createLight<SmallLight<RedLight>>(Vec(94, 109), module, Piste::DECAY_LIGHT));
+	addChild(createLight<SmallLight<RedLight>>(Vec(x1, y1+8*yh), module, Piste::DECAY1_LIGHT));
 }

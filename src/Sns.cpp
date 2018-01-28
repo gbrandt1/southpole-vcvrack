@@ -30,7 +30,7 @@ struct Sns : Module {
 		ACCENT_OUTPUT,
 		NUM_OUTPUTS
 	};
-	enum LightIds {
+	enum LightIds {		
 		NUM_LIGHTS
 	};
 
@@ -40,21 +40,10 @@ struct Sns : Module {
 
 	void step() override;
 	void reset() override;
-/*
-	void onSampleRateChange() override;
-
-	json_t *toJson() override {
-		json_t *rootJ = json_object();
-		return rootJ;
-	}
-
-	void fromJson(json_t *rootJ) override {
-	}
-*/
 
 	Bjorklund euclid;
 	Bjorklund euclid2;
-	//std::vector<bool> 
+
 	std::array<bool,32> sequence;
 	std::array<bool,32> accents;
 
@@ -81,7 +70,7 @@ void Sns::reset() {
 	euclid.init(par_l,par_k);
 	euclid.iter();
 	euclid.rotater(par_s);
-//  euclid.print();
+	//  euclid.print();
     
 	euclid2.reset();	
 	if (par_a>0) {
@@ -108,38 +97,27 @@ void Sns::reset() {
     }
     std::cout << '\n';
 */
-	//std::copy(euclid.sequence.begin(), euclid.sequence.end(), sequence);
 
    	calculate = false;
 	from_reset = true;
 }
-/*
-void Sns::onSampleRateChange() {
-}
-*/
+
 void Sns::step() {
 
   	bool nextStep = false;
 
-	if (inputs[CLK_INPUT].active)
-	{
+	// reset sequence
+	if (inputs[RESET_INPUT].active) {
+		if (resetTrigger.process(inputs[RESET_INPUT].value)) {
+			currentStep = par_l;
+		}		
+	}	
+
+	if (inputs[CLK_INPUT].active) {
 		if (clockTrigger.process(inputs[CLK_INPUT].value)) {
 			nextStep = true;
 		}
 	}  
-
-	// reset sequence
-	if (from_reset) { 
-		//currentStep = par_l;
-		//nextStep = true;
-		from_reset = false;
-	}
-	if (inputs[RESET_INPUT].active) {
-		if (resetTrigger.process(inputs[RESET_INPUT].value)) {
-			currentStep = par_l;
-			//nextStep = true;
-		}		
-	}	
 
 	if (nextStep) {
 		
@@ -149,14 +127,13 @@ void Sns::step() {
 		}
 		
 		// no processing during recalculation
-		if ( !calculate)
+		//if ( !calculate)
 	    if (sequence[currentStep] ) {
 		  	gatePulse.trigger(1e-3);
 		} 
-//		  	if (par_a) {
-      //	if (accents.at( currentStep )) {
-	//	    accentPulse.trigger(1e-3);
-	  //	}					
+	  	if (par_a && accents.at( currentStep )) {
+			accentPulse.trigger(1e-3);
+	  	}					
 	} 
 
 
@@ -192,10 +169,13 @@ struct SnsDisplay : TransparentWidget {
 	int frame = 0;
 	std::shared_ptr<Font> font;
 
-	const float y1 = 180;
-	const float yh = 30;
+	float y1;
+	float yh;
 
-	SnsDisplay() {
+	SnsDisplay( float y1_, float yh_ ) {
+	  
+	  y1 = y1_;
+	  yh = yh_;
 	  //font = Font::load(assetPlugin(plugin, "res/fonts/Sudo.ttf"));
 	  font = Font::load(assetPlugin(plugin, "res/hdad-segment14-1.002/Segment14.ttf"));
 	}
@@ -207,10 +187,10 @@ struct SnsDisplay : TransparentWidget {
 		float cx = 0.5*b.size.x;
 		float cy = 0.5*b.size.y;
 		const float r1 = .45*b.size.x;
-		const float r2 = .35*b.size.x;
+		const float r2 = .25*b.size.x;
 
 		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0x7f));
-		nvgFillColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+		nvgFillColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));		
 		nvgBeginPath(vg);
 	    nvgCircle(vg, cx, cy, r1);
 	    nvgCircle(vg, cx, cy, r2);
@@ -224,9 +204,10 @@ struct SnsDisplay : TransparentWidget {
 			float y = cy + r * sinf(2.*M_PI*i/len-.5*M_PI);
 
 			nvgBeginPath(vg);
-			nvgStrokeWidth(vg, 1.);
-			nvgCircle(vg, x, y, 3.);
+			//nvgStrokeWidth(vg, 1.);
+			//nvgCircle(vg, x, y, 3.);
 			if ( i == module->currentStep  ) {
+				nvgCircle(vg, x, y, 3.);
 				nvgStrokeWidth(vg, 1.5);
 				if ( module->sequence[i] ) 	nvgFill(vg);
 			}	
@@ -295,6 +276,9 @@ SnsWidget::SnsWidget() {
 	setModule(module);
 	box.size = Vec(15*4, 380);
 
+	const float y1 = 180;
+	const float yh = 30;
+
 	{
 		SVGPanel *panel = new SVGPanel();
 		panel->box.size = box.size;
@@ -303,7 +287,7 @@ SnsWidget::SnsWidget() {
 	}
 
 	{
-		SnsDisplay *display = new SnsDisplay();
+		SnsDisplay *display = new SnsDisplay(y1,yh);
 		display->module = module;
 		display->box.pos = Vec( 0.05*box.size.x, 30);
 		display->box.size = Vec( .9*box.size.x, .9*box.size.x );

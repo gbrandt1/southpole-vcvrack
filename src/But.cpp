@@ -164,8 +164,8 @@ ButWidget::ButWidget()
 		addChild(panel);
 	}
 
-    const float x1 = 5.;
-    const float x2 = 5.+20.;
+    const float x1 = 3.;
+    const float x2 = 4.+20.;
     const float x3 = 5.+40.;
     const float x4 = 5.+63.;
 
@@ -177,7 +177,7 @@ ButWidget::ButWidget()
 
         addInput(createInput<sp_Port>(Vec(x1, yPos), module, But::IN1_INPUT + i));
         addOutput(createOutput<sp_Port>(Vec(x2, yPos), module, But::OUTA1_OUTPUT + i));
-        addParam(createParam<sp_Switch>(Vec(x3, 2 + yPos), module, But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
+        addParam(createParam<sp_Switch>(Vec(x3+1, 3 + yPos), module, But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
         addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, But::OUTB1_OUTPUT + i));
     }
 

@@ -1,6 +1,6 @@
 #include "Southpole.hpp"
 
-struct Tub : Module 
+struct Abr : Module 
 {
 	enum ParamIds 
 	{
@@ -61,7 +61,7 @@ struct Tub : Module
 
     bool swState[8] = {};
     
-	Tub() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
+	Abr() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
 	{
 		reset();
 	}
@@ -113,7 +113,7 @@ struct Tub : Module
 };
 
 
-void Tub::step() 
+void Abr::step() 
 {
     float outa = 0.;
     float outb = 0.;
@@ -144,21 +144,21 @@ void Tub::step()
     outputs[SUM_OUTPUT].value = out;
 }
 
-TubWidget::TubWidget() 
+AbrWidget::AbrWidget() 
 {
-	auto *module = new Tub();
+	auto *module = new Abr();
 	setModule(module);
 	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
 	{
 		auto *panel = new SVGPanel();
 		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Tub.svg")));
+		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Abr.svg")));
 		addChild(panel);
 	}
 
-    const float x1 = 5.;
-    const float x2 = 5.+20.;
+    const float x1 = 3.;
+    const float x2 = 4.+20.;
     const float x3 = 5.+43.;
     const float x4 = 5.+63.;
 
@@ -168,16 +168,16 @@ TubWidget::TubWidget()
     {
         yPos += 32.;
 
-        addInput(createInput<sp_Port>(Vec(x1, yPos), module, Tub::INA1_INPUT + i));
-        addParam(createParam<sp_Switch>(Vec(x2, 2 + yPos), module, Tub::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
-        addInput(createInput<sp_Port>(Vec(x3, yPos), module, Tub::INB1_INPUT + i));
-        addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, Tub::OUT1_OUTPUT + i));
+        addInput(createInput<sp_Port>(Vec(x1, yPos), module, Abr::INA1_INPUT + i));
+        addParam(createParam<sp_Switch>(Vec(x2+1, 3 + yPos), module, Abr::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
+        addInput(createInput<sp_Port>(Vec(x3, yPos), module, Abr::INB1_INPUT + i));
+        addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, Abr::OUT1_OUTPUT + i));
     }
 
     yPos += 48.;
-    addOutput(createOutput<sp_Port>(Vec(x1, yPos), module, Tub::SUMA_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec((x2+x3)/2., yPos), module, Tub::SUMB_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, Tub::SUM_OUTPUT));
+    addOutput(createOutput<sp_Port>(Vec(x1, yPos), module, Abr::SUMA_OUTPUT));
+    addOutput(createOutput<sp_Port>(Vec(x3, yPos), module, Abr::SUMB_OUTPUT));
+    addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, Abr::SUM_OUTPUT));
 }
 
 
