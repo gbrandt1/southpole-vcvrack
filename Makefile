@@ -4,7 +4,7 @@ VERSION = 0.5.1
 # FLAGS will be passed to both the C and C++ compiler
 FLAGS += \
 	-DTEST \
-	-I./parasites \
+	-I./eurorack \
 	-Wno-unused-local-typedefs
 
 CFLAGS +=
@@ -31,21 +31,20 @@ SOURCES += src/Piste.cpp
 SOURCES += src/Wriggle.cpp
 SOURCES += src/Fuse.cpp
 
-SOURCES += src/Annuli.cpp
-SOURCES += parasites/rings/dsp/fm_voice.cc
-SOURCES += parasites/rings/dsp/string_synth_part.cc
-SOURCES += parasites/rings/dsp/string.cc
-SOURCES += parasites/rings/dsp/resonator.cc
-SOURCES += parasites/rings/resources.cc
+SOURCES += src/Splash.cpp
+SOURCES += eurorack/stmlib/utils/random.cc
+SOURCES += eurorack/stmlib/dsp/atan.cc
+SOURCES += eurorack/stmlib/dsp/units.cc
+SOURCES += eurorack/stmlib/utils/random.cc
+SOURCES += eurorack/tides/generator.cc 
+SOURCES += eurorack/tides/resources.cc
 
-SOURCES += src/Smoke.cpp
-SOURCES += parasites/clouds/dsp/correlator.cc
-SOURCES += parasites/clouds/dsp/granular_processor.cc
-SOURCES += parasites/clouds/dsp/mu_law.cc
-SOURCES += parasites/clouds/dsp/pvoc/frame_transformation.cc
-SOURCES += parasites/clouds/dsp/pvoc/phase_vocoder.cc
-SOURCES += parasites/clouds/dsp/pvoc/stft.cc
-SOURCES += parasites/clouds/resources.cc 
+SOURCES += src/Cornrows.cpp	
+SOURCES += eurorack/braids/macro_oscillator.cc
+SOURCES += eurorack/stmlib/utils/random.cc
+SOURCES += eurorack/braids/analog_oscillator.cc
+SOURCES += eurorack/braids/digital_oscillator.cc
+SOURCES += eurorack/braids/resources.cc
 
 # Add files to the ZIP package when running `make dist`
 # The compiled plugin is automatically added.
@@ -53,3 +52,11 @@ DISTRIBUTABLES += $(wildcard LICENSE*) res
 
 # Include the VCV plugin Makefile framework
 include ../../plugin.mk
+
+dist: all
+	mkdir -p dist
+	rm -rf dist/$(SLUG)
+	mkdir -p dist/$(SLUG)
+	cp -R $(DISTRIBUTABLES) dist/$(SLUG)/
+	cd dist && zip -5 -r $(SLUG)-$(VERSION)-$(ARCH).zip $(SLUG)
+
