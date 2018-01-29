@@ -20,8 +20,8 @@ void init(rack::Plugin *p) {
 
 #ifdef PARASITES
     p->addModel(createModel<SmokeWidget>("Southpole", "Smoke", "Smoke", GRANULAR_TAG, REVERB_TAG));
-    p->addModel(createModel<AnnuliWidget>("Southpole", "Annuli", "Annuli", UTILITY_TAG));
 #else
+    p->addModel(createModel<AnnuliWidget>("Southpole", "Annuli", "Annuli", UTILITY_TAG));
     p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava", AMPLIFIER_TAG));
     p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana", AMPLIFIER_TAG));
     p->addModel(createModel<ButWidget>("Southpole", "But", "But", SWITCH_TAG, UTILITY_TAG));

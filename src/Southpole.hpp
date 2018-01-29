@@ -16,12 +16,12 @@ struct SmokeWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
+#else
+
 struct AnnuliWidget : ModuleWidget {
 	AnnuliWidget();
 	Menu *createContextMenu() override;
 };
-
-#else
 
 struct BalaclavaWidget : ModuleWidget {
 	BalaclavaWidget();
