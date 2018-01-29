@@ -262,11 +262,11 @@ struct CornrowsDisplay : TransparentWidget {
 		nvgStrokeColor(vg, borderColor);
 		nvgStroke(vg);
 
-		nvgFontSize(vg, 24);
+		nvgFontSize(vg, 20.);
 		nvgFontFaceId(vg, font->handle);
 		nvgTextLetterSpacing(vg, 2.);
 
-		Vec textPos = Vec(10, 30);
+		Vec textPos = Vec(5, 28);
 		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
 		nvgFillColor(vg, nvgTransRGBA(textColor, 16));
 		nvgText(vg, textPos.x, textPos.y, "~~~~", NULL);
@@ -279,43 +279,38 @@ struct CornrowsDisplay : TransparentWidget {
 CornrowsWidget::CornrowsWidget() {
 	Cornrows *module = new Cornrows();
 	setModule(module);
-	box.size = Vec( 8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT );
+	box.size = Vec( 6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT );
 
 	{
 		SVGPanel *panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Cornrows.svg")));
+		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Cornrows6HP.svg")));
 		panel->box.size = box.size;
 		addChild(panel);	
 	}
 
 	{
 		CornrowsDisplay *display = new CornrowsDisplay();
-		display->box.pos = Vec(9, 40);
-		display->box.size = Vec(112*.9, .9*40);
+		display->box.pos = Vec(5, 40);
+		display->box.size = Vec(90.-10., 34.);
 		display->module = module;
 		addChild(display);
 	}
 
-    const float x1 = 12;
-    const float x2 = 48;
-    const float x3 = 85;
+    const float x1 = 4.;
+    const float x2 = 36.;
+    const float x3 = 64.;
 
     const float y1 = 155;	
     const float yh = 40;
 
-	//addChild(createScrew<ScrewBlack>(Vec(RACK_GRID_WIDTH, 0)));
-	//addChild(createScrew<ScrewBlack>(Vec(6 * RACK_GRID_WIDTH, 0)));
-	//addChild(createScrew<ScrewBlack>(Vec(RACK_GRID_WIDTH, 365)));
-	//addChild(createScrew<ScrewBlack>(Vec(6 * RACK_GRID_WIDTH, 365)));
-
-	addParam(createParam<sp_Encoder>(Vec(x3-15, 90), module, Cornrows::SHAPE_PARAM, 0.0, 1.0, 0.0));
+	addParam(createParam<sp_Encoder>(Vec(x3-25., 90), module, Cornrows::SHAPE_PARAM, 0.0, 1.0, 0.0));
 
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1), module, Cornrows::FINE_PARAM, -1.0, 1.0, 0.0));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1), module, Cornrows::COARSE_PARAM, -2.0, 2.0, 0.0));
 	
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+yh), module, Cornrows::FM_PARAM, -1.0, 1.0, 0.0));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2*yh), module, Cornrows::TIMBRE_PARAM, 0.0, 1.0, 0.5));
-	addParam(createParam<sp_Trimpot>(Vec(x2, y1+2.25*yh), module, Cornrows::MODULATION_PARAM, -1.0, 1.0, 0.0));
+	addParam(createParam<sp_Trimpot>(Vec(x2, y1+2.5*yh), module, Cornrows::MODULATION_PARAM, -1.0, 1.0, 0.0));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+3*yh), module, Cornrows::COLOR_PARAM, 0.0, 1.0, 0.5));
 
 	addInput(createInput<sp_Port>(Vec(x1, y1-yh), module, Cornrows::TRIG_INPUT));
@@ -324,7 +319,7 @@ CornrowsWidget::CornrowsWidget() {
 	addInput(createInput<sp_Port>(Vec(x1, y1+2*yh), module, Cornrows::TIMBRE_INPUT));
 	addInput(createInput<sp_Port>(Vec(x1, y1+3*yh), module, Cornrows::COLOR_INPUT));
 
-	addOutput(createOutput<sp_Port>(Vec(x2, y1+3.75*yh), module, Cornrows::OUT_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x2, y1+4*yh), module, Cornrows::OUT_OUTPUT));
 }
 
 struct CornrowsSettingItem : MenuItem {

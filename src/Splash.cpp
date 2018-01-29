@@ -115,7 +115,10 @@ void Splash::step() {
 		generator.set_mode(mode);
 	}
 	lights[MODE_GREEN_LIGHT].value = (mode == 2) ? 1.0 : 0.0;
+	lights[MODE_GREEN_LIGHT].value = (mode == 0) ? 0.0 : 1.0;
+
 	lights[MODE_RED_LIGHT].value = (mode == 0) ? 1.0 : 0.0;
+	lights[MODE_RED_LIGHT].value = (mode == 2) ? 0.0 : 1.0;
 
 	tides::GeneratorRange range = generator.range();
 	if (rangeTrigger.process(params[RANGE_PARAM].value)) {
@@ -123,7 +126,10 @@ void Splash::step() {
 		generator.set_range(range);
 	}
 	lights[RANGE_GREEN_LIGHT].value = (range == 2) ? 1.0 : 0.0;
+	lights[RANGE_GREEN_LIGHT].value = (range == 0) ? 0.0 : 1.0;
+
 	lights[RANGE_RED_LIGHT].value = (range == 0) ? 1.0 : 0.0;
+	lights[RANGE_RED_LIGHT].value = (range == 2) ? 0.0 : 1.0;
 
 	// Buffer loop
 	if (++frame >= 16) {
@@ -221,11 +227,14 @@ SplashWidget::SplashWidget() {
   	const float y2 = 25.0f;
   	const float yh = 38.0f;
 
-	addParam(createParam<CKD6>(Vec(x3,y1), module, Splash::MODE_PARAM, 0.0, 1.0, 0.0));
+	addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, Splash::MODE_PARAM, 0.0, 1.0, 0.0));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+16, y1-13), module, Splash::MODE_GREEN_LIGHT));
 
-	addParam(createParam<CKD6>(Vec(x3,y1+1.5*yh), module, Splash::RANGE_PARAM, 0.0, 1.0, 0.0));
-	addParam(createParam<sp_BlackKnob>(Vec(x2-5,y2+1.6*yh), module, Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x2,y2+3*yh+8), module, Splash::FM_PARAM, -12.0, 12.0, 0.0));
+	addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, Splash::RANGE_PARAM, 0.0, 1.0, 0.0));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+16, y1+5+yh), module, Splash::RANGE_GREEN_LIGHT));
+
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+1.6*yh), module, Splash::PHASE_GREEN_LIGHT));
+	addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
 
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, Splash::SHAPE_PARAM, -1.0, 1.0, 0.0));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, Splash::SLOPE_PARAM, -1.0, 1.0, 0.0));
@@ -236,23 +245,21 @@ SplashWidget::SplashWidget() {
 	addInput(createInput<sp_Port>(Vec(x2, y1), module, Splash::FREEZE_INPUT));
 
 	addInput(createInput<sp_Port>(Vec(x1, y2+2*yh), module, Splash::PITCH_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y2+3*yh), module, Splash::FM_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1,   y2+3.25*yh), module, Splash::FM_INPUT));
+	addParam(createParam<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, Splash::FM_PARAM, -12.0, 12.0, 0.0));
 
 	addInput(createInput<sp_Port>(Vec(x1, y2+4*yh), module, Splash::SHAPE_INPUT));
 	addInput(createInput<sp_Port>(Vec(x1, y2+4.75*yh), module, Splash::SLOPE_INPUT));
 	addInput(createInput<sp_Port>(Vec(x1, y2+5.5*yh), module, Splash::SMOOTHNESS_INPUT));
 
-	addInput(createInput<sp_Port>(Vec(x3, y1+6*yh), module, Splash::LEVEL_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y1+6*yh), module, Splash::CLOCK_INPUT));
+	addInput(createInput<sp_Port>(Vec(x3, y1+5.9*yh), module, Splash::LEVEL_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+5.9*yh), module, Splash::CLOCK_INPUT));
 
-	addOutput(createOutput<sp_Port>(Vec(x1, y1+7*yh), module, Splash::HIGH_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x1+1*28., y1+7*yh), module, Splash::LOW_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x1+2*28., y1+7*yh), module, Splash::UNI_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x1+3*28., y1+7*yh), module, Splash::BI_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x1, y1+7.125*yh), module, Splash::HIGH_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x1+1*28., y1+7.125*yh), module, Splash::LOW_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x1+2*28., y1+7.125*yh), module, Splash::UNI_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x1+3*28., y1+7.125*yh), module, Splash::BI_OUTPUT));
 
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, y1+10), module, Splash::MODE_GREEN_LIGHT));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, y1+3*yh), module, Splash::PHASE_GREEN_LIGHT));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, y2+2*yh+10), module, Splash::RANGE_GREEN_LIGHT));
 }
 
 void SplashWidget::step() {
