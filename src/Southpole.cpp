@@ -10,7 +10,11 @@ void init(rack::Plugin *p) {
 	// It must only contain letters, numbers, and characters "-" and "_". No spaces.
 	// To guarantee uniqueness, it is a good idea to prefix the slug by your name, alias, or company name if available, e.g. "MyCompany-MyPlugin".
 	// The ZIP package must only contain one folder, with the name equal to the plugin's slug.
+#ifdef PARASITES
 	p->slug = "Southpole";
+#else
+	p->slug = "Southpole-parasites";    
+#endif
 	p->version = TOSTRING(VERSION);
 	p->website = "https://github.com/gbrandt1/southpole-vcvrack";
 	p->manual = "https://github.com/gbrandt1/southpole-vcvrack/blob/master/README.md";
@@ -19,20 +23,20 @@ void init(rack::Plugin *p) {
 	//p->addModel(createModel<MyModuleWidget>("Southpole", "MyModule", "My Module", //OSCILLATOR_TAG));
 
 #ifdef PARASITES
-    p->addModel(createModel<SmokeWidget>("Southpole", "Smoke", "Smoke", GRANULAR_TAG, REVERB_TAG));
+    p->addModel(createModel<SmokeWidget>("Southpole", "Smoke", "Smoke - texture synth", GRANULAR_TAG, REVERB_TAG));
 #else
-    p->addModel(createModel<AnnuliWidget>("Southpole", "Annuli", "Annuli", UTILITY_TAG));
-    p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava", AMPLIFIER_TAG));
-    p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana", AMPLIFIER_TAG));
-    p->addModel(createModel<ButWidget>("Southpole", "But", "But", SWITCH_TAG, UTILITY_TAG));
-    p->addModel(createModel<AbrWidget>("Southpole", "Abr", "Abr", SWITCH_TAG, UTILITY_TAG));
-    p->addModel(createModel<EtagereWidget>("Southpole", "Etagere", "Etagere", FILTER_TAG));
-    p->addModel(createModel<SnsWidget>("Southpole", "SNS", "SNS", SEQUENCER_TAG));
-    p->addModel(createModel<PisteWidget>("Southpole", "Piste", "Piste", ENVELOPE_GENERATOR_TAG, EFFECT_TAG, UTILITY_TAG));
-    p->addModel(createModel<WriggleWidget>("Southpole", "Wriggle", "Wriggle", LFO_TAG, FUNCTION_GENERATOR_TAG));
-    p->addModel(createModel<FuseWidget>("Southpole", "Fuse", "Fuse", SEQUENCER_TAG));
-    p->addModel(createModel<CornrowsWidget>("Southpole", "Cornrows", "Cornrows", OSCILLATOR_TAG, WAVESHAPER_TAG));
-	p->addModel(createModel<SplashWidget>("Southpole", "Splash", "Splash", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
+    p->addModel(createModel<AnnuliWidget>("Southpole", "Annuli", "Annuli - resonator"));
+    p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava - VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
+    p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana - VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
+    p->addModel(createModel<ButWidget>("Southpole", "But", "But - A/B buss", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
+    p->addModel(createModel<AbrWidget>("Southpole", "Abr", "Abr - A/B switch", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
+    p->addModel(createModel<EtagereWidget>("Southpole", "Etagere", "Etagere - EQ", FILTER_TAG));
+    p->addModel(createModel<SnsWidget>("Southpole", "SNS", "SNS - euclidean sequencer", SEQUENCER_TAG));
+    p->addModel(createModel<PisteWidget>("Southpole", "Piste", "Piste - drum processor", ENVELOPE_GENERATOR_TAG, EFFECT_TAG, UTILITY_TAG));
+    p->addModel(createModel<WriggleWidget>("Southpole", "Wriggle", "Wriggle - spring model", LFO_TAG, FUNCTION_GENERATOR_TAG));
+    p->addModel(createModel<FuseWidget>("Southpole", "Fuse", "Fuse - next pattern", SEQUENCER_TAG));
+    p->addModel(createModel<CornrowsWidget>("Southpole", "Cornrows", "Cornrows - macro oscillator", OSCILLATOR_TAG, WAVESHAPER_TAG));
+	p->addModel(createModel<SplashWidget>("Southpole", "Splash", "Splash / Lambs - tidal modulator", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
 #endif
 }
 

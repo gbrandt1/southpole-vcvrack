@@ -1,17 +1,19 @@
 # southpole-vcvrack
 
-### Please note: Currently no stable / compilable tag is announced yet. Stay tuned!!!
-
-![All](./doc/sp-all-2018-01-22.png)
+![All](./doc/sp-all-2018-01-30.png)
 
 Southpole VCV Rack Modules
 
-These modules are mainly reskins of the existing Audible Instruments /
+A personal collection of modules I've always wanted for my workflow.
+
+Some of the modules are simply reskins of the existing Audible Instruments /
 Arable Instruments VCV Rack versions of Mutable Instruments eurorack modules.
+
 - The skins are inspired by hardware micro versions of various MI modules.
 - Some skins do not exist yet in hardware.
-- Other modules did not yet exist in VCV Rack versions.
-- Compiled agaist parasites firmware where possible. (Required a few fixes which is why it is checked in here) 
+- Some modules did not yet exist in VCV Rack versions.
+- Some modules are new.
+- Compiled agaist parasites firmware where available (Required a few fixes which is why it is checked in here)
 
 - [Mutable Instruments](https://mutable-instruments.net/)
 - [Audible Instruments](https://github.com/VCVRack/AudibleInstruments/)
@@ -25,6 +27,20 @@ After checking out in the `plugins/` directory, get external dependencies with
 
 	git submodule update --init --recursive
 
+Build main modules
+
+	make dist
+	cp -r dist/Southpole ..
+
+Build parasite based modules
+
+	make clean
+	make -f Makefile.parasites dist
+	cp -r dist/Southpole-parasites ..
+
+Remove development library
+
+(Note: Right now the make system doesn't seem to pick up the plugin libraries? --> copy manually)
 
 ## Modules copied from Audible Instruments / Arable Instruments
 
