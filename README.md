@@ -30,17 +30,12 @@ After checking out in the `plugins/` directory, get external dependencies with
 Build main modules
 
 	make dist
-	cp -r dist/Southpole ..
-
-Build parasite based modules
+	
+Build parasite based modules (only Smoke, for now not included in binary release)
 
 	make clean
 	make -f Makefile.parasites dist
 	cp -r dist/Southpole-parasites ..
-
-Remove development library
-
-(Note: Right now the make system doesn't seem to pick up the plugin libraries? --> copy manually)
 
 ## Modules copied from Audible Instruments / Arable Instruments
 
@@ -60,7 +55,8 @@ Remove development library
 ### Smoke - Texture Synthesizer
 Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](https://mutable-instruments.net/modules/clouds/manual/)
 
-- parasites firmware (Neil)
+- Humo: eurorack firmware
+- Smoke: parasites firmware (Neil)
 
 ### Annuli - Resonator
 - Based on [Rings](https://mutable-instruments.net/modules/rings), [Manual](https://mutable-instruments.net/modules/rings/manual/)
