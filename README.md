@@ -75,6 +75,15 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves)
 - Inverse of But, either input A or B goes to output
 - Sums of inputs set to A or B provided
 
+### SNS - Euclidean Sequencer
+
+- i know. but this one looks cool and has a few additional features:
+- up to 32 steps
+- rotate sequence
+- up to 32 pads (silent steps) - for bursts
+- accents, accent rotation: nested euclidean sequence on main sequence
+- all inputs scaled to each other in what i think is a sensible way
+
 ### Piste - Drum Processor
 
 - one-stop module to turn oscillators into drums / percussion 

@@ -84,6 +84,12 @@ struct Bjorklund
         }
     }
 
+    void pad(int p) {
+        for (int i=0; i<p; i++) {
+            sequence.push_back(0);
+        }
+    }
+
     void rotater(int r) {
 
         for (int i=0; i<r; i++) {

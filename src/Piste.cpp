@@ -6,8 +6,8 @@
 
 struct Piste : Module {
 	enum ParamIds {
-		LP_PARAM,
-		HP_PARAM,
+		FREQ_PARAM,
+		RESO_PARAM,
 		DECAY1_PARAM,
 		DECAY2_PARAM,
 		SCALE1_PARAM,
@@ -40,7 +40,6 @@ struct Piste : Module {
 
     VAStateVariableFilter lpFilter;
     VAStateVariableFilter hpFilter;
-    VAStateVariableFilter bpFilter;
 
 	float env1 = 0.0;
 	float env2 = 0.0;
@@ -60,7 +59,7 @@ struct Piste : Module {
 
         lpFilter.setFilterType(SVFLowpass);
         hpFilter.setFilterType(SVFHighpass);        
-        bpFilter.setFilterType(SVFBandpass);
+        //bpFilter.setFilterType(SVFBandpass);
 	}
 	void step() override;
 
@@ -74,8 +73,10 @@ void Piste::step() {
     
 	float drive = clampf(params[DRIVE_PARAM].value, 0, 1.0);
 
-    float lpgain = pow( 20., clampf(params[LP_PARAM].value, -1.0, 1.0));
-    float hpgain = pow( 20., clampf(params[HP_PARAM].value, -1.0, 1.0));
+    //float lpgain = pow( 20., clampf(params[FREQ_PARAM].value, -1.0, 1.0));
+    //float hpgain = pow( 20., clampf(params[RESO_PARAM].value, -1.0, 1.0));
+	float freq = clampf(params[FREQ_PARAM].value, -1., 1.0);
+    float reso = clampf(params[RESO_PARAM].value, .0, 1.0);
 
 	float decay1 = 			clampf(params[DECAY1_PARAM].value + inputs[DECAY1_INPUT].value / 10.0, 0.0, 1.0);
 	float decay2 = decay1 * clampf(params[DECAY2_PARAM].value + inputs[DECAY2_INPUT].value / 10.0, 0.0, 1.0);
@@ -97,17 +98,13 @@ void Piste::step() {
 	const float base = 20000.0;
 	const float maxTime = 1.0;
 
-	if (decay1 < 1e-4) {
-		env1 = 0.;
-	}
-	else {
+	if (decay1 < 1e-4) { env1 = 0.;
+	} else {
 		env1 += powf(base, 1. - decay1) / maxTime * ( - env1) / engineGetSampleRate();
 	}
 
-	if (decay2 < 1e-4) {
-		env2 = 0.;
-	}
-	else {
+	if (decay2 < 1e-4) { env2 = 0.;
+	} else {
 		env2 += powf(base, 1. - decay2) / maxTime * ( - env2) / engineGetSampleRate();
 	}
 
@@ -116,53 +113,36 @@ void Piste::step() {
 
 	// VCA
 	float v = inputs[IN_INPUT].value;
-
-
-//        timer++;
-//        if (timer > engineGetSampleRate()/2.) {
-//            timer = 0;
-//            printf("%f %f %f %f\n", lp_cutoff, bp2_cutoff, bp3_cutoff, hp_cutoff);
-//        }
 	 
 	// DRIVE
-
 	v = (1.-drive)*v + drive * 10.*tanhf(10.*drive*v);
 
-    // EQ
-	lpFilter.setQ(.5);
-    lpFilter.setSampleRate(engineGetSampleRate());
-    lpFilter.setCutoffFreq(250.);
+    const float f0 = 261.626;		
+    const float rmax = 0.9995; // Qmax = 1000
 
-    hpFilter.setQ(.5);
-    hpFilter.setSampleRate(engineGetSampleRate());
-    hpFilter.setCutoffFreq(2000.);
-/*
-	lp2Filter.setQ(.5);
-    lp2Filter.setSampleRate(engineGetSampleRate());
-    lp2Filter.setCutoffFreq(4000.);
-*/
-    bpFilter.setQ(.25);
-    bpFilter.setSampleRate(engineGetSampleRate());
-    bpFilter.setCutoffFreq(600.);
+	float fout = v;
 
-    float lpout  = lpFilter.processAudioSample( v, 1);
-    float hpout  = hpFilter.processAudioSample( v, 1);
-    float bpout  = bpFilter.processAudioSample( v, 1);
+    // FILTER	
+	if (freq < 0.) {
 
-	//float lp2pout = v; //lp2Filter.processAudioSample( v, 1);
-	//float out = hp2Filter.processAudioSample( v, 1);
+	    float lp_cutoff  = f0 * powf(2.f, 8.*(freq+1.)-4.);
+		lpFilter.setResonance(reso*rmax);
+    	lpFilter.setSampleRate(engineGetSampleRate());
+    	lpFilter.setCutoffFreq(lp_cutoff);
+    	fout  = lpFilter.processAudioSample( v, 1);
+	}
+	else if ( freq > 0.) {
 
-	//float mids = v - lpout - hpout;
+	    float hp_cutoff  = f0 * powf(2.f, 8.*freq-3.);
+    	hpFilter.setResonance(reso*rmax);
+    	hpFilter.setSampleRate(engineGetSampleRate());
+    	hpFilter.setCutoffFreq(hp_cutoff);
+    	fout  = hpFilter.processAudioSample( v, 1);
+	}
 
 	// VCA
-	v = lpout*lpgain + 4.*bpout + hpout*hpgain;
-	//if (lpgain >= 1.) {
-	//	v = v - lpout + lpout * lpgain;
-	//} else {
-	//	v = hp2out/lpgain;
-	//}
-	//v = v * 10.* scale1 * env1 * (1. + 10* scale2 * env2);
-
+	
+	v = fout * 10.*scale1 * env1 * (1. + 10* scale2 * env2);
 
 	outputs[OUT_OUTPUT].value = v;
 
@@ -185,7 +165,7 @@ PisteWidget::PisteWidget() {
 	}
 
 	const float x1 = 5.;	
-	const float x2 = 33.;
+	const float x2 = 36.;
 
 	const float y1 = 47.;
 	const float yh = 31.;
@@ -194,11 +174,11 @@ PisteWidget::PisteWidget() {
 	addInput(createInput<sp_Port>(Vec(x1, y1), module, Piste::IN_INPUT));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1), module, Piste::DRIVE_PARAM, 0.0, 1.0, 0.0));
 	
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+1*yh), module, Piste::LP_PARAM, -1.0, 1.0, 0.));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Piste::HP_PARAM, -1.0, 1.0, 0.));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+1*yh), module, Piste::FREQ_PARAM, -1.0, 1.0, 0.));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Piste::RESO_PARAM, .0, 1.0, 0.));
 
-	addChild(createLight<SmallLight<RedLight>>(Vec(x1, y1+2*yh), module, Piste::DECAY1_LIGHT));
-	addChild(createLight<SmallLight<RedLight>>(Vec(x2, y1+2*yh), module, Piste::DECAY2_LIGHT));
+	addChild(createLight<SmallLight<RedLight>>(Vec(x1+6, y1+2*yh+5), module, Piste::DECAY1_LIGHT));
+	addChild(createLight<SmallLight<RedLight>>(Vec(x2+6, y1+2*yh+5), module, Piste::DECAY2_LIGHT));
 
 	addInput(createInput<sp_Port>(Vec(x1, y1+2.5*yh), module, Piste::TRIG1_INPUT));
 	addInput(createInput<sp_Port>(Vec(x2, y1+2.5*yh), module, Piste::TRIG2_INPUT));
