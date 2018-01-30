@@ -184,32 +184,39 @@ struct SnsDisplay : TransparentWidget {
 		
 		Rect b = Rect(Vec(2, 2), box.size.minus(Vec(2, 2)));
 
-		float cx = 0.5*b.size.x;
-		float cy = 0.5*b.size.y;
+		float cx = 0.5*b.size.x+1;
+		float cy = 0.5*b.size.y-6;
 		const float r1 = .45*b.size.x;
-		const float r2 = .25*b.size.x;
+		const float r2 = .3*b.size.x;
 
-		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0x7f));
-		nvgFillColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));		
 		nvgBeginPath(vg);
+		nvgStrokeColor(vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
+		nvgFillColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));		
+		nvgStrokeWidth(vg, 1.);
 	    nvgCircle(vg, cx, cy, r1);
 	    nvgCircle(vg, cx, cy, r2);
 		nvgStroke(vg);
-//		std::vector<bool>::iterator it = euclid.sequence.begin();
+
 		unsigned len = module->par_l;
-		//printf("%d \n", len);
+
 		for (unsigned i = 0; i < len; i++) {
+
 			float r = module->accents[i] ? r1 : r2;
 			float x = cx + r * cosf(2.*M_PI*i/len-.5*M_PI);
 			float y = cy + r * sinf(2.*M_PI*i/len-.5*M_PI);
 
 			nvgBeginPath(vg);
-			//nvgStrokeWidth(vg, 1.);
-			//nvgCircle(vg, x, y, 3.);
+			nvgStrokeColor(vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
+			nvgStrokeWidth(vg, 1.);
+			nvgCircle(vg, x, y, 3.);
 			if ( i == module->currentStep  ) {
 				nvgCircle(vg, x, y, 3.);
 				nvgStrokeWidth(vg, 1.5);
-				if ( module->sequence[i] ) 	nvgFill(vg);
+				if ( module->sequence[i] ) {
+					nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+					nvgFill(vg);
+				}
+				nvgLineTo(vg, cx, cy);
 			}	
 			nvgStroke(vg);
 		}
@@ -250,13 +257,25 @@ struct SnsDisplay : TransparentWidget {
 		   module->reset();		
 		}
 
+		// Background
+		NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
+		NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+		nvgFillColor(vg, backgroundColor);
+		nvgFill(vg);
+		nvgStrokeWidth(vg, 1.5);
+		nvgStrokeColor(vg, borderColor);
+		nvgStroke(vg);
+
+
 		drawPolygon(vg);
 
 		nvgFontSize(vg, 8);
 		nvgFontFaceId(vg, font->handle);
 //		nvgTextLetterSpacing(vg, 2.);
 
-		Vec textPos = Vec(8, 100);
+		Vec textPos = Vec(2, 95);
 		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
 		nvgFillColor(vg, nvgTransRGBA(textColor, 16));
 		//nvgText(vg, textPos.x, textPos.y, "~~~~", NULL);
@@ -266,7 +285,7 @@ struct SnsDisplay : TransparentWidget {
 		nvgText(vg, textPos.x, textPos.y, str, NULL);
 
 		snprintf(str,sizeof(str),"%2d %2d",int(module->par_s),int(module->par_a));
-		nvgText(vg, textPos.x, textPos.y+10., str, NULL);
+		nvgText(vg, textPos.x+36, textPos.y, str, NULL);
 	}
 };
 
@@ -274,7 +293,7 @@ struct SnsDisplay : TransparentWidget {
 SnsWidget::SnsWidget() {
 	Sns *module = new Sns();
 	setModule(module);
-	box.size = Vec(15*4, 380);
+	box.size = Vec(15*6, 380);
 
 	const float y1 = 180;
 	const float yh = 30;
@@ -289,8 +308,8 @@ SnsWidget::SnsWidget() {
 	{
 		SnsDisplay *display = new SnsDisplay(y1,yh);
 		display->module = module;
-		display->box.pos = Vec( 0.05*box.size.x, 30);
-		display->box.size = Vec( .9*box.size.x, .9*box.size.x );
+		display->box.pos = Vec( 3., 30);
+		display->box.size = Vec(box.size.x-6., 100. );
 		addChild(display);
 	}
 

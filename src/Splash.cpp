@@ -292,7 +292,7 @@ Menu *SplashWidget::createContextMenu() {
 	assert(tides);
 
 	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<SplashSheepItem>(&MenuEntry::text, "Sheep", &SplashSheepItem::tides, tides));
+	menu->addChild(construct<SplashSheepItem>(&MenuEntry::text, "Lambs", &SplashSheepItem::tides, tides));
 
 	return menu;
 }

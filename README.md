@@ -61,8 +61,8 @@ Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](http
 Inspired by [Shelves](https://mutable-instruments.net/modules/shelves)
 [Manual](https://mutable-instruments.net/modules/shelves/manual/)
 
-- experimental - does not fully reproduce all characteristics of Shelves!
-- filter code copied from RJModules Filters
+- does not fully reproduce all characteristics of Shelves!
+- biquad filters copied from RJModules Filters
 
 ### But - Manual A/B Buss 
 
@@ -77,19 +77,19 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves)
 
 ### Piste - Drum Processor
 
-- inspired by [Bastl Skis](http://www.bastl-instruments.com/modular/skis/)
 - one-stop module to turn oscillators into drums / percussion 
-- input gain + eq
+- inspired by [Bastl Skis](http://www.bastl-instruments.com/modular/skis/)
+- input gain + eq + overdrive because sometimes basic processing is all that's needed
 - 2 independent decay envelopes (eg. body and accent) the sum of which is applied to input signal via internal VCA
 - 2nd envelope is scaled to 1st
 - triggers are scalable
-- overdrive in output stage
+- mute input / trigger veto intended for choke groups (eg. open hihat mutes closed hihat)
 
 ### Fuse - Synchronized one-shot triggers
 
-- tool to help keep time in 4/4 based music
-- can be used to launch triggers ONCE at a given step on a 16 step counter
-- intended to build a "queue next pattern" system like on groove boxes
-- Arm triggers manually or via inputs
+- intended to build a "queue next pattern" system like on groove boxes / drum machines
+- helps fire synchronized events in 4/4 based music if you can't count like me
+- can be used to launch triggers (or beat-long gates) ONCE at a given beat on a 16 step counter
+- arm triggers/gates manually or via inputs
 - for example, clock with bars, trigger to mute the kick for exactly 4 bars, trigger 4 bar later to drop
 

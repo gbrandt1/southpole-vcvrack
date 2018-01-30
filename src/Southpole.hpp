@@ -61,6 +61,7 @@ struct PisteWidget : ModuleWidget {
 
 struct FuseWidget : ModuleWidget {
 	FuseWidget();
+	Menu *createContextMenu() override;
 };
 
 struct CornrowsWidget : ModuleWidget {

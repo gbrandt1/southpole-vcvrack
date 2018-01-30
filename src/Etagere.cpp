@@ -101,7 +101,7 @@ struct Etagere : Module {
         //}
     }
 
-    unsigned timer;
+    //unsigned timer;
 };
 
 void Etagere::step() {
