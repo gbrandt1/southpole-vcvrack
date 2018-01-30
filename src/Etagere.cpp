@@ -146,9 +146,6 @@ void Etagere::step() {
         const float rmax = 0.9995; // Qmax = 1000
         //const float rmax = 0.975; // Qmax = 20
 
-//		float g_cutoff = clampf( inputs[FREQ5_INPUT].value, -4., 4.); 
-//		float g_gain   = clampf( inputs[GAIN5_INPUT].value / 10.0, 0., 1.); 
-
         float lp_cutoff  = f0 * powf(2.f, freq1);
         float bp2_cutoff = f0 * powf(2.f, freq2);
         float bp3_cutoff = f0 * powf(2.f, freq3);
@@ -178,10 +175,10 @@ void Etagere::step() {
             printf("%f %f %f %f\n", lp_cutoff, bp2_cutoff, bp3_cutoff, hp_cutoff);
         }
 */
-		float lpgain  = pow(20.,-gain1); //clampf(params[GAIN1_PARAM].value + g_gain, 0., gmax);
-		float bp2gain = pow(20.,-gain2); //clampf(params[GAIN2_PARAM].value + g_gain, 0., gmax);
-		float bp3gain = pow(20.,-gain3); //clampf(params[GAIN3_PARAM].value + g_gain, 0., gmax);
-		float hpgain  = pow(20.,-gain4); //clampf(params[GAIN4_PARAM].value + g_gain, 0., gmax);
+		float lpgain  = pow(20.,-gain1); 
+		float bp2gain = pow(20.,-gain2); 
+		float bp3gain = pow(20.,-gain3); 
+		float hpgain  = pow(20.,-gain4);
 
         outputs[LP_OUTPUT].value  = lpout*lpgain;
         outputs[BP2_OUTPUT].value = bp2out*bp2gain;
@@ -191,11 +188,8 @@ void Etagere::step() {
         float sumout = lpout*lpgain + hpout*hpgain +  bp2out*bp2gain + bp3out*bp3gain;
 
         outputs[OUT_OUTPUT].value = sumout;
-        
  
 	// Lights
-	//lights[CLIP5_LIGHT].value = fabs(sumout) > 10. ? 1.0 : 0.0;
-	//lights[CLIP_LIGHT].value = fabs(sumout) ? 1.0 : 0.0;
     lights[CLIP5_LIGHT].setBrightnessSmooth( fabs(sumout) > 10. ? 1. : 0. );    
 }
 
@@ -205,7 +199,6 @@ EtagereWidget::EtagereWidget() {
     setModule(module);
 	box.size = Vec(15*6, 380);
 
-    //setPanel(SVG::load(assetPlugin(plugin, "res/Etagere.svg")));
 	{
 		SVGPanel *panel = new SVGPanel();
 		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere.svg")));
@@ -226,7 +219,7 @@ EtagereWidget::EtagereWidget() {
     const float gmax = -1.;
     const float gmin =  1.;
 
-    // 880, 5000
+    // TO DO possible default freqs: 880, 5000
 
     addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 1*yh), module, Etagere::FREQ1_PARAM, vfmin, vfmax, 0.));
     addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, Etagere::GAIN1_PARAM,  gmin,  gmax, 0.));
@@ -268,6 +261,4 @@ EtagereWidget::EtagereWidget() {
     addOutput(createOutput<sp_Port>(Vec(x2, y1+13*yh), module, Etagere::OUT_OUTPUT));
 
 	addChild(createLight<SmallLight<RedLight>>(Vec(x2+10., y1+12.5*yh), module, Etagere::CLIP5_LIGHT));
-
-//    printf("ok. %d\n", module->lights.size());
 }

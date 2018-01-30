@@ -59,7 +59,6 @@ struct Piste : Module {
 
         lpFilter.setFilterType(SVFLowpass);
         hpFilter.setFilterType(SVFHighpass);        
-        //bpFilter.setFilterType(SVFBandpass);
 	}
 	void step() override;
 
@@ -73,8 +72,6 @@ void Piste::step() {
     
 	float drive = clampf(params[DRIVE_PARAM].value, 0, 1.0);
 
-    //float lpgain = pow( 20., clampf(params[FREQ_PARAM].value, -1.0, 1.0));
-    //float hpgain = pow( 20., clampf(params[RESO_PARAM].value, -1.0, 1.0));
 	float freq = clampf(params[FREQ_PARAM].value, -1., 1.0);
     float reso = clampf(params[RESO_PARAM].value, .0, 1.0);
 
@@ -84,7 +81,6 @@ void Piste::step() {
 	float scale1 = 			clampf(params[SCALE1_PARAM].value, 0.0, 1.0);
 	float scale2 = scale1 * clampf(params[SCALE2_PARAM].value, 0.0, 1.0);
 
-	// Gate or trigger
 	bool muted = inputs[MUTE_INPUT].normalize(0.) >= 1.0;
 	
 	if (!muted) { 
@@ -111,7 +107,6 @@ void Piste::step() {
 	outputs[ENV1_OUTPUT].value = 10.*scale1 * env1;
 	outputs[ENV2_OUTPUT].value = 10.*scale2 * env2;
 
-	// VCA
 	float v = inputs[IN_INPUT].value;
 	 
 	// DRIVE
@@ -130,8 +125,8 @@ void Piste::step() {
     	lpFilter.setSampleRate(engineGetSampleRate());
     	lpFilter.setCutoffFreq(lp_cutoff);
     	fout  = lpFilter.processAudioSample( v, 1);
-	}
-	else if ( freq > 0.) {
+
+	} else if ( freq > 0.) {
 
 	    float hp_cutoff  = f0 * powf(2.f, 8.*freq-3.);
     	hpFilter.setResonance(reso*rmax);
@@ -140,8 +135,7 @@ void Piste::step() {
     	fout  = hpFilter.processAudioSample( v, 1);
 	}
 
-	// VCA
-	
+	// VCA	
 	v = fout * 10.*scale1 * env1 * (1. + 10* scale2 * env2);
 
 	outputs[OUT_OUTPUT].value = v;
@@ -169,7 +163,6 @@ PisteWidget::PisteWidget() {
 
 	const float y1 = 47.;
 	const float yh = 31.;
-	
 
 	addInput(createInput<sp_Port>(Vec(x1, y1), module, Piste::IN_INPUT));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1), module, Piste::DRIVE_PARAM, 0.0, 1.0, 0.0));

@@ -1,4 +1,4 @@
-//#include <string.h>
+
 #include <array>
 
 #include "Southpole.hpp"
@@ -234,17 +234,15 @@ struct SnsDisplay : TransparentWidget {
 		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
 		nvgBeginPath(vg);
 		bool first = true;
-		//std::vector<bool>::iterator it = euclid.sequence.begin();
+
 		for (unsigned int  i = 0; i < len; i++) {
+
 			float a = i/float(len);
 			float r = module->accents[i] ? r1 : r2;
 			float x = cx + r * cosf(2.*M_PI*a-.5*M_PI);
 			float y = cy + r * sinf(2.*M_PI*a-.5*M_PI);
+
 			if ( module->sequence[i] ) {
-				//if (accents[i]) {
-				//	x = cx + r1 * cosf(2.*M_PI*a-.5*M_PI);
-				//	y = cy + r1 * sinf(2.*M_PI*a-.5*M_PI);
-				//}
 				Vec p(x,y);
 				if (module->par_k == 1) nvgCircle(vg, x, y, 3.);				
 				if (first) {
@@ -253,7 +251,6 @@ struct SnsDisplay : TransparentWidget {
 				} else 
 					nvgLineTo(vg, p.x, p.y);
 			}
-			//std::advance(it,1);
 		}
 
 		nvgClosePath(vg);
@@ -274,7 +271,6 @@ struct SnsDisplay : TransparentWidget {
 		nvgCircle(vg, x, y, 3.);
 		nvgStrokeWidth(vg, 1.5);
 		nvgFill(vg);
-		//nvgLineTo(vg, cx, cy);
 		nvgStroke(vg);
 	}
 

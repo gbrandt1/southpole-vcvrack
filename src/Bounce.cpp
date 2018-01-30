@@ -63,14 +63,6 @@ void Bounce::step() {
 
 	outputs[OUT_OUTPUT].value = clampf(x0, -10., 10. );
 
-/*	c++;
-	if ( c == engineGetSampleRate() ) {
-		//f0 = engineGetSampleRate()*
-		f0 = sqrt(k/m)/2./M_PI;
-		std::cout << f0 << std::endl;
-		c = 0;
-	}
-*/
 }
 
 
