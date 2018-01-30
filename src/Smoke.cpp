@@ -305,7 +305,11 @@ SmokeWidget::SmokeWidget() {
   box.size = Vec(6* RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
 	SVGPanel *panel = new SVGPanel();
+#ifdef PARASITES  
 	panel->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke6HP.svg")));
+#else
+	panel->setBackground(SVG::load(assetPlugin(plugin, "res/Humo.svg")));
+#endif
 	panel->box.size = box.size;
 	addChild(panel);
 
@@ -327,9 +331,10 @@ SmokeWidget::SmokeWidget() {
   addInput(createInput<sp_Port>(Vec(x1, 1.25*yh+y1), module, Smoke::FREEZE_INPUT));
   addParam(createParam<LEDButton>(Vec(  x2,   1.35*yh+y1  ), module, Smoke::FREEZE_PARAM, 0.0, 1.0, 0.0));
   addChild(createLight<FreezeLight>(Vec(x2+3, 1.35*yh+y1+3), module,Smoke::FREEZE_LIGHT));
+#ifdef PARASITES
   addParam(createParam<LEDButton>(Vec(  x3,   1.35*yh+y1  ), module, Smoke::REVERSE_PARAM, 0.0, 1.0, 0.0));
   addChild(createLight<FreezeLight>(Vec(x3+3, 1.35*yh+y1+3), module, Smoke::REVERSE_LIGHT));
-
+#endif
   addParam(createParam<sp_SmallBlackKnob>(Vec(x1, 2.5*yh+y1), module, Smoke::POSITION_PARAM, 0.0, 1.0, 0.5));
   addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 2.5*yh+y1), module, Smoke::SIZE_PARAM, 0.0, 1.0, 0.5));
   addParam(createParam<sp_SmallBlackKnob>(Vec(x3, 2.5*yh+y1), module, Smoke::PITCH_PARAM, -2.0, 2.0, 0.0));

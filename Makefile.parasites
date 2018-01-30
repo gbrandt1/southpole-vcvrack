@@ -37,11 +37,4 @@ DISTRIBUTABLES += $(wildcard LICENSE*) res
 # Include the VCV plugin Makefile framework
 include ../../plugin.mk
 
-dist: all
-	mkdir -p dist
-	rm -rf dist/$(SLUG)
-	mkdir -p dist/$(SLUG)
-	cp -R $(DISTRIBUTABLES) dist/$(SLUG)/
-	cd dist && zip -5 -r $(SLUG)-$(VERSION)-$(ARCH).zip $(SLUG)
-
 

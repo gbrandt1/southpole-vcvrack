@@ -11,9 +11,9 @@ void init(rack::Plugin *p) {
 	// To guarantee uniqueness, it is a good idea to prefix the slug by your name, alias, or company name if available, e.g. "MyCompany-MyPlugin".
 	// The ZIP package must only contain one folder, with the name equal to the plugin's slug.
 #ifdef PARASITES
-	p->slug = "Southpole";
-#else
 	p->slug = "Southpole-parasites";    
+#else
+	p->slug = "Southpole";
 #endif
 	p->version = TOSTRING(VERSION);
 	p->website = "https://github.com/gbrandt1/southpole-vcvrack";
@@ -25,6 +25,7 @@ void init(rack::Plugin *p) {
 #ifdef PARASITES
     p->addModel(createModel<SmokeWidget>("Southpole", "Smoke", "Smoke - texture synth", GRANULAR_TAG, REVERB_TAG));
 #else
+    p->addModel(createModel<SmokeWidget>("Southpole", "Humo", "Humo - texture synth", GRANULAR_TAG, REVERB_TAG));
     p->addModel(createModel<AnnuliWidget>("Southpole", "Annuli", "Annuli - resonator"));
     p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava - VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
     p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana - VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));

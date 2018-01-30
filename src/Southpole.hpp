@@ -9,14 +9,12 @@ extern Plugin *plugin;
 // module widgets
 ////////////////////
 
-#ifdef PARASITES
+//#ifdef PARASITES
 
 struct SmokeWidget : ModuleWidget {
 	SmokeWidget();
 	Menu *createContextMenu() override;
 };
-
-#else
 
 struct AnnuliWidget : ModuleWidget {
 	AnnuliWidget();
@@ -77,7 +75,7 @@ struct SplashWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
-#endif
+//#endif
 
 // GUI COMPONENTS
 
