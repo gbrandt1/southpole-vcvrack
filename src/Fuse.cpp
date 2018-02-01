@@ -38,11 +38,7 @@ struct Fuse : Module {
 		NUM_LIGHTS
 	};
 
-	enum GateMode {
-		TRIGGER,
-		GATE
-	};
-	GateMode gateMode = TRIGGER;
+	bool gateMode;
 
 	Fuse() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
 
@@ -60,10 +56,24 @@ struct Fuse : Module {
 	PulseGenerator pulse[4];
 
 	bool armed[4];
-	bool gateOn;
+	bool gateOn[4];
 
 	const unsigned maxsteps = 16;
 	unsigned curstep = 0;
+
+
+	json_t *toJson() override {
+		json_t *rootJ = json_object();
+		json_object_set_new(rootJ, "gateMode", json_boolean( gateMode ));
+		return rootJ;
+	}
+
+	void fromJson(json_t *rootJ) override {
+		json_t *gateModeJ = json_object_get(rootJ, "gateMode");
+		if (gateModeJ) {
+			gateMode = json_boolean_value(gateModeJ);
+		}
+	}
 };
 
 void Fuse::step() {
@@ -76,7 +86,7 @@ void Fuse::step() {
 			for (unsigned int i=0; i<4; i++) {
 				armTrigger[i].reset();
 				armed[i] = false;
-				gateOn = false;	
+				gateOn[i] = false;	
 		  	}
 		}
 	}
@@ -85,29 +95,38 @@ void Fuse::step() {
 		if (clockTrigger.process(inputs[CLK_INPUT].value)) {
 			nextStep = true;
 		}
-	} 
+	}
 
 	if ( nextStep ) {
-		curstep++;
+		curstep++;		
 		if ( curstep >= maxsteps ) curstep = 0;
-		if ( curstep % 4 == 0 ) gateOn = false;
+
+		if ( curstep % 4 == 0 ) {
+			unsigned int i = curstep/4;
+		 	gateOn[(i-1)%4] = false;
+
+			if ( armed[i] ) {
+				pulse[i].trigger(1e-3);
+     			if ( gateMode ) gateOn[i] = true;
+				armed[i] = false;
+			}
+		}		
+    	//printf("%d %d\n",curstep,gateOn[curstep/4]);
 	}
 
 	for (unsigned int i=0; i<4; i++) {
 
 		if ( params[SWITCH1_PARAM + i].value > 0. ) armed[i] = true;
 		if ( armTrigger[i].process(inputs[ARM1_INPUT + i].normalize(0.))) armed[i] = true;
-
+		
 		lights[ARM1_LIGHT + i].setBrightness( armed[i] ? 1.0 : 0.0 );
-
-		if (nextStep && i*4 == curstep && armed[i]) {
-			pulse[i].trigger(1e-3);
-			armed[i] = false;
-     		if ( gateMode == Fuse::GATE ) gateOn = true;
-		}
-
+			
 		bool p = pulse[i].process(1.0 / engineGetSampleRate());		
-		outputs[OUT1_OUTPUT + i].value = gateOn || p ? 10.0 : 0.0;
+
+		if (gateOn[i]) p = true;
+		
+		outputs[OUT1_OUTPUT + i].value =  p ? 10.0 : 0.0;
+		
 	}
 };
 
@@ -186,7 +205,7 @@ FuseWidget::FuseWidget() {
 
 struct FuseGateModeItem : MenuItem {
 	Fuse *fuse;
-	Fuse::GateMode gateMode;
+	bool gateMode;
 	void onAction(EventAction &e) override {
 		fuse->gateMode = gateMode;
 	}
@@ -211,13 +230,13 @@ Menu *FuseWidget::createContextMenu() {
 	FuseGateModeItem *triggerItem = new FuseGateModeItem();
 	triggerItem->text = "Trigger";
 	triggerItem->fuse = fuse;
-	triggerItem->gateMode = Fuse::TRIGGER;
+	triggerItem->gateMode = false;
 	menu->addChild(triggerItem);
 
 	FuseGateModeItem *gateItem = new FuseGateModeItem();
 	gateItem->text = "Gate";
 	gateItem->fuse = fuse;
-	gateItem->gateMode = Fuse::GATE;
+	gateItem->gateMode = true;
 	menu->addChild(gateItem);
 
 	return menu;
