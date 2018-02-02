@@ -14,6 +14,8 @@ extern Plugin *plugin;
 struct SmokeWidget : ModuleWidget {
 	SVGPanel *panel1;
 	SVGPanel *panel2;
+	SVGPanel *panel3;
+	SVGPanel *panel4;
 	SmokeWidget();
 	void step() override;
 	Menu *createContextMenu() override;
@@ -37,50 +39,47 @@ struct SplashWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
-struct BalaclavaWidget : ModuleWidget {
-	BalaclavaWidget();
-};
+struct BalaclavaWidget : ModuleWidget {	BalaclavaWidget(); };
 
-struct BandanaWidget : ModuleWidget {
-	BandanaWidget();
-};
+struct BandanaWidget : ModuleWidget { BandanaWidget(); };
 
-struct ButWidget : ModuleWidget {
-	ButWidget();
-};
+struct ButWidget : ModuleWidget { ButWidget(); };
 
-struct AbrWidget : ModuleWidget {
-	AbrWidget();
-};
+struct AbrWidget : ModuleWidget { AbrWidget(); };
 
-struct EtagereWidget : ModuleWidget {
-	EtagereWidget();
-};
+struct EtagereWidget : ModuleWidget { EtagereWidget(); };
 
-struct SnsWidget : ModuleWidget {
-	SnsWidget();
-};
+struct SnsWidget : ModuleWidget { SnsWidget(); };
 
-struct BounceWidget : ModuleWidget {
-	BounceWidget();
-};
+struct BounceWidget : ModuleWidget { BounceWidget(); };
 
-struct WriggleWidget : ModuleWidget {
-	WriggleWidget();
-};
+struct WriggleWidget : ModuleWidget { WriggleWidget(); };
 
-struct PisteWidget : ModuleWidget {
-	PisteWidget();
-};
+struct PisteWidget : ModuleWidget {	PisteWidget(); };
 
 struct FuseWidget : ModuleWidget {
 	FuseWidget();
 	Menu *createContextMenu() override;
 };
 
-struct SsshWidget : ModuleWidget {
-	SsshWidget();
+struct SsshWidget : ModuleWidget {	SsshWidget(); };
+
+struct Blank1HPWidget : ModuleWidget {	Blank1HPWidget(); };
+
+struct Blank2HPWidget : ModuleWidget {	Blank2HPWidget(); };
+
+struct Blank4HPWidget : ModuleWidget {	Blank4HPWidget(); };
+
+struct Blank8HPWidget : ModuleWidget {
+	Blank8HPWidget(); 
+//	TextField *textField;
+//	json_t *toJson() override;
+//	void fromJson(json_t *rootJ) override;
 };
+
+struct Blank16HPWidget : ModuleWidget {	Blank16HPWidget(); };
+
+struct Blank42HPWidget : ModuleWidget {	Blank42HPWidget(); };
 
 //#endif
 

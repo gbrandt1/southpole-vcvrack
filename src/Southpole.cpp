@@ -39,6 +39,13 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<CornrowsWidget>("Southpole", "Cornrows", "Cornrows - macro oscillator", OSCILLATOR_TAG, WAVESHAPER_TAG));
 	p->addModel(createModel<SplashWidget>("Southpole", "Splash", "Splash / Lambs - tidal modulator", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
 	p->addModel(createModel<SsshWidget>("Southpole", "Sssh", "Sssh - noise and S+H", UTILITY_TAG));
+
+	p->addModel(createModel<Blank1HPWidget>("Southpole", "Blank", "Blank 1 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank2HPWidget>("Southpole", "Blank", "Blank 2 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank4HPWidget>("Southpole", "Blank", "Blank 4 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank8HPWidget>("Southpole", "Blank", "Blank 8 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank16HPWidget>("Southpole", "Blank", "Blank 16 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank42HPWidget>("Southpole", "Blank", "Blank 42 HP", UTILITY_TAG));
     
 #endif
 }

@@ -63,6 +63,8 @@ SOURCES += eurorack/clouds/dsp/pvoc/phase_vocoder.cc
 SOURCES += eurorack/clouds/dsp/pvoc/stft.cc
 SOURCES += eurorack/clouds/resources.cc 
 
+SOURCES += src/Blanks.cpp
+
 # Add files to the ZIP package when running `make dist`
 # The compiled plugin is automatically added.
 DISTRIBUTABLES += $(wildcard LICENSE*) res

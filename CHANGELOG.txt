@@ -1,6 +1,8 @@
 
 
-- Sssh: new module, 6x the noise/S+H section from Kinks
+- Humo (Clouds): new skins for the alternate modes: Espectro, Ritardo, Camilla
+- Sssh: new module, 4 copies of the noise/S+H section from Kinks, normalized
 - Fuse: fixes to gate/trigger behavior
+- Blank panels: 2HP, 4HP, 8HP, 16HP, 42HP
 
 -- 0.5.1.1 ----

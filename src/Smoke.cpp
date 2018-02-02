@@ -324,6 +324,18 @@ SmokeWidget::SmokeWidget() {
     panel2->box.size = box.size;
     addChild(panel2);
   }
+  {
+    panel3 = new SVGPanel();
+    panel3->setBackground(SVG::load(assetPlugin(plugin, "res/Ritardo.svg")));
+    panel3->box.size = box.size;
+    addChild(panel3);
+  }
+  {
+    panel4 = new SVGPanel();
+    panel4->setBackground(SVG::load(assetPlugin(plugin, "res/Camilla.svg")));
+    panel4->box.size = box.size;
+    addChild(panel4);
+  }
 #endif
 
   const float x1 = 5;
@@ -393,9 +405,19 @@ void SmokeWidget::step() {
 
 	panel1->visible = true;
 	panel2->visible = false;
+	panel3->visible = false;
+	panel4->visible = false;
   if ( smoke->playbackmode == clouds::PLAYBACK_MODE_SPECTRAL) {
+    panel1->visible = false;
     panel2->visible = true;
-    panel2->visible = true;
+  }
+  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_LOOPING_DELAY) {
+    panel1->visible = false;
+    panel3->visible = true;
+  }
+  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_STRETCH) {
+    panel1->visible = false;
+    panel4->visible = true;
   }
 
 	ModuleWidget::step();
