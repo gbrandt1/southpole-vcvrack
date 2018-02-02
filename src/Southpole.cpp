@@ -29,6 +29,7 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<AnnuliWidget>("Southpole", "Annuli", "Annuli - resonator"));
     p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava - VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
     p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana - VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
+
     p->addModel(createModel<ButWidget>("Southpole", "But", "But - A/B buss", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
     p->addModel(createModel<AbrWidget>("Southpole", "Abr", "Abr - A/B switch", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
     p->addModel(createModel<EtagereWidget>("Southpole", "Etagere", "Etagere - EQ", FILTER_TAG));
@@ -39,6 +40,7 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<CornrowsWidget>("Southpole", "Cornrows", "Cornrows - macro oscillator", OSCILLATOR_TAG, WAVESHAPER_TAG));
 	p->addModel(createModel<SplashWidget>("Southpole", "Splash", "Splash / Lambs - tidal modulator", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
 	p->addModel(createModel<SsshWidget>("Southpole", "Sssh", "Sssh - noise and S+H", UTILITY_TAG));
+	p->addModel(createModel<SnakeWidget>("Southpole", "Snake", "Snake - multicore", UTILITY_TAG));
 
 	p->addModel(createModel<Blank1HPWidget>("Southpole", "Blank", "Blank 1 HP", UTILITY_TAG));
 	p->addModel(createModel<Blank2HPWidget>("Southpole", "Blank", "Blank 2 HP", UTILITY_TAG));

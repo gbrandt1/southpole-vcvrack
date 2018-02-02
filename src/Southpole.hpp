@@ -64,6 +64,13 @@ struct FuseWidget : ModuleWidget {
 
 struct SsshWidget : ModuleWidget {	SsshWidget(); };
 
+struct SnakeWidget : ModuleWidget {	
+	SnakeWidget(); 
+	static float *cable;
+	static unsigned int *lockid;
+	static unsigned int counter;
+};
+
 struct Blank1HPWidget : ModuleWidget {	Blank1HPWidget(); };
 
 struct Blank2HPWidget : ModuleWidget {	Blank2HPWidget(); };

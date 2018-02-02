@@ -22,6 +22,7 @@ SOURCES += src/Bandana.cpp
 SOURCES += src/But.cpp
 SOURCES += src/Abr.cpp
 SOURCES += src/Sssh.cpp
+SOURCES += src/Snake.cpp
 
 SOURCES += src/Etagere.cpp
 SOURCES += src/VAStateVariableFilter.cpp

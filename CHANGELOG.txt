@@ -1,5 +1,9 @@
 
 
+- Snake: multicore (experimental!) introduces a small delay!
+  if in doubt check the difference signal of in and output.
+  a particular port is locked by the instance where the cable gets plugged first (green light).
+  this signal is then available at all other instances (red light).
 - Humo (Clouds): new skins for the alternate modes: Espectro, Ritardo, Camilla
 - Sssh: new module, 4 copies of the noise/S+H section from Kinks, normalized
 - Fuse: fixes to gate/trigger behavior
