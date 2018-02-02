@@ -12,12 +12,28 @@ extern Plugin *plugin;
 //#ifdef PARASITES
 
 struct SmokeWidget : ModuleWidget {
+	SVGPanel *panel1;
+	SVGPanel *panel2;
 	SmokeWidget();
+	void step() override;
 	Menu *createContextMenu() override;
 };
 
 struct AnnuliWidget : ModuleWidget {
 	AnnuliWidget();
+	Menu *createContextMenu() override;
+};
+
+struct CornrowsWidget : ModuleWidget {
+	CornrowsWidget();
+	Menu *createContextMenu() override;
+};
+
+struct SplashWidget : ModuleWidget {
+	SVGPanel *tidesPanel;
+	SVGPanel *sheepPanel;
+	SplashWidget();
+	void step() override;
 	Menu *createContextMenu() override;
 };
 
@@ -62,17 +78,8 @@ struct FuseWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
-struct CornrowsWidget : ModuleWidget {
-	CornrowsWidget();
-	Menu *createContextMenu() override;
-};
-
-struct SplashWidget : ModuleWidget {
-	SVGPanel *tidesPanel;
-	SVGPanel *sheepPanel;
-	SplashWidget();
-	void step() override;
-	Menu *createContextMenu() override;
+struct SsshWidget : ModuleWidget {
+	SsshWidget();
 };
 
 //#endif

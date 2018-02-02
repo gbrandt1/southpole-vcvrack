@@ -114,3 +114,16 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves)
 - arm triggers/gates manually or via inputs
 - for example, clock with bars, trigger to mute the kick for exactly 4 bars, trigger 4 bar later to drop
 
+### Wriggle - Spring Model
+
+- follows input with a given stiffness and damping of the spring
+- mass normalized to one
+- output can be scaled/offset
+- designed to implement "Woggle CV" (works best at LFO rates)
+
+### Sssh - Noise / S+H
+
+- 4x the noise / S+H section from Kinks
+- triggers are normalled from top to bottom
+- inputs are normalled to noise
+- noises are four calls to generator (not a copy)

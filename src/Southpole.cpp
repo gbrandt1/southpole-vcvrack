@@ -38,6 +38,8 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<FuseWidget>("Southpole", "Fuse", "Fuse - next pattern", SEQUENCER_TAG));
     p->addModel(createModel<CornrowsWidget>("Southpole", "Cornrows", "Cornrows - macro oscillator", OSCILLATOR_TAG, WAVESHAPER_TAG));
 	p->addModel(createModel<SplashWidget>("Southpole", "Splash", "Splash / Lambs - tidal modulator", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
+	p->addModel(createModel<SsshWidget>("Southpole", "Sssh", "Sssh - noise and S+H", UTILITY_TAG));
+    
 #endif
 }
 

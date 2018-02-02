@@ -1,0 +1,6 @@
+
+
+- Sssh: new module, 6x the noise/S+H section from Kinks
+- Fuse: fixes to gate/trigger behavior
+
+-- 0.5.1.1 ----

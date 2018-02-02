@@ -164,10 +164,10 @@ Smoke::~Smoke() {
 
 void Smoke::step() {
 
-  //Frame<2> inputFrame;
+  Frame<2> inputFrame;
   // Get input
   if (!inputBuffer.full()) {
-    Frame<2> inputFrame;
+    //Frame<2> inputFrame;
     inputFrame.samples[0] = inputs[IN_L_INPUT].value * params[IN_GAIN_PARAM].value / 5.0;
     inputFrame.samples[1] = inputs[IN_R_INPUT].active ? inputs[IN_R_INPUT].value * params[IN_GAIN_PARAM].value / 5.0 : inputFrame.samples[0];
     inputBuffer.push(inputFrame);
@@ -278,7 +278,7 @@ void Smoke::step() {
   }
 
 	// Lights
-  /*
+  
 	clouds::Parameters *p = processor->mutable_parameters();
 	VUMeter vuMeter;
 	vuMeter.dBInterval = 6.0;
@@ -293,7 +293,7 @@ void Smoke::step() {
 	lights[PAN_RED_LIGHT].setBrightness(0.0);
 	lights[FEEDBACK_RED_LIGHT].setBrightnessSmooth(vuMeter.getBrightness(1));
 	lights[REVERB_RED_LIGHT].setBrightnessSmooth(vuMeter.getBrightness(0));
-  */
+  
 }
 
 
@@ -304,14 +304,27 @@ SmokeWidget::SmokeWidget() {
   setModule(module);
   box.size = Vec(6* RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
-	SVGPanel *panel = new SVGPanel();
-#ifdef PARASITES  
-	panel->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke6HP.svg")));
+#ifdef PARASITES
+  {
+	  SVGPanel *panel = new SVGPanel();
+	  Panel->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke6HP.svg")));
+	  Panel->box.size = box.size;
+	  addChild(panel);
+  }
 #else
-	panel->setBackground(SVG::load(assetPlugin(plugin, "res/Humo.svg")));
+  {
+    panel1 = new SVGPanel();
+    panel1->setBackground(SVG::load(assetPlugin(plugin, "res/Humo.svg")));
+    panel1->box.size = box.size;
+    addChild(panel1);
+  }
+  {
+    panel2 = new SVGPanel();
+    panel2->setBackground(SVG::load(assetPlugin(plugin, "res/Espectro.svg")));
+    panel2->box.size = box.size;
+    addChild(panel2);
+  }
 #endif
-	panel->box.size = box.size;
-	addChild(panel);
 
   const float x1 = 5;
   const float x2 = 35;
@@ -367,11 +380,25 @@ SmokeWidget::SmokeWidget() {
   addOutput(createOutput<sp_Port>(Vec(x3, 9.5*yh+y1), module, Smoke::OUT_L_OUTPUT));
   addOutput(createOutput<sp_Port>(Vec(x3, 10.5*yh+y1), module, Smoke::OUT_R_OUTPUT));
   
-  //addChild(createLight<MediumLight<GreenRedLight>>(Vec(x1+10, y1), module, Smoke::MIX_GREEN_LIGHT));
-	//addChild(createLight<MediumLight<GreenRedLight>>(Vec(x1+20, y1), module, Smoke::PAN_GREEN_LIGHT));
-	//addChild(createLight<MediumLight<GreenRedLight>>(Vec(x1+30, y1), module, Smoke::FEEDBACK_GREEN_LIGHT));
-	//addChild(createLight<MediumLight<GreenRedLight>>(Vec(x1+40, y1), module, Smoke::REVERB_GREEN_LIGHT));
+  addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3, y1+40), module, Smoke::MIX_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3, y1+30), module, Smoke::PAN_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3, y1+20), module, Smoke::FEEDBACK_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3, y1+10), module, Smoke::REVERB_GREEN_LIGHT));
  
+}
+
+void SmokeWidget::step() {
+	Smoke *smoke = dynamic_cast<Smoke*>(module);
+	assert(smoke);
+
+	panel1->visible = true;
+	panel2->visible = false;
+  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_SPECTRAL) {
+    panel2->visible = true;
+    panel2->visible = true;
+  }
+
+	ModuleWidget::step();
 }
 
 struct CloudsModeItem : MenuItem {
