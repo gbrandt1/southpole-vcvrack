@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 
 #################################################################################################################################
 # community-builds-from-source.sh
@@ -10,6 +10,7 @@
 # This script pulls down the VCV Rack community repo, finds source urls, pulls down source repos, and builds plugins.
 #
 # This script requires:
+#	  bash - brew install bash # on mac
 #     git - https://git-scm.com/
 #     VCV Rack dev env - https://github.com/VCVRack/Rack#setting-up-your-development-environment
 #
@@ -21,7 +22,10 @@
 #
 #################################################################################################################################
 
-nproc=`nproc`
+nproc=`sysctl -n hw.physicalcpu` #mac
+#nproc=`nproc` #linux
+
+echo $nproc
 
 # check for the community repo locally
 echo [Update community repo]
@@ -51,8 +55,8 @@ buildfails=""
 # you look up that version below when checking out source.
 declare -A versionMap
 versionMap=([Autodafe]=skip [Autodafe-Drums]=skip [NYSTHI]=skip
-	[Southpole]=skip
-	[DrumKit]=master [VCV-Rack-Plugins]=master)
+	[Southpole]=skip 
+	[RJModules]=master [DrumKit]=master [VCV-Rack-Plugins]=master)
 
 # helper function to see if a particular key is in an associative array
 exists(){
@@ -75,6 +79,7 @@ do
 	echo [$pluginDirName]
 	if exists ${pluginDirName} in versionMap
 	then
+		echo ${versionMap[${pluginDirName}]}
 		if [ ${versionMap[${pluginDirName}]} == "skip" ]
 	 	then
 		 	echo [$pluginDirName SKIPPING]
@@ -127,10 +132,10 @@ do
 	# clean old builds (might not be needed but can prevent issues)
 	#make clean
 
-	make -j$(nproc) dep
+	make -j$nproc dep
 
 	# finally, build the plugin
-	if make -j$(nproc)
+	if make -j$nproc
 	then
 		 true; # say nothing
 	else
