@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
 #################################################################################################################################
 # community-builds-from-source.sh
@@ -55,7 +55,7 @@ buildfails=""
 # you look up that version below when checking out source.
 declare -A versionMap
 versionMap=([Autodafe]=skip [Autodafe-Drums]=skip [NYSTHI]=skip
-	[Southpole]=skip 
+	[southpole-vcvrack]=skip 
 	[RJModules]=master [DrumKit]=master [VCV-Rack-Plugins]=master)
 
 # helper function to see if a particular key is in an associative array
