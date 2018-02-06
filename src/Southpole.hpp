@@ -1,8 +1,6 @@
 
 #include "rack.hpp"
-
 using namespace rack;
-
 extern Plugin *plugin;
 
 ////////////////////
@@ -70,6 +68,9 @@ struct SnakeWidget : ModuleWidget {
 	static unsigned int *lockid;
 	static unsigned int counter;
 };
+
+struct GnomeWidget : ModuleWidget {	GnomeWidget(); };
+struct Gnome2Widget : ModuleWidget {	Gnome2Widget(); };
 
 struct Blank1HPWidget : ModuleWidget {	Blank1HPWidget(); };
 

@@ -1,5 +1,5 @@
 SLUG = Southpole
-VERSION = 0.5.1
+VERSION = 0.5.2
 
 # FLAGS will be passed to both the C and C++ compiler
 FLAGS += \
@@ -23,6 +23,7 @@ SOURCES += src/But.cpp
 SOURCES += src/Abr.cpp
 SOURCES += src/Sssh.cpp
 SOURCES += src/Snake.cpp
+SOURCES += src/Gnome.cpp
 
 SOURCES += src/Etagere.cpp
 SOURCES += src/VAStateVariableFilter.cpp

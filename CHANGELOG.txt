@@ -1,12 +1,20 @@
 
 
+-- 0.5.2 ----
+
+- Gnome: complete synth voice based on Fundamental modules
+
 - Snake: multicore (experimental!) introduces a small delay!
   if in doubt check the difference signal of in and output.
   a particular port is locked by the instance where the cable gets plugged first (green light).
   this signal is then available at all other instances (red light).
-- Humo (Clouds): new skins for the alternate modes: Espectro, Ritardo, Camilla
-- Sssh: new module, 4 copies of the noise/S+H section from Kinks, normalized
+
+- Humo (standard Clouds): new skins for the alternate modes: Espectro, Ritardo, Camilla
+
+- Sssh: 4 copies of the noise/S+H section from Kinks, normalized
+
 - Fuse: fixes to gate/trigger behavior
-- Blank panels: 2HP, 4HP, 8HP, 16HP, 42HP
+
+- Blank panels: 1HP, 2HP, 4HP, 8HP, 16HP, 42HP - nothing special for now but watch this space
 
 -- 0.5.1.1 ----

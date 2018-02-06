@@ -41,13 +41,14 @@ void init(rack::Plugin *p) {
 	p->addModel(createModel<SplashWidget>("Southpole", "Splash", "Splash / Lambs - tidal modulator", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
 	p->addModel(createModel<SsshWidget>("Southpole", "Sssh", "Sssh - noise and S+H", UTILITY_TAG));
 	p->addModel(createModel<SnakeWidget>("Southpole", "Snake", "Snake - multicore", UTILITY_TAG));
+	p->addModel(createModel<GnomeWidget>("Southpole", "Gnome", "Gnome - synth voice", UTILITY_TAG));
 
-	p->addModel(createModel<Blank1HPWidget>("Southpole", "Blank", "Blank 1 HP", UTILITY_TAG));
-	p->addModel(createModel<Blank2HPWidget>("Southpole", "Blank", "Blank 2 HP", UTILITY_TAG));
-	p->addModel(createModel<Blank4HPWidget>("Southpole", "Blank", "Blank 4 HP", UTILITY_TAG));
-	p->addModel(createModel<Blank8HPWidget>("Southpole", "Blank", "Blank 8 HP", UTILITY_TAG));
-	p->addModel(createModel<Blank16HPWidget>("Southpole", "Blank", "Blank 16 HP", UTILITY_TAG));
-	p->addModel(createModel<Blank42HPWidget>("Southpole", "Blank", "Blank 42 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank1HPWidget>("Southpole", "Blank1HP", "Blank 1 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank2HPWidget>("Southpole", "Blank2HP", "Blank 2 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank4HPWidget>("Southpole", "Blank4HP", "Blank 4 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank8HPWidget>("Southpole", "Blank8HP", "Blank 8 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank16HPWidget>("Southpole", "Blank16HP", "Blank 16 HP", UTILITY_TAG));
+	p->addModel(createModel<Blank42HPWidget>("Southpole", "Blank42HP", "Blank 42 HP", UTILITY_TAG));
     
 #endif
 }

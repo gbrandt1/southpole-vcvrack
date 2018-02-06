@@ -3,7 +3,6 @@
 Blank1HPWidget::Blank1HPWidget() 
 {
 	box.size = Vec(1 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
 	{
 		auto *panel = new SVGPanel();
 		panel->box.size = box.size;
@@ -15,7 +14,6 @@ Blank1HPWidget::Blank1HPWidget()
 Blank2HPWidget::Blank2HPWidget() 
 {
 	box.size = Vec(2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
 	{
 		auto *panel = new SVGPanel();
 		panel->box.size = box.size;
@@ -27,7 +25,6 @@ Blank2HPWidget::Blank2HPWidget()
 Blank4HPWidget::Blank4HPWidget() 
 {
 	box.size = Vec(4 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
 	{
 		auto *panel = new SVGPanel();
 		panel->box.size = box.size;
@@ -39,7 +36,6 @@ Blank4HPWidget::Blank4HPWidget()
 Blank8HPWidget::Blank8HPWidget() 
 {
 	box.size = Vec(8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
 	{
 		auto *panel = new SVGPanel();
 		panel->box.size = box.size;
@@ -72,7 +68,6 @@ void Blank8HPWidget::fromJson(json_t *rootJ) {
 Blank16HPWidget::Blank16HPWidget() 
 {
 	box.size = Vec(16 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
 	{
 		auto *panel = new SVGPanel();
 		panel->box.size = box.size;
@@ -84,7 +79,6 @@ Blank16HPWidget::Blank16HPWidget()
 Blank42HPWidget::Blank42HPWidget() 
 {
 	box.size = Vec(42 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
 	{
 		auto *panel = new SVGPanel();
 		panel->box.size = box.size;
