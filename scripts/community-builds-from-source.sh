@@ -55,8 +55,9 @@ buildfails=""
 # you look up that version below when checking out source.
 declare -A versionMap
 versionMap=([Autodafe]=skip [Autodafe-Drums]=skip [AepelzensParasites]=skip [NYSTHI]=skip
-	[southpole-vcvrack]=skip 
 	[VCV-Console]=skip [VCV-PulseMatrix]=skip [Vult]=skip [VultModules]=skip)
+	[southpole-vcvrack]=skip [vcvrack-rtlsdr]=skip
+	[RJModules]=master [DrumKit]=master [VCV-Rack-Plugins]=master)
 
 # helper function to see if a particular key is in an associative array
 exists(){

@@ -306,11 +306,42 @@ SmokeWidget::SmokeWidget() {
 
 #ifdef PARASITES
   {
-	  SVGPanel *panel = new SVGPanel();
-	  Panel->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke6HP.svg")));
-	  Panel->box.size = box.size;
-	  addChild(panel);
+	  panel1 = new SVGPanel();
+	  panel1->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke6HP.svg")));
+	  panel1->box.size = box.size;
+	  addChild(panel1);
   }
+  {
+    panel2 = new SVGPanel();
+    panel2->setBackground(SVG::load(assetPlugin(plugin, "res/Espectro.svg")));
+    panel2->box.size = box.size;
+    addChild(panel2);
+  }
+  {
+    panel3 = new SVGPanel();
+    panel3->setBackground(SVG::load(assetPlugin(plugin, "res/Ritardo.svg")));
+    panel3->box.size = box.size;
+    addChild(panel3);
+  }
+  {
+    panel4 = new SVGPanel();
+    panel4->setBackground(SVG::load(assetPlugin(plugin, "res/Camilla.svg")));
+    panel4->box.size = box.size;
+    addChild(panel4);
+  }
+  {
+    panel5 = new SVGPanel();
+    panel5->setBackground(SVG::load(assetPlugin(plugin, "res/Oliverb.svg")));
+    panel5->box.size = box.size;
+    addChild(panel5);
+  }
+  {
+    panel6 = new SVGPanel();
+    panel6->setBackground(SVG::load(assetPlugin(plugin, "res/Camilla.svg")));
+    panel6->box.size = box.size;
+    addChild(panel6);
+  }
+  
 #else
   {
     panel1 = new SVGPanel();
@@ -407,6 +438,8 @@ void SmokeWidget::step() {
 	panel2->visible = false;
 	panel3->visible = false;
 	panel4->visible = false;
+	panel5->visible = false;
+	panel6->visible = false;
   if ( smoke->playbackmode == clouds::PLAYBACK_MODE_SPECTRAL) {
     panel1->visible = false;
     panel2->visible = true;
@@ -418,6 +451,14 @@ void SmokeWidget::step() {
   if ( smoke->playbackmode == clouds::PLAYBACK_MODE_STRETCH) {
     panel1->visible = false;
     panel4->visible = true;
+  }
+  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_OLIVERB) {
+    panel1->visible = false;
+    panel5->visible = true;    
+  }
+  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_RESONESTOR) {
+    panel1->visible = false;
+    panel6->visible = true;
   }
 
 	ModuleWidget::step();

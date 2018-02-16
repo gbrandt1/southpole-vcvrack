@@ -30,6 +30,17 @@ SOURCES += parasites/clouds/dsp/pvoc/phase_vocoder.cc
 SOURCES += parasites/clouds/dsp/pvoc/stft.cc
 SOURCES += parasites/clouds/resources.cc 
 
+SOURCES += src/Salto.cpp
+SOURCES += parasites/tides/generator.cc
+SOURCES += parasites/tides/resources.cc
+
+#SOURCES += parasites/warps/dsp/modulator.cc
+#SOURCES += parasites/warps/dsp/oscillator.cc
+#SOURCES += parasites/warps/dsp/vocoder.cc
+#SOURCES += parasites/warps/dsp/filter_bank.cc
+#SOURCES += parasites/warps/resources.cc
+
+
 # Add files to the ZIP package when running `make dist`
 # The compiled plugin is automatically added.
 DISTRIBUTABLES += $(wildcard LICENSE*) res
