@@ -120,7 +120,7 @@ struct LowFrequencyOscillator {
 	
 
 	LowFrequencyOscillator() {
-		resetTrigger.setThresholds(0.0, 0.01);
+		//resetTrigger.setThresholds(0.0, 0.01);
 	}
 	void setPitch(float pitch) {
 		pitch = fminf(pitch, 8.0);

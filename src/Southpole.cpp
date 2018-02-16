@@ -24,11 +24,12 @@ void init(rack::Plugin *p) {
 
 #ifdef PARASITES
     p->addModel(createModel<SmokeWidget>("Southpole", "Smoke", "Smoke - texture synth", GRANULAR_TAG, REVERB_TAG));
+    p->addModel(createModel<SaltoWidget>("Southpole", "Salto", "Salto - two bumps/drunks", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
 #else
     p->addModel(createModel<SmokeWidget>("Southpole", "Humo", "Humo - texture synth", GRANULAR_TAG, REVERB_TAG));
     p->addModel(createModel<AnnuliWidget>("Southpole", "Annuli", "Annuli - resonator"));
-    p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava - VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
-    p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana - VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
+    p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava - Quad VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
+    p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana - Quad Polarizer", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
 
     p->addModel(createModel<ButWidget>("Southpole", "But", "But - A/B buss", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
     p->addModel(createModel<AbrWidget>("Southpole", "Abr", "Abr - A/B switch", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));

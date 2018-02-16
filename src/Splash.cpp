@@ -7,7 +7,6 @@
 #include "dsp/digital.hpp"
 #include "tides/generator.h"
 
-
 struct Splash : Module {
 	enum ParamIds {
 		MODE_PARAM,
@@ -182,6 +181,7 @@ void Splash::step() {
 	lastGate = gate;
 
 	const tides::GeneratorSample& sample = generator.Process(gate);
+
 	uint32_t uni = sample.unipolar;
 	int32_t bi = sample.bipolar;
 
@@ -219,7 +219,6 @@ SplashWidget::SplashWidget() {
 		sheepPanel->box.size = box.size;
 		addChild(sheepPanel);
 	}
-
   	const float x1 = 0.5*RACK_GRID_WIDTH;
   	const float x2 = 3.25*RACK_GRID_WIDTH;
   	const float x3 = 5.75*RACK_GRID_WIDTH; 
@@ -227,13 +226,14 @@ SplashWidget::SplashWidget() {
   	const float y2 = 25.0f;
   	const float yh = 38.0f;
 
+
 	addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, Splash::MODE_PARAM, 0.0, 1.0, 0.0));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+16, y1-13), module, Splash::MODE_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, Splash::MODE_GREEN_LIGHT));
 
 	addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, Splash::RANGE_PARAM, 0.0, 1.0, 0.0));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+16, y1+5+yh), module, Splash::RANGE_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-9), module, Splash::RANGE_GREEN_LIGHT));
 
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+1.6*yh), module, Splash::PHASE_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, Splash::PHASE_GREEN_LIGHT));
 	addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
 
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, Splash::SHAPE_PARAM, -1.0, 1.0, 0.0));

@@ -7,17 +7,31 @@ extern Plugin *plugin;
 // module widgets
 ////////////////////
 
-//#ifdef PARASITES
-
 struct SmokeWidget : ModuleWidget {
 	SVGPanel *panel1;
 	SVGPanel *panel2;
 	SVGPanel *panel3;
 	SVGPanel *panel4;
+	SVGPanel *panel5;
+	SVGPanel *panel6;	
 	SmokeWidget();
 	void step() override;
 	Menu *createContextMenu() override;
 };
+
+#ifdef PARASITES
+
+struct SaltoWidget : ModuleWidget {
+	SVGPanel *panel0;
+	SVGPanel *panel1;
+	SVGPanel *panel2;
+	SaltoWidget();
+	void step() override;
+	Menu *createContextMenu() override;
+};
+
+
+#else
 
 struct AnnuliWidget : ModuleWidget {
 	AnnuliWidget();
@@ -89,7 +103,7 @@ struct Blank16HPWidget : ModuleWidget {	Blank16HPWidget(); };
 
 struct Blank42HPWidget : ModuleWidget {	Blank42HPWidget(); };
 
-//#endif
+#endif
 
 // GUI COMPONENTS
 
