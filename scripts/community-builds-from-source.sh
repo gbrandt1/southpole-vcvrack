@@ -54,9 +54,9 @@ buildfails=""
 # unless you check out a specific git label. So the versionMap lets
 # you look up that version below when checking out source.
 declare -A versionMap
-versionMap=([Autodafe]=skip [Autodafe-Drums]=skip [NYSTHI]=skip
+versionMap=([Autodafe]=skip [Autodafe-Drums]=skip [AepelzensParasites]=skip [NYSTHI]=skip
 	[southpole-vcvrack]=skip 
-	[RJModules]=master [DrumKit]=master [VCV-Rack-Plugins]=master)
+	[VCV-Console]=skip [VCV-PulseMatrix]=skip [Vult]=skip [VultModules]=skip)
 
 # helper function to see if a particular key is in an associative array
 exists(){
@@ -67,6 +67,7 @@ exists(){
   fi
   eval '[ ${'$3'[$1]+muahaha} ]'
 }
+
 
 # loop through the json in the community repo
 for gitPlugin in $(cat community/plugins/*.json | grep \"source\" | awk -F'"' '{print $4}')
@@ -112,6 +113,7 @@ do
 
 	# pull down the latest code
 	git fetch
+	
 	if exists ${pluginDirName} in versionMap 
 	then
 		git checkout ${versionMap[${pluginDirName}]}
@@ -119,7 +121,9 @@ do
 		latest=`git describe --tags --abbrev=0`
 		if [[ ! -z $latest ]]; then
 			echo "[$pluginDirName Latest tag: $latest]"
-			git checkout $latest
+			#git checkout $latest
+			git checkout master
+			git pull
 		else
 			echo "[$pluginDirName no tags - using master !!!]"
 			git checkout master
@@ -128,18 +132,24 @@ do
 
 	# try to update submodules if there are any
 	git submodule update --init --recursive
-
 	# clean old builds (might not be needed but can prevent issues)
 	#make clean
-
 	make -j$nproc dep
-
 	# finally, build the plugin
 	if make -j$nproc
 	then
 		 true; # say nothing
 	else
-		 buildfails="${buildfails} ${pluginDirName}"
+		# try again with latest tag
+		git checkout $latest
+		#git pull
+		make clean
+		if make -j$nproc
+		then
+			true;
+		else
+			buildfails="${buildfails} ${pluginDirName}"
+		fi
 	fi
 
 	# go back to the last dir
@@ -148,3 +158,13 @@ do
 done
 
 echo "BUILD FAILURES: ${buildfails}"
+
+
+for binOnly in $(grep -L \"source\" community/plugins/*.json)
+do
+	for dlurl in $(cat $binOnly | grep \"download\" | awk -F'"' '{print $4}')
+	do
+		echo $dlurl
+	done
+done	
+

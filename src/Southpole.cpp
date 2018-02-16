@@ -33,6 +33,7 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<ButWidget>("Southpole", "But", "But - A/B buss", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
     p->addModel(createModel<AbrWidget>("Southpole", "Abr", "Abr - A/B switch", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
     p->addModel(createModel<EtagereWidget>("Southpole", "Etagere", "Etagere - EQ", FILTER_TAG));
+    p->addModel(createModel<HugoWidget>("Southpole", "Hugo", "Hugo", UTILITY_TAG));
     p->addModel(createModel<SnsWidget>("Southpole", "SNS", "SNS - euclidean sequencer", SEQUENCER_TAG));
     p->addModel(createModel<PisteWidget>("Southpole", "Piste", "Piste - drum processor", ENVELOPE_GENERATOR_TAG, EFFECT_TAG, UTILITY_TAG));
     p->addModel(createModel<WriggleWidget>("Southpole", "Wriggle", "Wriggle - spring model", LFO_TAG, FUNCTION_GENERATOR_TAG));

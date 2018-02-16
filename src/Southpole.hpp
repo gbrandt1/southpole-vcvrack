@@ -37,15 +37,17 @@ struct SplashWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
+struct AbrWidget : ModuleWidget { AbrWidget(); };
+
 struct BalaclavaWidget : ModuleWidget {	BalaclavaWidget(); };
 
 struct BandanaWidget : ModuleWidget { BandanaWidget(); };
 
 struct ButWidget : ModuleWidget { ButWidget(); };
 
-struct AbrWidget : ModuleWidget { AbrWidget(); };
-
 struct EtagereWidget : ModuleWidget { EtagereWidget(); };
+
+struct HugoWidget : ModuleWidget { HugoWidget(); };
 
 struct SnsWidget : ModuleWidget { SnsWidget(); };
 
