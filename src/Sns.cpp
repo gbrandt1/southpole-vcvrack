@@ -33,6 +33,7 @@ struct Sns : Module {
 		GATE_OUTPUT,
 		ACCENT_OUTPUT,
 		CLK_OUTPUT,
+		RESET_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {		
@@ -129,6 +130,7 @@ void Sns::step() {
 		if (resetTrigger.process(inputs[RESET_INPUT].value)) {
 			currentStep = par_l + par_p;
 		}		
+	    outputs[RESET_OUTPUT].value = inputs[RESET_INPUT].value; 
 	}	
 
 	if (inputs[CLK_INPUT].active) {
@@ -357,12 +359,13 @@ SnsWidget::SnsWidget() {
 	addInput(createInput<sp_Port>(Vec(x3, y1+3.5*yh), module, Sns::S_INPUT));
 
 	addInput(createInput<sp_Port>(Vec(x1, y1+4.65*yh), module, Sns::CLK_INPUT));
-	addInput(createInput<sp_Port>(Vec(x2, y1+4.65*yh), module, Sns::RESET_INPUT));
-
-	addOutput(createOutput<sp_Port>(Vec(x1+15, y1+5.4*yh), module, Sns::GATE_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x2+15, y1+5.4*yh), module, Sns::ACCENT_OUTPUT));
-
+	addInput(createInput<sp_Port>(Vec(x1, y1+5.4*yh), module, Sns::RESET_INPUT));
 	addOutput(createOutput<sp_Port>(Vec(x3, y1+4.65*yh), module, Sns::CLK_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, y1+5.4*yh), module, Sns::RESET_OUTPUT));
+
+	addOutput(createOutput<sp_Port>(Vec(x2, y1+4.65*yh), module, Sns::GATE_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x2, y1+5.4*yh), module, Sns::ACCENT_OUTPUT));
+
 
 	//addChild(createLight<SmallLight<RedLight>>(Vec(4, 281), module, Sns::CLK_LIGHT));
 	//addChild(createLight<SmallLight<RedLight>>(Vec(4+25, 281), module, Sns::GATE_LIGHT));

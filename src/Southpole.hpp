@@ -81,11 +81,13 @@ struct FuseWidget : ModuleWidget {
 
 struct SsshWidget : ModuleWidget {	SsshWidget(); };
 
+#define NSNAKEBUSS  16
 struct SnakeWidget : ModuleWidget {	
 	SnakeWidget(); 
-	static float *cable;
-	static unsigned int *lockid;
-	static unsigned int counter;
+	static float *cable[NSNAKEBUSS];
+	static unsigned int *lockid[NSNAKEBUSS];
+	static unsigned int counter[NSNAKEBUSS];
+	static unsigned int last_buss;
 };
 
 struct GnomeWidget : ModuleWidget {	GnomeWidget(); };

@@ -252,7 +252,7 @@ SplashParasiteWidget::SplashParasiteWidget() {
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, SplashParasite::MODE_GREEN_LIGHT));
 
 	addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, SplashParasite::RANGE_PARAM, 0.0, 1.0, 0.0));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-8), module, SplashParasite::RANGE_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, SplashParasite::RANGE_GREEN_LIGHT));
 
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, SplashParasite::PHASE_GREEN_LIGHT));
 	addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, SplashParasite::FREQUENCY_PARAM, -48.0, 48.0, 0.0));

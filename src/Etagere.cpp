@@ -221,43 +221,39 @@ EtagereWidget::EtagereWidget() {
 
     // TO DO possible default freqs: 880, 5000
 
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 1*yh), module, Etagere::FREQ1_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, Etagere::GAIN1_PARAM,  gmin,  gmax, 0.));
-
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 3*yh), module, Etagere::FREQ2_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 4*yh), module, Etagere::GAIN2_PARAM,  gmin,  gmax, 0.));
-    addParam(createParam<sp_Trimpot>(Vec(x15, y1+ 5*yh), module, Etagere::Q2_PARAM,      0.0,   1.0, 0.));
-    
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 6*yh), module, Etagere::FREQ3_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 7*yh), module, Etagere::GAIN3_PARAM,  gmin,  gmax, 0.));
-    addParam(createParam<sp_Trimpot>(Vec(x15, y1+ 8*yh), module, Etagere::Q3_PARAM,      0.0,   1.0, 0.));
-    
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 9*yh), module, Etagere::FREQ4_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+10*yh), module, Etagere::GAIN4_PARAM,  gmin,  gmax, 0.));
-
-    addInput(createInput<sp_Port>(Vec(x1, y1+13* yh), module, Etagere::IN_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 1* yh), module, Etagere::FREQ1_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 2* yh), module, Etagere::GAIN1_INPUT));
+    addInput(createInput<sp_Port>(Vec(x1, y1+ 1* yh), module, Etagere::FREQ4_INPUT));
+    addInput(createInput<sp_Port>(Vec(x1, y1+ 2* yh), module, Etagere::GAIN4_INPUT));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 1*yh), module, Etagere::FREQ4_PARAM, vfmin, vfmax, 0.));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, Etagere::GAIN4_PARAM,  gmin,  gmax, 0.));
+    addOutput(createOutput<sp_Port>(Vec(x2, y1+0*yh), module, Etagere::HP_OUTPUT + 0));
 
     addInput(createInput<sp_Port>(Vec(x1, y1+ 3* yh), module, Etagere::FREQ2_INPUT));
     addInput(createInput<sp_Port>(Vec(x1, y1+ 4* yh), module, Etagere::GAIN2_INPUT));
     addInput(createInput<sp_Port>(Vec(x1, y1+ 5* yh), module, Etagere::Q2_INPUT));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 3*yh), module, Etagere::FREQ2_PARAM, vfmin, vfmax, 0.));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 4*yh), module, Etagere::GAIN2_PARAM,  gmin,  gmax, 0.));
+    addParam(createParam<sp_Trimpot>(Vec(x15, y1+ 5*yh), module, Etagere::Q2_PARAM,      0.0,   1.0, 0.));
+    addOutput(createOutput<sp_Port>(Vec(x2, y1+5*yh), module, Etagere::BP2_OUTPUT));
     
     addInput(createInput<sp_Port>(Vec(x1, y1+ 6* yh), module, Etagere::FREQ3_INPUT));
     addInput(createInput<sp_Port>(Vec(x1, y1+ 7* yh), module, Etagere::GAIN3_INPUT));
     addInput(createInput<sp_Port>(Vec(x1, y1+ 8* yh), module, Etagere::Q3_INPUT));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 6*yh), module, Etagere::FREQ3_PARAM, vfmin, vfmax, 0.));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 7*yh), module, Etagere::GAIN3_PARAM,  gmin,  gmax, 0.));
+    addParam(createParam<sp_Trimpot>(Vec(x15, y1+ 8*yh), module, Etagere::Q3_PARAM,      0.0,   1.0, 0.));
+    addOutput(createOutput<sp_Port>(Vec(x2, y1+8*yh), module, Etagere::BP3_OUTPUT));
     
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 9* yh), module, Etagere::FREQ4_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+10* yh), module, Etagere::GAIN4_INPUT));    
+    addInput(createInput<sp_Port>(Vec(x1, y1+ 9* yh), module, Etagere::FREQ1_INPUT));
+    addInput(createInput<sp_Port>(Vec(x1, y1+10* yh), module, Etagere::GAIN1_INPUT));    
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 9*yh), module, Etagere::FREQ1_PARAM, vfmin, vfmax, 0.));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+10*yh), module, Etagere::GAIN1_PARAM,  gmin,  gmax, 0.));
+    addOutput(createOutput<sp_Port>(Vec(x2, y1+11*yh), module, Etagere::LP_OUTPUT + 0));
+
 	
     addInput(createInput<sp_Port>(Vec(x1, y1+11* yh), module, Etagere::FREQ5_INPUT));
     addInput(createInput<sp_Port>(Vec(x1, y1+12* yh), module, Etagere::GAIN5_INPUT));    
 	
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+0*yh), module, Etagere::LP_OUTPUT + 0));
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+5*yh), module, Etagere::BP2_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+8*yh), module, Etagere::BP3_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+11*yh), module, Etagere::HP_OUTPUT + 0));
-
+    addInput(createInput<sp_Port>(  Vec(x1, y1+13* yh), module, Etagere::IN_INPUT));    
     addOutput(createOutput<sp_Port>(Vec(x2, y1+13*yh), module, Etagere::OUT_OUTPUT));
 
 	addChild(createLight<SmallLight<RedLight>>(Vec(x2+10., y1+12.5*yh), module, Etagere::CLIP5_LIGHT));
