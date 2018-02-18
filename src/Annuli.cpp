@@ -254,12 +254,18 @@ AnnuliWidget::AnnuliWidget() {
 	Annuli *module = new Annuli();
 	setModule(module);
 	box.size = Vec(15*6, 380);
-
-	SVGPanel *panel = new SVGPanel();
-	panel->setBackground(SVG::load(assetPlugin(plugin, "res/Annuli.svg")));
-	panel->box.size = box.size;
-	addChild(panel);
-
+	{
+		panel = new SVGPanel();
+		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Annuli.svg")));
+		panel->box.size = box.size;
+		addChild(panel);
+	}
+	{
+		panel2 = new SVGPanel();
+		panel2->setBackground(SVG::load(assetPlugin(plugin, "res/DisastrousPeace.svg")));
+		panel2->box.size = box.size;
+		addChild(panel2);		
+	}
     const float x1 = 5;
     const float x2 = 35;
     const float x3 = 65;
@@ -299,6 +305,15 @@ AnnuliWidget::AnnuliWidget() {
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+18, y1+yh+3), module, Annuli::RESONATOR_GREEN_LIGHT));
 }
 
+void AnnuliWidget::step() {
+	Annuli *annuli = dynamic_cast<Annuli*>(module);
+	assert(annuli);
+
+	panel->visible  =  !annuli->easterEgg;
+	panel2->visible =  annuli->easterEgg;
+
+	ModuleWidget::step();
+}
 
 struct AnnuliModelItem : MenuItem {
 	Annuli *rings;

@@ -307,25 +307,25 @@ SmokeWidget::SmokeWidget() {
 #ifdef PARASITES
   {
 	  panel1 = new SVGPanel();
-	  panel1->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke6HP.svg")));
+	  panel1->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke-parasite.svg")));
 	  panel1->box.size = box.size;
 	  addChild(panel1);
   }
   {
     panel2 = new SVGPanel();
-    panel2->setBackground(SVG::load(assetPlugin(plugin, "res/Espectro.svg")));
+    panel2->setBackground(SVG::load(assetPlugin(plugin, "res/Espectro-parasite.svg")));
     panel2->box.size = box.size;
     addChild(panel2);
   }
   {
     panel3 = new SVGPanel();
-    panel3->setBackground(SVG::load(assetPlugin(plugin, "res/Ritardo.svg")));
+    panel3->setBackground(SVG::load(assetPlugin(plugin, "res/Ritardo-parasite.svg")));
     panel3->box.size = box.size;
     addChild(panel3);
   }
   {
     panel4 = new SVGPanel();
-    panel4->setBackground(SVG::load(assetPlugin(plugin, "res/Camilla.svg")));
+    panel4->setBackground(SVG::load(assetPlugin(plugin, "res/Camilla-parasite.svg")));
     panel4->box.size = box.size;
     addChild(panel4);
   }
@@ -337,7 +337,7 @@ SmokeWidget::SmokeWidget() {
   }
   {
     panel6 = new SVGPanel();
-    panel6->setBackground(SVG::load(assetPlugin(plugin, "res/Camilla.svg")));
+    panel6->setBackground(SVG::load(assetPlugin(plugin, "res/Resonestor.svg")));
     panel6->box.size = box.size;
     addChild(panel6);
   }
@@ -345,7 +345,7 @@ SmokeWidget::SmokeWidget() {
 #else
   {
     panel1 = new SVGPanel();
-    panel1->setBackground(SVG::load(assetPlugin(plugin, "res/Humo.svg")));
+    panel1->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke.svg")));
     panel1->box.size = box.size;
     addChild(panel1);
   }
@@ -423,10 +423,10 @@ SmokeWidget::SmokeWidget() {
   addOutput(createOutput<sp_Port>(Vec(x3, 9.5*yh+y1), module, Smoke::OUT_L_OUTPUT));
   addOutput(createOutput<sp_Port>(Vec(x3, 10.5*yh+y1), module, Smoke::OUT_R_OUTPUT));
   
-  addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3, y1+40), module, Smoke::MIX_GREEN_LIGHT));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3, y1+30), module, Smoke::PAN_GREEN_LIGHT));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3, y1+20), module, Smoke::FEEDBACK_GREEN_LIGHT));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3, y1+10), module, Smoke::REVERB_GREEN_LIGHT));
+  addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 40), module, Smoke::MIX_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 30), module, Smoke::PAN_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 20), module, Smoke::FEEDBACK_GREEN_LIGHT));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 10), module, Smoke::REVERB_GREEN_LIGHT));
  
 }
 
@@ -438,8 +438,10 @@ void SmokeWidget::step() {
 	panel2->visible = false;
 	panel3->visible = false;
 	panel4->visible = false;
-	panel5->visible = false;
-	panel6->visible = false;
+  #ifdef PARASITES
+    panel5->visible = false;
+    panel6->visible = false;
+  #endif
   if ( smoke->playbackmode == clouds::PLAYBACK_MODE_SPECTRAL) {
     panel1->visible = false;
     panel2->visible = true;
@@ -452,14 +454,16 @@ void SmokeWidget::step() {
     panel1->visible = false;
     panel4->visible = true;
   }
-  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_OLIVERB) {
-    panel1->visible = false;
-    panel5->visible = true;    
-  }
-  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_RESONESTOR) {
-    panel1->visible = false;
-    panel6->visible = true;
-  }
+  #ifdef PARASITES
+    if ( smoke->playbackmode == clouds::PLAYBACK_MODE_OLIVERB) {
+      panel1->visible = false;
+      panel5->visible = true;    
+    }
+    if ( smoke->playbackmode == clouds::PLAYBACK_MODE_RESONESTOR) {
+      panel1->visible = false;
+      panel6->visible = true;
+    }
+  #endif
 
 	ModuleWidget::step();
 }

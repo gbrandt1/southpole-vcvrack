@@ -21,11 +21,11 @@ struct SmokeWidget : ModuleWidget {
 
 #ifdef PARASITES
 
-struct SaltoWidget : ModuleWidget {
+struct SplashParasiteWidget : ModuleWidget {
 	SVGPanel *panel0;
 	SVGPanel *panel1;
 	SVGPanel *panel2;
-	SaltoWidget();
+	SplashParasiteWidget();
 	void step() override;
 	Menu *createContextMenu() override;
 };
@@ -34,7 +34,10 @@ struct SaltoWidget : ModuleWidget {
 #else
 
 struct AnnuliWidget : ModuleWidget {
+	SVGPanel *panel;
+	SVGPanel *panel2;
 	AnnuliWidget();
+	void step() override;
 	Menu *createContextMenu() override;
 };
 

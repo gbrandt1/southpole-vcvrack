@@ -25,7 +25,7 @@
 nproc=`sysctl -n hw.physicalcpu` #mac
 #nproc=`nproc` #linux
 
-echo $nproc
+echo "threads: " $nproc
 
 # check for the community repo locally
 echo [Update community repo]
@@ -54,10 +54,20 @@ buildfails=""
 # unless you check out a specific git label. So the versionMap lets
 # you look up that version below when checking out source.
 declare -A versionMap
-versionMap=([Autodafe]=skip [Autodafe-Drums]=skip [AepelzensParasites]=skip [NYSTHI]=skip
-	[VCV-Console]=skip [VCV-PulseMatrix]=skip [Vult]=skip [VultModules]=skip)
-	[southpole-vcvrack]=skip [vcvrack-rtlsdr]=skip
-	[RJModules]=master [DrumKit]=master [VCV-Rack-Plugins]=master)
+versionMap=([Autodafe]=skip [Autodafe-Drums]=skip 
+	[AepelzensParasites]=skip [NYSTHI]=skip
+	[VCV-Console]=skip [VCV-PulseMatrix]=skip 
+	[Vult]=skip [VultModules]=skip
+	[southpole-vcvrack]=skip 
+	[vcvrack-rtlsdr]=skip
+	[Alikins-rack-plugins]=v0.5.2
+	[AudibleInstruments]=v0.5.0
+	[Befaco]=v0.5.0
+	[BogaudioModules]=0.5.4
+	[DHE-Modules]=v0.5.0
+	[ESeries]=v0.5.0
+	[JW-Modules]=v0.5.11
+	[vcv_luckyxxl]=v0.5.1)
 
 # helper function to see if a particular key is in an associative array
 exists(){
@@ -110,10 +120,11 @@ do
 	pushd $pluginDirName
 
 	# Some devs don't have a .gitignore so you can't pull until you do something with the changed files.
-	#git reset HEAD --hard #discards any changes - we could do `git stash` here instead
-
+	git reset HEAD --hard #discards any changes - we could do `git stash` here instead
+	git clean -f -d
 	# pull down the latest code
-	git fetch
+	git pull
+
 	
 	if exists ${pluginDirName} in versionMap 
 	then
@@ -135,15 +146,19 @@ do
 	git submodule update --init --recursive
 	# clean old builds (might not be needed but can prevent issues)
 	#make clean
-	make -j$nproc dep
+	make -q dep
+	if test $? -le 1 ; then
+		make -j$nproc dep
+	fi
+	
 	# finally, build the plugin
 	if make -j$nproc
 	then
 		 true; # say nothing
 	else
-		# try again with latest tag
-		git checkout $latest
-		#git pull
+		# if master failed try again with latest tag
+		echo "[$pluginDirName master failed - trying latest tag $latest]"
+		git checkout $latest		
 		make clean
 		if make -j$nproc
 		then
@@ -159,8 +174,9 @@ do
 done
 
 echo "BUILD FAILURES: ${buildfails}"
+echo
 
-
+echo "Binaries only:"
 for binOnly in $(grep -L \"source\" community/plugins/*.json)
 do
 	for dlurl in $(cat $binOnly | grep \"download\" | awk -F'"' '{print $4}')

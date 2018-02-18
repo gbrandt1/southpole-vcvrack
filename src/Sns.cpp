@@ -32,6 +32,7 @@ struct Sns : Module {
 	enum OutputIds {
 		GATE_OUTPUT,
 		ACCENT_OUTPUT,
+		CLK_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {		
@@ -134,6 +135,7 @@ void Sns::step() {
 		if (clockTrigger.process(inputs[CLK_INPUT].value)) {
 			nextStep = true;
 		}
+	    outputs[CLK_OUTPUT].value = inputs[CLK_INPUT].value; 
 	}  
 
 	if (nextStep) {
@@ -299,7 +301,7 @@ struct SnsDisplay : TransparentWidget {
 
 		Vec textPos = Vec(15, 105);
 		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
-		nvgFillColor(vg, nvgTransRGBA(textColor, 16));
+		//nvgFillColor(vg, nvgTransRGBA(textColor, 16));
 		//nvgText(vg, textPos.x, textPos.y, "~~~~", NULL);
 		nvgFillColor(vg, textColor);
 		char str[20];
@@ -354,11 +356,13 @@ SnsWidget::SnsWidget() {
 	addInput(createInput<sp_Port>(Vec(x2, y1+3.5*yh), module, Sns::A_INPUT));
 	addInput(createInput<sp_Port>(Vec(x3, y1+3.5*yh), module, Sns::S_INPUT));
 
-	addInput(createInput<sp_Port>(Vec(x1+15, y1+4.65*yh), module, Sns::CLK_INPUT));
-	addInput(createInput<sp_Port>(Vec(x2+15, y1+4.65*yh), module, Sns::RESET_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1, y1+4.65*yh), module, Sns::CLK_INPUT));
+	addInput(createInput<sp_Port>(Vec(x2, y1+4.65*yh), module, Sns::RESET_INPUT));
 
 	addOutput(createOutput<sp_Port>(Vec(x1+15, y1+5.4*yh), module, Sns::GATE_OUTPUT));
 	addOutput(createOutput<sp_Port>(Vec(x2+15, y1+5.4*yh), module, Sns::ACCENT_OUTPUT));
+
+	addOutput(createOutput<sp_Port>(Vec(x3, y1+4.65*yh), module, Sns::CLK_OUTPUT));
 
 	//addChild(createLight<SmallLight<RedLight>>(Vec(4, 281), module, Sns::CLK_LIGHT));
 	//addChild(createLight<SmallLight<RedLight>>(Vec(4+25, 281), module, Sns::GATE_LIGHT));

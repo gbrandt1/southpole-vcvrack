@@ -23,11 +23,11 @@ void init(rack::Plugin *p) {
 	//p->addModel(createModel<MyModuleWidget>("Southpole", "MyModule", "My Module", //OSCILLATOR_TAG));
 
 #ifdef PARASITES
-    p->addModel(createModel<SmokeWidget>("Southpole", "Smoke", "Smoke - texture synth", GRANULAR_TAG, REVERB_TAG));
-    p->addModel(createModel<SaltoWidget>("Southpole", "Salto", "Salto - two bumps/drunks", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
+    p->addModel(createModel<SmokeWidget>("Southpole Parasites", "Smoke", "Smoke/Espectro/Ritardo/Camilla/Oliverb/Resonestor", GRANULAR_TAG, REVERB_TAG));
+    p->addModel(createModel<SplashParasiteWidget>("Southpole Parasites", "SplashParasite", "Splash/Two Bumps/Two Drunks", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
 #else
-    p->addModel(createModel<SmokeWidget>("Southpole", "Humo", "Humo - texture synth", GRANULAR_TAG, REVERB_TAG));
-    p->addModel(createModel<AnnuliWidget>("Southpole", "Annuli", "Annuli - resonator"));
+    p->addModel(createModel<SmokeWidget>("Southpole", "Smoke", "Smoke/Espectro/Ritardo/Camilla - texture synth", GRANULAR_TAG, REVERB_TAG));
+    p->addModel(createModel<AnnuliWidget>("Southpole", "Annuli", "Annuli / Disastrous Peace - resonator"));
     p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava - Quad VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
     p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana - Quad Polarizer", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
 

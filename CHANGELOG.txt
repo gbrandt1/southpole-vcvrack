@@ -1,4 +1,22 @@
 
+-- 0.5.3 ----
+
+- Parasites skins + libary:
+  - access to Parasites firmwares by M. Puech https://mqtthiqs.github.io/parasites/
+  - based on Aepelzens Parasites / Arable Instruments
+  - indicated by Lovecraftian font and logo to differentiate from original firmwares
+  - Smoke (Clouds): Smoke, Espectro, Ritardo, Camilla, Oliverb, Resonestor
+  - Splash: Splash, Two Bumps, Two Drunks
+
+- Mutable Instruments skins:
+  - Humo rename back Smoke, skin cosmetics for all modes
+    - add back VU meter
+
+  - Annuli: add skin for Disastrous Peace easter egg mode
+
+
+
+
 
 -- 0.5.2 ----
 

@@ -172,8 +172,9 @@ void Cornrows::step() {
 			for (int i = 0; i < 24; i++) {
 				in[i].samples[0] = render_buffer[i] / 32768.0;
 			}
-//			src.setRatio(engineGetSampleRate() / 96000.0);
-			src.setRates(96000, engineGetSampleRate());
+// VERSION > 0.6			
+//			src.setRates(96000, engineGetSampleRate());
+			src.setRatio(engineGetSampleRate() / 96000.0);
 
 			int inLen = 24;
 			int outLen = outputBuffer.capacity();

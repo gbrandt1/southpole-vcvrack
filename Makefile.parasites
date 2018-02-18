@@ -1,5 +1,5 @@
 SLUG = Southpole-parasites
-VERSION = 0.5.1
+VERSION = 0.5.3
 
 # FLAGS will be passed to both the C and C++ compiler
 FLAGS += \
@@ -30,7 +30,7 @@ SOURCES += parasites/clouds/dsp/pvoc/phase_vocoder.cc
 SOURCES += parasites/clouds/dsp/pvoc/stft.cc
 SOURCES += parasites/clouds/resources.cc 
 
-SOURCES += src/Salto.cpp
+SOURCES += src/SplashParasite.cpp
 SOURCES += parasites/tides/generator.cc
 SOURCES += parasites/tides/resources.cc
 
