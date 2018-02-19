@@ -19,6 +19,7 @@ LDFLAGS +=
 SOURCES += src/Southpole.cpp
 SOURCES += src/Balaclava.cpp	
 SOURCES += src/Bandana.cpp
+SOURCES += src/Falls.cpp
 SOURCES += src/But.cpp
 SOURCES += src/Abr.cpp
 SOURCES += src/Sssh.cpp

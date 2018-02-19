@@ -8,15 +8,36 @@
   - Smoke (Clouds): Smoke, Espectro, Ritardo, Camilla, Oliverb, Resonestor
   - Splash: Splash, Two Bumps, Two Drunks
 
-- Mutable Instruments skins:
-  - Humo rename back Smoke, skin cosmetics for all modes
+- Mutable Instruments skins
+  - Humo 
+    - rename back Smoke, skin cosmetics for all modes
     - add back VU meter
 
-  - Annuli: add skin for Disastrous Peace easter egg mode
+  - Annuli
+    - add skin for Disastrous Peace easter egg mode
 
+- Etagère
+  - swap LP/HP position
+  - update cosmetics
 
+- Gnome
+  - changed internal gain staging and mixing behavior
+  - crossfading between oscillator and sub-oscillator
+  - better range for PWM behavior
+  - VCF resonance gain-compensation
+  - updated skin cosmetics (original color theme...)
 
+- SNS
+  - CLK/RST thru added for easier chaining of multiple SNS
 
+- Snake
+  - introduce 16 internal busses with 10 lines per buss
+  - cosmetics, separate 2x5 lines
+
+- Falls
+  - Attenumixverter, inspired by Fonitronik Cascade
+  - empty inputs provide offsets
+  - empty outputs mix into output below
 
 -- 0.5.2 ----
 

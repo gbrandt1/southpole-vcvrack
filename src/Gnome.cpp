@@ -220,6 +220,8 @@ struct Gnome : Module {
     VAStateVariableFilter hpfilter;
     VAStateVariableFilter ntfilter;
 
+	float last_fout;
+
 	bool decaying = false;
 	float env = 0.0;
 	//SchmittTrigger envtrigger;
@@ -310,7 +312,7 @@ void Gnome::step() {
 	float pitchCv = 12.0 * inputs[PITCH_INPUT].value;
 	float fm = 10. * params[FM_PARAM].value * outputs[LFO_OUTPUT].value;
 	oscillator.setPitch(params[PITCH_PARAM].value, pitchCv + fm);
-	oscillator.setPulseWidth(params[PW_PARAM].value + params[PWM_PARAM].value * inputs[PW_INPUT].value / 10.0);
+	oscillator.setPulseWidth(params[PW_PARAM].value + (5.0+inputs[PW_INPUT].value) / 10.0);
 
 	oscillator.process(1.0 / engineGetSampleRate());
 
@@ -328,7 +330,7 @@ void Gnome::step() {
 	subosc.process( tri );
 	float sub1 = subosc.count & 2 ? 5.0 : -5.0;
 	float sub2 = subosc.count & 4 ? 5.0 : -5.0;
-	float noise = 5.0 * randomNormal();
+	float noise = 2.3548 * randomNormal();
 
 	float sub =	0; 
 	float subwave = params[SUBWAVE_PARAM].value;
@@ -340,8 +342,9 @@ void Gnome::step() {
 
 	float ext = inputs[EXT_INPUT].value;
 
+	osc = crossf( osc, sub, submix );
 
-	float vco_out = (submix * sub + crossf( osc, ext, extmix ));
+	float vco_out = crossf( osc, ext, extmix );
 
 	outputs[VCO_OUTPUT].value = vco_out;
 
@@ -357,14 +360,12 @@ void Gnome::step() {
 	  inputs[VCFFREQ_INPUT].normalize(0.)
 	+ params[VCFPITCH_PARAM].value 
 	+ params[VCFENV_PARAM].value * 11.*env
-	+ params[VCFLFO_PARAM].value * 5.5*interp
+	+ params[VCFLFO_PARAM].value * 11.*interp
 	, -4.0, 6.0);
 	float reso = params[VCFQ_PARAM].value;
 
   	const float f0 = 261.626;
     float cutoff  = f0 * powf(2.f, freq);
-
-	//printf("%f %f\n",freq, cutoff); //, inputs[VCFCV_PARAM].value); // * 10.*interp);
 
     lpfilter.setCutoffFreq(cutoff);
     bpfilter.setCutoffFreq(cutoff);
@@ -387,11 +388,13 @@ void Gnome::step() {
 	else if (ftyp < 2.0) fout = crossf(bpout, hpout, ftyp - 1.0);
 	else 				 fout = crossf(hpout, ntout, ftyp - 2.0);
 
+	fout = fout - 0.8*reso*fout;
+
 	outputs[VCF_OUTPUT].value = fout;
 
 	// VCA
 
-	outputs[AUDIO_OUTPUT].value = fout * 10. * env;
+	outputs[AUDIO_OUTPUT].value = fout * env;
 
 	lights[PHASE_POS_LIGHT].setBrightnessSmooth(fmaxf(0.0, lfo.light()));
 	lights[PHASE_NEG_LIGHT].setBrightnessSmooth(fmaxf(0.0,-lfo.light()));
@@ -429,7 +432,7 @@ GnomeWidget::GnomeWidget() {
   	addInput(createInput<sp_Port>(			Vec(x1, y1+4*yh), module, Gnome::EXT_INPUT));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Gnome::EXT_PARAM, .0, 1.0, 0.0));
 	addInput(createInput<sp_Port>(			Vec(x1, y1+5*yh), module, Gnome::PW_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Gnome::PW_PARAM, 0.0, 1.0, 0.5));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Gnome::PW_PARAM, 0.0, .5, 0.25));
 	addInput(createInput<sp_Port>(			Vec(x1, y1+6*yh), module, Gnome::FM_INPUT));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Gnome::FM_PARAM, 0.0, 1.0, 0.0));
 	addOutput(createOutput<sp_Port>(		Vec(x2, y1+7*yh), module, Gnome::VCO_OUTPUT));
@@ -456,14 +459,13 @@ GnomeWidget::GnomeWidget() {
 	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+1*yh), module, Gnome::VCFTYPE_PARAM, 0.0, 3.0, 0.0));
   	addInput(createInput<sp_Port>(			 Vec(x5, y1+2*yh), module, Gnome::VCFFREQ_INPUT));
 	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+3*yh), module, Gnome::VCFPITCH_PARAM, -4.0,  7.0, 0.0));
-
-	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+4*yh), module, Gnome::VCFQ_PARAM,     0.0,  1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+5*yh), module, Gnome::VCFENV_PARAM,    -1,  1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+6*yh), module, Gnome::VCFLFO_PARAM,     0., 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+4*yh), module, Gnome::VCFQ_PARAM,     0.0, 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+5*yh), module, Gnome::VCFENV_PARAM,  -1.0, 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+6*yh), module, Gnome::VCFLFO_PARAM,  -1.0, 1.0, 0.0));
 	addOutput(createOutput<sp_Port>( 	  	 Vec(x5, y1+7*yh), module, Gnome::VCF_OUTPUT));
 
  	//VCA
-	addOutput(createOutput<sp_Port>(Vec(x5, y1+8*yh), module, Gnome::AUDIO_OUTPUT));
+	addOutput(createOutput<sp_Port>(Vec(x3, y1+8*yh), module, Gnome::AUDIO_OUTPUT));
  
 
 	addChild(createLight<SmallLight<GreenRedLight>>(Vec(x3, y1+3*yh), module, Gnome::PHASE_POS_LIGHT));

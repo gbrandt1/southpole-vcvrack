@@ -113,10 +113,10 @@ void Etagere::step() {
         float gain4 = clampf(g_gain + params[GAIN4_PARAM].value + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
 
 		float g_cutoff = clampf(inputs[FREQ5_INPUT].normalize(0.), -4.0, 6.0);
-        float freq1 = clampf(g_cutoff + params[FREQ1_PARAM].value + inputs[FREQ1_INPUT].normalize(0.), -4.0, 7.0);
-        float freq2 = clampf(g_cutoff + params[FREQ2_PARAM].value + inputs[FREQ2_INPUT].normalize(0.), -4.0, 7.0);
-        float freq3 = clampf(g_cutoff + params[FREQ3_PARAM].value + inputs[FREQ3_INPUT].normalize(0.), -4.0, 7.0);
-        float freq4 = clampf(g_cutoff + params[FREQ4_PARAM].value + inputs[FREQ4_INPUT].normalize(0.), -4.0, 7.0);
+        float freq1 = clampf(g_cutoff + params[FREQ1_PARAM].value + inputs[FREQ1_INPUT].normalize(0.), -4.0, 6.0);
+        float freq2 = clampf(g_cutoff + params[FREQ2_PARAM].value + inputs[FREQ2_INPUT].normalize(0.), -4.0, 6.0);
+        float freq3 = clampf(g_cutoff + params[FREQ3_PARAM].value + inputs[FREQ3_INPUT].normalize(0.), -4.0, 6.0);
+        float freq4 = clampf(g_cutoff + params[FREQ4_PARAM].value + inputs[FREQ4_INPUT].normalize(0.), -4.0, 6.0);
 
         float reso2 = clampf(g_cutoff + params[Q2_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, .0, 1.0);
         float reso3 = clampf(g_cutoff + params[Q3_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, .0, 1.0);
