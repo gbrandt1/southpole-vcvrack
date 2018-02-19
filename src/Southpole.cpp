@@ -31,6 +31,7 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", "Balaclava - Quad VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
     p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana - Quad Polarizer", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
 
+    p->addModel(createModel<FallsWidget>("Southpole", "Falls", "Falls - Attenumixverteroffset", UTILITY_TAG,AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
     p->addModel(createModel<ButWidget>("Southpole", "But", "But - A/B buss", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
     p->addModel(createModel<AbrWidget>("Southpole", "Abr", "Abr - A/B switch", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
     p->addModel(createModel<EtagereWidget>("Southpole", "Etagere", "Etagere - EQ", FILTER_TAG));

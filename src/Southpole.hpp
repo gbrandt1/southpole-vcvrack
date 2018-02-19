@@ -54,60 +54,36 @@ struct SplashWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
-struct AbrWidget : ModuleWidget { AbrWidget(); };
-
 struct BalaclavaWidget : ModuleWidget {	BalaclavaWidget(); };
-
 struct BandanaWidget : ModuleWidget { BandanaWidget(); };
+struct FallsWidget : ModuleWidget { FallsWidget(); };
 
+struct AbrWidget : ModuleWidget { AbrWidget(); };
 struct ButWidget : ModuleWidget { ButWidget(); };
-
 struct EtagereWidget : ModuleWidget { EtagereWidget(); };
-
 struct HugoWidget : ModuleWidget { HugoWidget(); };
-
 struct SnsWidget : ModuleWidget { SnsWidget(); };
-
 struct BounceWidget : ModuleWidget { BounceWidget(); };
-
 struct WriggleWidget : ModuleWidget { WriggleWidget(); };
-
 struct PisteWidget : ModuleWidget {	PisteWidget(); };
-
 struct FuseWidget : ModuleWidget {
 	FuseWidget();
 	Menu *createContextMenu() override;
 };
 
 struct SsshWidget : ModuleWidget {	SsshWidget(); };
-
-#define NSNAKEBUSS  16
-struct SnakeWidget : ModuleWidget {	
-	SnakeWidget(); 
-	static float *cable[NSNAKEBUSS];
-	static unsigned int *lockid[NSNAKEBUSS];
-	static unsigned int counter[NSNAKEBUSS];
-	static unsigned int last_buss;
-};
-
+struct SnakeWidget : ModuleWidget {	SnakeWidget(); };
 struct GnomeWidget : ModuleWidget {	GnomeWidget(); };
-struct Gnome2Widget : ModuleWidget {	Gnome2Widget(); };
-
 struct Blank1HPWidget : ModuleWidget {	Blank1HPWidget(); };
-
 struct Blank2HPWidget : ModuleWidget {	Blank2HPWidget(); };
-
 struct Blank4HPWidget : ModuleWidget {	Blank4HPWidget(); };
-
 struct Blank8HPWidget : ModuleWidget {
 	Blank8HPWidget(); 
 //	TextField *textField;
 //	json_t *toJson() override;
 //	void fromJson(json_t *rootJ) override;
 };
-
 struct Blank16HPWidget : ModuleWidget {	Blank16HPWidget(); };
-
 struct Blank42HPWidget : ModuleWidget {	Blank42HPWidget(); };
 
 #endif
