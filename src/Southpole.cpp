@@ -32,9 +32,11 @@ void init(rack::Plugin *p) {
     p->addModel(createModel<BandanaWidget>("Southpole", "Bandana", "Bandana - Quad Polarizer", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
 
     p->addModel(createModel<FallsWidget>("Southpole", "Falls", "Falls - Attenumixverteroffset", UTILITY_TAG,AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
+    p->addModel(createModel<AuxWidget>("Southpole", "Aux", "Aux - Effect Loop", UTILITY_TAG,AMPLIFIER_TAG, MIXER_TAG));
     p->addModel(createModel<ButWidget>("Southpole", "But", "But - A/B buss", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
     p->addModel(createModel<AbrWidget>("Southpole", "Abr", "Abr - A/B switch", SWITCH_TAG, UTILITY_TAG, MIXER_TAG));
     p->addModel(createModel<EtagereWidget>("Southpole", "Etagere", "Etagere - EQ", FILTER_TAG));
+    p->addModel(createModel<DeuxEtageresWidget>("Southpole", "DeuxEtageres", "Deux Etageres - Stereo EQ", FILTER_TAG));
     p->addModel(createModel<HugoWidget>("Southpole", "Hugo", "Hugo", UTILITY_TAG));
     p->addModel(createModel<SnsWidget>("Southpole", "SNS", "SNS - euclidean sequencer", SEQUENCER_TAG));
     p->addModel(createModel<PisteWidget>("Southpole", "Piste", "Piste - drum processor", ENVELOPE_GENERATOR_TAG, EFFECT_TAG, UTILITY_TAG));

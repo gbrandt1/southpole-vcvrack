@@ -57,10 +57,12 @@ struct SplashWidget : ModuleWidget {
 struct BalaclavaWidget : ModuleWidget {	BalaclavaWidget(); };
 struct BandanaWidget : ModuleWidget { BandanaWidget(); };
 struct FallsWidget : ModuleWidget { FallsWidget(); };
+struct AuxWidget : ModuleWidget { AuxWidget(); };
 
 struct AbrWidget : ModuleWidget { AbrWidget(); };
 struct ButWidget : ModuleWidget { ButWidget(); };
 struct EtagereWidget : ModuleWidget { EtagereWidget(); };
+struct DeuxEtageresWidget : ModuleWidget { DeuxEtageresWidget(); };
 struct HugoWidget : ModuleWidget { HugoWidget(); };
 struct SnsWidget : ModuleWidget { SnsWidget(); };
 struct BounceWidget : ModuleWidget { BounceWidget(); };

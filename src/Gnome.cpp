@@ -309,10 +309,10 @@ void Gnome::step() {
 
 	// VCO
 
-	float pitchCv = 12.0 * inputs[PITCH_INPUT].value;
+	float pitchCv = 12.0 * inputs[PITCH_INPUT].normalize(0.);
 	float fm = 10. * params[FM_PARAM].value * outputs[LFO_OUTPUT].value;
 	oscillator.setPitch(params[PITCH_PARAM].value, pitchCv + fm);
-	oscillator.setPulseWidth(params[PW_PARAM].value + (5.0+inputs[PW_INPUT].value) / 10.0);
+	oscillator.setPulseWidth(params[PW_PARAM].value + (5.0+inputs[PW_INPUT].normalize(0.)) / 10.0);
 
 	oscillator.process(1.0 / engineGetSampleRate());
 
@@ -321,7 +321,7 @@ void Gnome::step() {
 	float sqr = 5.0 * oscillator.sqr();
 
 	// Set output
-	float oscwave = params[OSC_PARAM].value; // + inputs[WAVE_INPUT].value;
+	float oscwave = params[OSC_PARAM].value + inputs[OSC_INPUT].normalize(0.)/10.;
 	//wave = clampf(wave, 0.0, 3.0);
 	float osc = 0.;
 	if (oscwave < 1.0)  osc = crossf(tri, saw, oscwave);

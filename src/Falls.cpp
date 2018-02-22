@@ -60,11 +60,11 @@ void Falls::step() {
 	for (int i = 0; i < NUMP; i++) {
 		float g = params[GAIN1_PARAM + i].value*12.;
 		g = clampf(g, -12.0, 12.0);
-		if (inputs[IN1_INPUT + i].active) {
-    		out += g * inputs[IN1_INPUT + i].normalize(0.);
-        } else {
-            out += g;      
-        }
+		//if (inputs[IN1_INPUT + i].active) {
+    		out += g * inputs[IN1_INPUT + i].normalize(1.);
+        //} else {
+        //    out += g;      
+        //}
 		lights[OUT1_POS_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, out / 5.0));
 		lights[OUT1_NEG_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, -out / 5.0));
 		if (outputs[OUT1_OUTPUT + i].active) {

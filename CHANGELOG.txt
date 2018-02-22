@@ -39,6 +39,10 @@
   - empty inputs provide offsets
   - empty outputs mix into output below
 
+- Aux
+  - 2 Stereo Effect Send/Return loops 
+  - with cross feedback (same or swapped stereo channels) 
+
 -- 0.5.2 ----
 
 - Gnome: complete synth voice based on Fundamental modules

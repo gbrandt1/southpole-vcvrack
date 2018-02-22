@@ -20,6 +20,7 @@ SOURCES += src/Southpole.cpp
 SOURCES += src/Balaclava.cpp	
 SOURCES += src/Bandana.cpp
 SOURCES += src/Falls.cpp
+SOURCES += src/Aux.cpp
 SOURCES += src/But.cpp
 SOURCES += src/Abr.cpp
 SOURCES += src/Sssh.cpp
@@ -27,6 +28,7 @@ SOURCES += src/Snake.cpp
 SOURCES += src/Gnome.cpp
 
 SOURCES += src/Etagere.cpp
+SOURCES += src/DeuxEtageres.cpp
 SOURCES += src/VAStateVariableFilter.cpp
 SOURCES += src/DSPUtilities.cpp
 
