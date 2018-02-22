@@ -8,14 +8,36 @@
 
 const float radius = 35.;
 
-	//chroma vectors
-	const int cn[4][12] =
-	{ { 1,0,1,0,1,1,0,1,0,1,0,1 }, 	// Major scale
+#define MAXPARTS 7
+#define TNROWS 12
+// circle of fifths
+const int cof[12] = { 0,7,2,9,4,11,6,1,8,3,10,5 };
+
+//chroma vectors
+const int cn[5][12] =
+	{ { 1,1,1,1,1,1,1,1,1,1,1,1 }, 	// Chromatic
+	  { 1,0,1,0,1,1,0,1,0,1,0,1 }, 	// Major scale
 	  { 1,0,1,1,0,1,0,1,1,0,0,1 }, 	// minor scale
 	  { 1,0,0,0,1,0,0,1,0,0,0,0 }, 	// M
 	  { 1,0,0,1,0,0,0,1,0,0,0,0 }, 	// m
-	};	
+	};
 
+enum chroma_vector_names {
+	CHROMATIC_CHROMA,
+	MAJOR_CHROMA,
+	MINOR_CHROMA,
+	M3_CHROMA,
+	m3_CHROMA,
+	NUM_CHROMAS
+};
+
+enum chord_type_names {
+	MAJ_CHORD,
+	MIN_CHORD,
+	AUG_CHORD,
+	DIM_CHORD,
+	SUS_CHORD
+};
 
 struct Note {
 
@@ -62,28 +84,27 @@ struct Hugo : Module {
 	void reset() override;
 
 	// Tonnetz torus aligned to major thirds 
-	// -> three rows are enough, fourth is for display
-	Note notes[4][12];
-	Note *chord[7];
-
-	int octave;
+	// -> three rows are enough, fourth is for display, twelve completes the map
+	Note notes[TNROWS][12];
+	Note *chord[MAXPARTS];
+	int octave[MAXPARTS];
+	int parts;
 	int transposition;
+	int scale;
+	chord_type_names type;	
 
 	float freq[12];
 
 	// playhead logical position
-	float x0;
-	float y0;
+	int nx;
+	int ny;
 
 	// playhead geometrical
-	float x;
-	float y;
+	float x0;
+	float y0;
 };
 
 void Hugo::reset() {
-
-	// circle of fifths
-	const int cof[12] = { 0,7,2,9,4,11,6,1,8,3,10,5 };
 
 	float ratio = pow(2., 1./12.);
 	for (int i=0; i<12; i++) {
@@ -91,7 +112,7 @@ void Hugo::reset() {
 		printf("%f\n", freq[i]);
 	}
 
-	for (int j=0; j<4; j++) {
+	for (int j=0; j<12; j++) {
 		for (int i=0; i<12; i++) {
 			notes[j][i].pc = cof[(i+10 + j*8)%12];
 
@@ -110,77 +131,85 @@ void Hugo::reset() {
 		}
 	}
 
-	for ( int i=0; i<12; i++ ) {
+	for ( int i=0; i< MAXPARTS; i++ ) {
 		chord[i] = &notes[0][i];
+		octave[i] = 1;
 	}
+
+	scale = 0;
+	parts = 7;
 }
 
 void Hugo::step() {
 
-	x0 = inputs[X_INPUT].normalize(0.)+6.;
-	y0 = inputs[Y_INPUT].normalize(0.)+1.;
+	x0 = inputs[X_INPUT].normalize(0.)+6;
+	y0 = inputs[Y_INPUT].normalize(0.)+1;
 
-	transposition = floor(inputs[TR_INPUT].normalize(0.));
-
-	while ( transposition < 0.) { transposition += 12.; }
-
-	octave = 1.;
-
-	//while (x0 <   0.) { x0 += 12.;  octave--; }
-	//while (x0 >= 12.) { x0 -= 12.;  octave++; }
 	while (x0 <   0.) { x0 += 12.; }
 	while (x0 >= 12.) { x0 -= 12.; }
 
 	while (y0 < 0. ) { y0 += 3.; }
 	while (y0 >= 3.) { y0 -= 3.; }
 
-	float phi = -(x0 - y0/2.)*2.*M_PI / 12.;
-	float   r = radius + 25.*y0;
-
-	x = r*sin(phi);
-	y = r*cos(phi);
-	//x = 30*(x0-6);
-	//y = 30*(y0-1);
-
-	// clear any activitiy
-	//for ( int ny = 0; ny < 3; ny++) {
-	//	for ( int nx = 0; nx < 12; nx++) {
-	//		notes[ny][nx].active = 0.0;
-	//	}
-	//}	
-
 	// determine active triad
-	int nx = floor(x0);
-	int ny = floor(y0);
+	nx = floor(x0);
+	ny = floor(y0);
 
-	if (nx<0) { nx+=12; }
-	if (ny<0) { ny+=3; }
-	
+	//if (nx<0) { nx+=12; }
+	//if (ny<0) { ny+=3; }
+
+	transposition = floor(inputs[TR_INPUT].normalize(0.));
+	while ( transposition < 0.) { transposition += 12.; }
+
+/*
     if ( y0-ny > x0-nx  ) {
 		// Major (0 4 7 e 2 6 9)
-		chord[0] = &notes[(ny+1)%4][ nx];
-		chord[1] = &notes[ ny	  ][ nx];
-		chord[2] = &notes[(ny+1)%4][(nx+1)%12];
-		chord[3] = &notes[ ny	  ][(nx+1)%12];
-		chord[4] = &notes[(ny+1)%4][(nx+2)%12];
-		chord[5] = &notes[ ny     ][(nx+2)%12];
-		chord[6] = &notes[(ny+1)%4][(nx+3)%12];
+		chord[0] = &notes[(ny+1)%TNROWS][ nx	  ];
+		chord[1] = &notes[ ny	       ][ nx	  ];
+		chord[2] = &notes[(ny+1)%TNROWS][(nx+1)%12];
+		chord[3] = &notes[ ny	       ][(nx+1)%12];
+		chord[4] = &notes[(ny+1)%TNROWS][(nx+2)%12];
+		chord[5] = &notes[ ny          ][(nx+2)%12];
+		chord[6] = &notes[(ny+1)%TNROWS][(nx+3)%12];
+		type = MAJ_CHORD;
 	} else {
 		// minor (0 3 7 t 2 5 9)
-		chord[0] = &notes[ ny     ][ nx];
-		chord[1] = &notes[(ny+1)%4][(nx+1)%12];
-		chord[2] = &notes[ ny     ][(nx+1)%12];
-		chord[3] = &notes[(ny+1)%4][(nx+2)%12];
-		chord[4] = &notes[ ny     ][(nx+2)%12];
-		chord[5] = &notes[(ny+1)%4][(nx+3)%12];
-		chord[6] = &notes[ ny     ][(nx+3)%12];
+		chord[0] = &notes[ ny     	   ][ nx  	  ];
+		chord[1] = &notes[(ny+1)%TNROWS][(nx+1)%12];
+		chord[2] = &notes[ ny     	   ][(nx+1)%12];
+		chord[3] = &notes[(ny+1)%TNROWS][(nx+2)%12];
+		chord[4] = &notes[ ny     	   ][(nx+2)%12];
+		chord[5] = &notes[(ny+1)%TNROWS][(nx+3)%12];
+		chord[6] = &notes[ ny          ][(nx+3)%12];
+		type = MIN_CHORD;
+	}
+*/
+
+	// augmented (wrap??)
+	for (int i=0; i<MAXPARTS; i++) { chord[i] = &notes[(12+ny-i)%3][ nx ]; }
+	type = AUG_CHORD;
+/*
+	// diminished
+	//for (int i=0; i<MAXPARTS; i++) { chord[i] = &notes[(ny+i)%3][(nx+i)%12]; }
+	type = DIM_CHORD;
+
+	// suspended (sus4)
+	for (int i=0; i<MAXPARTS; i++) { chord[i] = &notes[ ny ][(nx+i)%12]; }
+	type = SUS_CHORD;
+*/
+	//count octaves
+	int o = 0.;
+	octave[0] = o;
+	for (int i=1; i<MAXPARTS; i++) { 
+		if ( chord[i]->pc < chord[i-1]->pc ) o++;
+		octave[i] = o;
 	}
 
-	outputs[N0_OUTPUT].value = octave+ transposition/12.;
-	outputs[N1_OUTPUT].value = octave+(transposition+chord[0]->pc)%12/12.;
-	outputs[N2_OUTPUT].value = octave+(transposition+chord[1]->pc)%12/12.;
-	outputs[N3_OUTPUT].value = octave+(transposition+chord[2]->pc)%12/12.;
-	outputs[N4_OUTPUT].value = octave+(transposition+chord[3]->pc)%12/12.;		
+
+	outputs[N0_OUTPUT].value = octave[0]+(transposition 			)   /12.;
+	for (int i=1; i<MAXPARTS; i++) { 
+		outputs[N0_OUTPUT+i].value = octave[1]+(transposition+chord[i-1]->pc)%12/12.;
+	}	
 }
 
 
@@ -190,18 +219,7 @@ struct HugoDisplay : TransparentWidget {
 	int frame = 0;
 	std::shared_ptr<Font> font;
 
-	float y1;
-	float yh;
-
-	const float a = 24.;
-	const float ofsx = a;
-	const float ofsy = a;
-	const float	sq3h = 0.86602540378;
-
-	HugoDisplay( float y1_, float yh_ ) {
-	  
-	  y1 = y1_;
-	  yh = yh_;
+	HugoDisplay() {	  
 	  font = Font::load(assetPlugin(plugin, "res/DejaVuSansMono.ttf"));
 	}
 
@@ -209,10 +227,10 @@ struct HugoDisplay : TransparentWidget {
 
 		float cx = box.size.x*0.5;
 		float cy = box.size.y*0.5;
-		
-		// active chord
-
-		for (int i=0; i<5; i++)	{
+				
+		// draw active chord - triangles
+		if (module->parts >= 3)
+		for (int i=0; i< module->parts-2; i++)	{
 			nvgBeginPath(vg);
 			nvgFillColor(vg, nvgRGBA(0x7f, 0x10, 0x10, 0xff));
 			nvgMoveTo(vg, module->chord[i  ]->x + cx, module->chord[i  ]->y + cy);
@@ -222,9 +240,20 @@ struct HugoDisplay : TransparentWidget {
 			nvgFill(vg);
 		}
 
+		// draw active chord - lines
+		for (int i=0; i<module->parts-1; i++)	{
+			nvgBeginPath(vg);
+			nvgStrokeWidth(vg, 2.);			
+			nvgStrokeColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
+			float y0 = module->chord[i  ]->y + cy;
+			float y1 = module->chord[i+1]->y + cy;
+			nvgMoveTo(vg, module->chord[i  ]->x + cx, y0);
+			nvgLineTo(vg, module->chord[i+1]->x + cx, y1);
+			nvgStroke(vg);
+		}
+
 		nvgStrokeWidth(vg, .7);				
 		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
-		//nvgFillColor(  vg, nvgRGBA(0x30, 0x10, 0x10, 0xff));
 
 		// draw triad grid
 		for ( int ny = 0; ny < 4; ny++) {
@@ -256,8 +285,8 @@ struct HugoDisplay : TransparentWidget {
 		
 		const char *note_names[12] = { 
 			//"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" 
-			"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" 
-			//"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "t", "e" 
+			//"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" 
+			"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "t", "e" 
 		};
 		
 		for ( int ny = 0; ny < 4; ny++) {
@@ -266,17 +295,16 @@ struct HugoDisplay : TransparentWidget {
 				float x = module->notes[ny][nx].x + cx;
 				float y = module->notes[ny][nx].y + cy;
 
-				//float d = sqrt( (nx-module->x0)*(nx-module->x0) + (ny-module->y0)*(ny-module->y0) );
-
 				// circle with note name
 				nvgBeginPath(vg);
-				nvgFillColor(vg, nvgRGBA(0x30, 0x10, 0x10, 0xff));
-				
+				nvgFillColor(vg, nvgRGBA(0x30, 0x10, 0x10, 0xff));				
 				//if ( module->notes[ny][nx].active > 0. ) {
 				//	nvgFillColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
-					nvgCircle(vg, x, y, 6.);
-					nvgFill(vg);
+				nvgCircle(vg, x, y, 6.);
+				nvgFill(vg);
 				//}									
+
+				//nvgStroke(vg);
 
 				nvgFontSize(vg, 12);
 				nvgFontFaceId(vg, font->handle);
@@ -286,11 +314,9 @@ struct HugoDisplay : TransparentWidget {
 
 				int pc = (module->notes[ny][nx].pc + module->transposition) %12;
 
-				if ( cn[0][pc] ) {
+				if ( cn[module->scale][pc] ) {
 					nvgText(vg, textPos.x, textPos.y, note_names[ pc ], NULL);
 				}
-
-				//nvgStroke(vg);
 			}
 		}
 		
@@ -298,13 +324,22 @@ struct HugoDisplay : TransparentWidget {
 
 		nvgFontSize(vg, 10);
 		nvgFontFaceId(vg, font->handle);
-		Vec textPos = Vec( 3, box.size.y-15);
+		Vec textPos = Vec( 3, box.size.y-25);
 		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
 		nvgFillColor(vg, textColor);
-		for (int i=0; i<7; i++) {
-			nvgText(vg, textPos.x+i*15, textPos.y, note_names[module->chord[i]->pc], NULL);
+		for (int i=0; i<module->parts; i++) {
+			nvgText(vg, textPos.x+i*15, textPos.y   , note_names[module->chord[i]->pc], NULL);
+			nvgText(vg, textPos.x+i*15, textPos.y+15, note_names[module->octave[i]], NULL);
 		}
 		//nvgStroke(vg);
+
+		// circle for root note		
+		nvgBeginPath(vg);
+		//	nvgFillColor(vg, nvgRGBA(0x30, 0x10, 0x10, 0xff));				
+		nvgFillColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
+		nvgCircle(vg, module->chord[0]->x + cx, module->chord[0]->y + cy, 6.);
+		nvgFill(vg);
+		nvgStroke(vg);
 
   	}
 
@@ -325,8 +360,13 @@ struct HugoDisplay : TransparentWidget {
 
 		drawTonnetz(vg);
 
-		float x = module->x + box.size.x*0.5;
-		float y = module->y + box.size.y*0.5;
+		// draw playhead	
+
+		float phi = -(module->x0 - module->y0/2.)*2.*M_PI / 12.;
+		float   r = radius + 25.*module->y0;
+
+		float x = r*sin(phi) + box.size.x*0.5;
+		float y = r*cos(phi) + box.size.y*0.5;
 
 		nvgBeginPath(vg);
 		nvgCircle(vg, x, y, 3.);
@@ -352,7 +392,7 @@ HugoWidget::HugoWidget() {
 	}
 
 	{
-		HugoDisplay *display = new HugoDisplay(15*16,30);
+		HugoDisplay *display = new HugoDisplay();
 		display->module = module;
 		display->box.pos = Vec( 5., 30);
 		display->box.size = Vec(box.size.x-10.,box.size.x-10. );
