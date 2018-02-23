@@ -63,7 +63,7 @@ struct AbrWidget : ModuleWidget { AbrWidget(); };
 struct ButWidget : ModuleWidget { ButWidget(); };
 struct EtagereWidget : ModuleWidget { EtagereWidget(); };
 struct DeuxEtageresWidget : ModuleWidget { DeuxEtageresWidget(); };
-struct HugoWidget : ModuleWidget { HugoWidget(); };
+struct RiemannWidget : ModuleWidget { RiemannWidget(); };
 struct SnsWidget : ModuleWidget { SnsWidget(); };
 struct BounceWidget : ModuleWidget { BounceWidget(); };
 struct WriggleWidget : ModuleWidget { WriggleWidget(); };

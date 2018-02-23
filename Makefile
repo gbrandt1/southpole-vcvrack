@@ -36,7 +36,7 @@ SOURCES += src/Sns.cpp
 SOURCES += src/Piste.cpp
 SOURCES += src/Wriggle.cpp
 SOURCES += src/Fuse.cpp
-SOURCES += src/Hugo.cpp
+SOURCES += src/Riemann.cpp
 
 SOURCES += src/Splash.cpp
 SOURCES += eurorack/stmlib/utils/random.cc
