@@ -102,7 +102,7 @@ struct Riemann : Module {
 	chord_type_names chord_type;
 	bool chord_group;
 
-	float freq[12];
+	//float freq[12];
 
 	// playhead logical position
 	int nx;
@@ -114,13 +114,13 @@ struct Riemann : Module {
 };
 
 void Riemann::reset() {
-
+/*
 	float ratio = pow(2., 1./12.);
 	for (int i=0; i<12; i++) {
 		freq[i] = 220. * pow(ratio, i+3);
 		printf("%f\n", freq[i]);
 	}
-
+*/
 	for (int j=0; j<12; j++) {
 		for (int i=0; i<12; i++) {
 

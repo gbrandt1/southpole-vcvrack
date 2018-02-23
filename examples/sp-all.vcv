@@ -3,10 +3,10 @@
   "modules": [
     {
       "plugin": "Southpole",
-      "model": "Humo",
+      "model": "Smoke",
       "pos": [
         0.0,
-        380.0
+        0.0
       ],
       "params": [
         0.0,
@@ -31,9 +31,386 @@
     },
     {
       "plugin": "Southpole",
+      "model": "Smoke",
+      "pos": [
+        90.0,
+        0.0
+      ],
+      "params": [
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "data": {
+        "playbackmode": 3,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Smoke",
+      "pos": [
+        180.0,
+        0.0
+      ],
+      "params": [
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "data": {
+        "playbackmode": 2,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Smoke",
+      "pos": [
+        270.0,
+        0.0
+      ],
+      "params": [
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "data": {
+        "playbackmode": 1,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "Smoke",
+      "pos": [
+        0.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "data": {
+        "playbackmode": 0,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1,
+        "reverse": 0
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "Smoke",
+      "pos": [
+        90.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "data": {
+        "playbackmode": 3,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1,
+        "reverse": 0
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "Smoke",
+      "pos": [
+        180.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "data": {
+        "playbackmode": 2,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1,
+        "reverse": 0
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "Smoke",
+      "pos": [
+        270.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "data": {
+        "playbackmode": 1,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1,
+        "reverse": 0
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "Smoke",
+      "pos": [
+        360.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "data": {
+        "playbackmode": 4,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1,
+        "reverse": 0
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "Smoke",
+      "pos": [
+        450.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "data": {
+        "playbackmode": 5,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1,
+        "reverse": 0
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "SplashParasites",
+      "pos": [
+        540.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": false,
+        "featureMode": 0
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "SplashParasites",
+      "pos": [
+        660.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": false,
+        "featureMode": 1
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "SplashParasites",
+      "pos": [
+        780.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": false,
+        "featureMode": 2
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Splash",
+      "pos": [
+        540.0,
+        0.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": false
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Splash",
+      "pos": [
+        660.0,
+        0.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": true
+      }
+    },
+    {
+      "plugin": "Southpole",
       "model": "Annuli",
       "pos": [
-        240.0,
+        360.0,
         0.0
       ],
       "params": [
@@ -58,9 +435,36 @@
     },
     {
       "plugin": "Southpole",
+      "model": "Annuli",
+      "pos": [
+        450.0,
+        0.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        30.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "polyphony": 0,
+        "model": 0,
+        "easterEgg": true
+      }
+    },
+    {
+      "plugin": "Southpole",
       "model": "Balaclava",
       "pos": [
-        330.0,
+        780.0,
         0.0
       ],
       "params": [
@@ -78,7 +482,7 @@
       "plugin": "Southpole",
       "model": "Bandana",
       "pos": [
-        405.0,
+        840.0,
         0.0
       ],
       "params": [
@@ -94,9 +498,50 @@
     },
     {
       "plugin": "Southpole",
+      "model": "Falls",
+      "pos": [
+        900.0,
+        0.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Aux",
+      "pos": [
+        960.0,
+        0.0
+      ],
+      "params": [
+        0.5,
+        0.5,
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "states": [
+          false,
+          false
+        ]
+      }
+    },
+    {
+      "plugin": "Southpole",
       "model": "But",
       "pos": [
-        465.0,
+        1020.0,
         0.0
       ],
       "params": [
@@ -126,7 +571,7 @@
       "plugin": "Southpole",
       "model": "Abr",
       "pos": [
-        555.0,
+        1110.0,
         0.0
       ],
       "params": [
@@ -156,8 +601,8 @@
       "plugin": "Southpole",
       "model": "Etagere",
       "pos": [
-        645.0,
-        0.0
+        900.0,
+        380.0
       ],
       "params": [
         0.0,
@@ -175,10 +620,46 @@
     },
     {
       "plugin": "Southpole",
+      "model": "DeuxEtageres",
+      "pos": [
+        990.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {}
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Riemann",
+      "pos": [
+        1080.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "plugin": "Southpole",
       "model": "SNS",
       "pos": [
-        750.0,
-        0.0
+        1320.0,
+        380.0
       ],
       "params": [
         0.25,
@@ -193,8 +674,8 @@
       "plugin": "Southpole",
       "model": "Piste",
       "pos": [
-        870.0,
-        0.0
+        1410.0,
+        380.0
       ],
       "params": [
         0.0,
@@ -210,7 +691,7 @@
       "plugin": "Southpole",
       "model": "Wriggle",
       "pos": [
-        975.0,
+        1440.0,
         0.0
       ],
       "params": [
@@ -224,7 +705,7 @@
       "plugin": "Southpole",
       "model": "Fuse",
       "pos": [
-        375.0,
+        1470.0,
         380.0
       ],
       "params": [
@@ -241,8 +722,8 @@
       "plugin": "Southpole",
       "model": "Cornrows",
       "pos": [
-        480.0,
-        380.0
+        1200.0,
+        0.0
       ],
       "params": [
         0.0,
@@ -281,54 +762,10 @@
     },
     {
       "plugin": "Southpole",
-      "model": "Splash",
-      "pos": [
-        570.0,
-        380.0
-      ],
-      "params": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "data": {
-        "mode": 1,
-        "range": 1,
-        "sheep": false
-      }
-    },
-    {
-      "plugin": "Southpole",
-      "model": "Splash",
-      "pos": [
-        690.0,
-        380.0
-      ],
-      "params": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "data": {
-        "mode": 1,
-        "range": 1,
-        "sheep": false
-      }
-    },
-    {
-      "plugin": "Southpole",
       "model": "Sssh",
       "pos": [
-        810.0,
-        380.0
+        1530.0,
+        0.0
       ],
       "params": []
     },
@@ -336,128 +773,52 @@
       "plugin": "Southpole",
       "model": "Snake",
       "pos": [
-        885.0,
-        380.0
-      ],
-      "params": []
-    },
-    {
-      "plugin": "Southpole",
-      "model": "Piste",
-      "pos": [
-        945.0,
-        380.0
+        1470.0,
+        0.0
       ],
       "params": [
         0.0,
-        0.0,
-        0.0,
-        0.5,
-        1.0,
-        0.5,
-        1.0
+        0.0
       ]
     },
     {
       "plugin": "Southpole",
-      "model": "Fuse",
+      "model": "Gnome",
       "pos": [
-        1020.0,
-        380.0
+        1290.0,
+        0.0
       ],
       "params": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.25,
+        0.0,
+        0.0,
+        -1.0,
+        1.0,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
         0.0,
         0.0,
         0.0,
         0.0
-      ],
-      "data": {
-        "gateMode": false
-      }
+      ]
     },
     {
       "plugin": "Southpole",
-      "model": "Humo",
+      "model": "Blank4HP",
       "pos": [
-        90.0,
+        1530.0,
         380.0
       ],
-      "params": [
-        0.0,
-        0.5,
-        0.5,
-        0.0,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5
-      ],
-      "data": {
-        "playbackmode": 3,
-        "lofi": 0,
-        "mono": 0,
-        "freeze": 0,
-        "buffersize": 1
-      }
-    },
-    {
-      "plugin": "Southpole",
-      "model": "Humo",
-      "pos": [
-        180.0,
-        380.0
-      ],
-      "params": [
-        0.0,
-        0.5,
-        0.5,
-        0.0,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5
-      ],
-      "data": {
-        "playbackmode": 2,
-        "lofi": 0,
-        "mono": 0,
-        "freeze": 0,
-        "buffersize": 1
-      }
-    },
-    {
-      "plugin": "Southpole",
-      "model": "Humo",
-      "pos": [
-        270.0,
-        380.0
-      ],
-      "params": [
-        0.0,
-        0.5,
-        0.5,
-        0.0,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5
-      ],
-      "data": {
-        "playbackmode": 1,
-        "lofi": 0,
-        "mono": 0,
-        "freeze": 0,
-        "buffersize": 1
-      }
+      "params": []
     }
   ],
   "wires": []

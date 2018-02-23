@@ -1,8 +1,8 @@
 # southpole-vcvrack
 
-![All](./doc/sp-all-2018-02-06.png)
+![All](./doc/sp-all-2018-02-23.png)
 
-Southpole VCV Rack Modules 0.5.2
+Southpole VCV Rack Modules 0.5.3
 
 A personal collection of modules I've always wanted for my workflow.
 
@@ -14,13 +14,13 @@ Arable Instruments VCV Rack versions of Mutable Instruments eurorack modules.
 - Some skins do not exist yet in hardware.
 - Some modules did not yet exist in VCV Rack versions.
 - Some modules are new.
-- Compiled agaist parasites firmware where available (Required a few fixes which is why it is checked in here)
 
-[Mutable Instruments](https://mutable-instruments.net/)
+- [Mutable Instruments](https://mutable-instruments.net/)
+- [Audible Instruments](https://github.com/VCVRack/AudibleInstruments/)
+- [ArableInstruments](https://github.com/adbrant/ArableInstruments/)
 
-[Audible Instruments](https://github.com/VCVRack/AudibleInstruments/)
+- Extra slug "Southpole Parasites" for parasites firmware based modules
 
-[ArableInstruments](https://github.com/adbrant/ArableInstruments/)
 
 ## Building
 
@@ -30,15 +30,12 @@ After checking out in the `plugins/` directory, get external dependencies with
 
 	git submodule update --init --recursive
 
-Build main modules
+There is a build script
 
-	make dist
-	
-Build parasite based modules (only Smoke, for now not included in binary release)
+	./scripts/make_all.sh
 
-	make clean
-	make -f Makefile.parasites dist
-	cp -r dist/Southpole-parasites .. #assuming .. is your plugins directory
+WARNING: Overwrites existing Southpole / SouthpoleParasites directories from eg. a regular download
+Inspect script before use		
 
 ## Modules copied from Audible Instruments / Arable Instruments
 
@@ -52,16 +49,17 @@ Build parasite based modules (only Smoke, for now not included in binary release
 
 - Based on [Sheep](https://mutable-instruments.net/modules/tides/firmware/) (Tides alternative firmware)
 
-- Uses eurorack firmware, no parasites interface yet
+- [Tides Parasites](https://mqtthiqs.github.io/parasites/tides.html) Two Bumps, Two Drunks
 
-### Humo - Texture Synthesizer
+### Smoke - Texture Synthesizer
 Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](https://mutable-instruments.net/modules/clouds/manual/)
 
-- Humo: eurorack firmware, extra skins for additional modes (see image above)
-- Smoke: parasites firmware (Neil) - need to compile yourself for now
+- Smoke, extra skins for additional modes: Espectro, Ritardo, Camilla
+- [Clouds Parasites](https://mqtthiqs.github.io/parasites/clouds.html) Oliver, Resonestor
 
 ### Annuli - Resonator
 - Based on [Rings](https://mutable-instruments.net/modules/rings), [Manual](https://mutable-instruments.net/modules/rings/manual/)
+- extra skin for Disastrous Peace mode
 
 ### Bandana - Quad VC-polarizer
 - Based on [Blinds](https://mutable-instruments.net/modules/blinds), [Manual](https://mutable-instruments.net/modules/blinds/manual/)
@@ -71,11 +69,40 @@ Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](http
 
 ## New modules
 
+### Riemann
+  - chord generator based on Neo-Riemannian Tonnetz analysis
+  - inspired by NE Tonnetz Sequent, Navichord app, o_C Automatonnetz 
+    (and my incapability to compose / improvise diatonic music)
+  - Traversal via perfect fifth (P5/V) per volt and major triad per volt (M3/V) inputs  
+  - Major/minor, Augmented/diminished chord groups
+  - 3 - 7 parts per chord (from standard triads to thirteenth chords)
+  - Parts mostly display for now, outputs after last part output root note
+  - Switch for suspensions (sus4) close to fifth-axis
+  - Transpose rotates within octave
+  - Outputs in V/oct
+  - Tonic output (T) for tonic drone
+  - Voicing inc/decreases octaves to the right/left sequentially by part 
+    (small settings to the right give chord inversions)
+
+### Falls - Attenumixer
+- Attenumixverter, inspired by Fonitronik Cascade
+- empty inputs provide offset voltages
+- empty outputs mix into output below
+
+### Aux - 2 stereo effect send/return loops 
+  - with cross feedback (same or swapped stereo channels)
+  - mute button for input (to listen to those sweet reverb tails)
+  - bypass button for fx (in case you went wild with the feedback pots)  
+
+
 ### Etagère - EQ Filter
 Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual](https://mutable-instruments.net/modules/shelves/manual/)
 
 - Does not fully reproduce all characteristics of Shelves!
 - Biquad filters copied from RJModules Filters
+
+### Deux Etagères
+- convenience stereo version of Etagère
 
 ### But - Manual A/B Buss 
 
@@ -96,6 +123,7 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual]
 - Rotate sequence and accents
 - Up to 32 pads (silent steps)
 - All inputs scaled to each other in what i think is a sensible way - great for LFO modulation of inputs
+- CLK/RST thru for easy chaining
 
 ### Piste - Drum Processor
 
@@ -131,10 +159,10 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual]
 
 ### Snake
 
-- Internal buss to bridge large distances or generally tidy up the patch
+ - 16 internal busses 0-F with 10 lines per buss to bridge large distances or generally tidy up the patch
 - First connection to input locks input (green led - red on all other instances)
 - Works best with slow signal. In case of parallel processin check difference between original and bussed signal by means of inverting summer and scope
-
+  
 ### Gnome - Synth Voice
 
 - An all-in-one module inspired by [MFB Nanozwerg](http://mfberlin.de/en/modules/nanozwerg_pro_e/)
@@ -144,7 +172,7 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual]
 - Sub-OSC 1/2 Oct / Noise
 - LFO from Fundamental LFO, morphing + S+H
 - ADSR from Fundamental ADSR
-- Biquad VCF
+- Biquad VCF with resonance gain-compensation
 
 ### Blanks
 
