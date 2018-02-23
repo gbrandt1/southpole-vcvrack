@@ -181,7 +181,6 @@ DeuxEtageresWidget::DeuxEtageresWidget() {
 	}
 
     const float x1 = 8;
-    const float x15 = 32;
 	const float x2 = 65;
 	
     const float y1 = 5.;

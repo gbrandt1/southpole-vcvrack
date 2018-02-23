@@ -1,10 +1,11 @@
 #include "Southpole.hpp"
 #include <string.h>
 
-#define NUMP 7
+#define NUMP 6
 
 struct Falls : Module {
 	enum ParamIds {
+		RANGE_PARAM,
 		GAIN1_PARAM,
 		GAIN2_PARAM,
 		GAIN3_PARAM,
@@ -55,11 +56,14 @@ struct Falls : Module {
 
 
 void Falls::step() {
+
+	float range = params[RANGE_PARAM].value > 0.5 ? 10. : 1.;
+
 	float out = 0.0;
 
 	for (int i = 0; i < NUMP; i++) {
-		float g = params[GAIN1_PARAM + i].value*12.;
-		g = clampf(g, -12.0, 12.0);
+		float g = params[GAIN1_PARAM + i].value*range;
+		g = clampf(g, -range, range);
 		//if (inputs[IN1_INPUT + i].active) {
     		out += g * inputs[IN1_INPUT + i].normalize(1.);
         //} else {
@@ -88,7 +92,7 @@ FallsWidget::FallsWidget() {
 	}
 
     const float y1 = 32;
-    const float yh = 46;
+    const float yh = 49;
 
     const float x1 = 4.;
     const float x2 = 20.;
@@ -100,4 +104,7 @@ FallsWidget::FallsWidget() {
         addOutput(createOutput<sp_Port>(Vec(x3,  y1+i*yh), module, Falls::OUT1_OUTPUT + i));
         addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+i*yh+18), module, Falls::GAIN1_PARAM + i, -1.0, 1.0, 0.0));
     }
+
+    addParam(createParam<sp_Switch>(Vec(x2, y1 + NUMP*yh ), module, Falls::RANGE_PARAM, 0.0, 1.0, 0.0));
+
 }

@@ -28,6 +28,8 @@ struct Note {
 
 struct Riemann : Module {
 	enum ParamIds {
+		GROUP_PARAM,
+		SUS_PARAM,
 		TRANSP_PARAM,
 		PARTS_PARAM,
 		VOICING_PARAM,
@@ -97,7 +99,8 @@ struct Riemann : Module {
 	int voicing;
 	int transp;
 	int scale;
-	chord_type_names type;	
+	chord_type_names chord_type;
+	bool chord_group;
 
 	float freq[12];
 
@@ -155,8 +158,9 @@ void Riemann::step() {
 	x0 = inputs[X_INPUT].normalize(0.)+6;
 	y0 = inputs[Y_INPUT].normalize(0.)+1;
 
-	parts   = clampf( inputs[PARTS_INPUT].value/10. + params[PARTS_PARAM].value, 0., 1.)*(MAXPARTS-3.)+3.;
-	voicing = clampf( inputs[VOICING_INPUT].value/10. + params[VOICING_PARAM].value, -1., 1.)*4.*MAXPARTS;
+	//parts   = clampf( inputs[PARTS_INPUT].value/10. + params[PARTS_PARAM].value, 0., 1.)*(MAXPARTS-3.)+3.;
+	parts   = clampf( params[PARTS_PARAM].value, 0., 1.)*(MAXPARTS-3.)+3.;
+	voicing = clampf( inputs[VOICING_INPUT].value/10. + params[VOICING_PARAM].value, -1., 1.)*4.*parts;
 	transp  = clampf( inputs[TRANSP_INPUT].value/10. + params[TRANSP_PARAM].value, 0., 1.)*11.;
 
 	while (x0 <   0.) { x0 += 12.; }
@@ -169,22 +173,28 @@ void Riemann::step() {
 	nx = floor(x0);
 	ny = floor(y0);
 
-    if ( y0-ny > x0-nx  ) {
-		type = MAJ_CHORD;
-		//type = AUG_CHORD;
+	if ( params[GROUP_PARAM].value > 0. ) {
+		if ( y0-ny > x0-nx  ) {
+			chord_type = MAJ_CHORD;
+		} else {
+			chord_type = MIN_CHORD;
+		}
 	} else {
-		type = MIN_CHORD;
-		//type = DIM_CHORD;
+		if ( y0-ny > x0-nx  ) {
+			chord_type = AUG_CHORD;
+		} else {
+			chord_type = DIM_CHORD;
+		}
 	}
 
 	// (m/M) (M/A) (A/M) (M/m) (m/d) (d/m)
 
 	//type = DIM_CHORD;
-    if ( fabs(y0-ny) < 0.25 ) {
-		type = SUS_CHORD;
+    if ( params[SUS_PARAM].value > 0.5 && fabs(y0-ny) < 0.3 ) {
+		chord_type = SUS_CHORD;
 	}
 
-	switch(	type ) { 
+	switch(	chord_type ) { 
 	
 		case MAJ_CHORD:
 
@@ -234,30 +244,35 @@ void Riemann::step() {
 			chord[5] = &notes[ ny ][(nx+6)%12]; 
 			chord[6] = &notes[ ny ][(nx+5)%12]; 
 			//}
+			break;
+
+		default:
+			break;
 	}	
 
 	//count octaves
-	int o = 0.;
+	int o=0;
 	octave[0] = o;
 	for (int i=1; i<MAXPARTS; i++) { 
 		if ( chord[i]->pc < chord[i-1]->pc ) o++;
 		octave[i] = o;
 	}
 	
-	// add voicing
+	// add voicing	
 	if (voicing > 0) {
-		for (int i=1; i< voicing; i++) { octave[i%MAXPARTS]++; }
+		for (int i=0; i< voicing; i++) { octave[i%parts]++; }
 	} else {
-		for (int i=1; i< abs(voicing); i++) { octave[i%MAXPARTS]--;	}
+		for (int i=0; i< abs(voicing); i++) { octave[i%parts]--;	}
 	}	 
-	// tonic in same octave as root
-	octave[0] = octave[1];
 
 	// tonic
 	outputs[N0_OUTPUT].value = octave[0]+transp/12.;
 	// chord
-	for (int i=1; i<MAXPARTS; i++) { 
-		outputs[N0_OUTPUT+i].value = octave[1]+(transp + chord[i-1]->pc)%12/12.;
+	for (int i=0; i<parts; i++) { 
+		outputs[N0_OUTPUT+i+1].value = octave[i]+(transp + chord[i]->pc)%12/12.;
+	}	
+	for (int i=parts; i< MAXPARTS; i++) { 
+		outputs[N0_OUTPUT+i+1].value = octave[0]+(transp + chord[0]->pc)%12/12.;
 	}	
 }
 
@@ -270,9 +285,9 @@ struct RiemannDisplay : TransparentWidget {
 
 	// draw note names	
 	const char *note_names[12] = { 
-		//"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" 
+		"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" 
 		//"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" 
-		"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "t", "e" 
+		//"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "t", "e" 
 	};
 
 	float cx;
@@ -300,58 +315,66 @@ struct RiemannDisplay : TransparentWidget {
 	void drawChordPath(NVGcontext *vg) {
 
 		// draw active chord path
-		if (module->type == Riemann::MAJ_CHORD || module->type == Riemann::MIN_CHORD ) {
-/*
-			nvgBeginPath(vg);
-			nvgStrokeWidth(vg, 2.);			
-			nvgStrokeColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
-//			int nx = module->nx;
-//			int ny = module->ny;
-//			nvgMoveTo(vg, module->notes[ny][nx].x + cx, module->notes[ny][nx].y + cy);
-			nvgMoveTo(vg, module->chord[0]->x + cx, module->chord[0]->y + cy);
-			for (int i=1; i<module->parts; i++)	{
-				nvgLineTo(vg, module->chord[i+1]->x + cx, module->chord[i+1]->y + cy);
-	//			nvgMoveTo(vg, module->notes[ny][ nx      ].x + cx, module->notes[ny][ nx      ].x + cy);
-	//			nvgLineTo(vg, module->notes[ny][(nx+i)%12].x + cx, module->notes[ny][(nx+i)%12].x + cy);
-			}
-			nvgStroke(vg);
-*/			
-		} else {
+		if (module->chord_type == Riemann::MAJ_CHORD || module->chord_type == Riemann::MIN_CHORD ) {
 
 			nvgBeginPath(vg);
 			nvgStrokeWidth(vg, 2.);			
 			nvgStrokeColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
+			for (int i=0; i<module->parts-1; i++)	{
+				nvgMoveTo(vg, module->chord[i  ]->x + cx, module->chord[i  ]->y + cy);
+				nvgLineTo(vg, module->chord[i+1]->x + cx, module->chord[i+1]->y + cy);
+			}
+			nvgStroke(vg);
+			
+		} else if (module->chord_type == Riemann::SUS_CHORD ) {
+				nvgBeginPath(vg);
+				nvgStrokeWidth(vg, 2.);			
+				nvgStrokeColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
+				float x0 = module->chord[0]->x + cx;
+				float y0 = module->chord[0]->y + cy;
+				nvgMoveTo(vg, x0, y0);
+				int nx = module->chord[0]->nx;
+				int ny = module->chord[0]->ny;
+				for (int i=0; i<module->parts; i++) {
+					//int nx = module->chord[i]->nx;
+					//int ny = module->chord[i]->ny;
+					float x1 = module->notes[ny][(nx+i)%12].x + cx;
+					float y1 = module->notes[ny][(nx+i)%12].y + cy;
+					nvgLineTo(vg, x1, y1);			
+				}	
+				nvgStroke(vg);
+		} else {
+
 			for (int i=0; i<module->parts; i++) {
+				nvgBeginPath(vg);
+				nvgStrokeWidth(vg, 2.);			
+				nvgStrokeColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
 				float x0 = module->chord[i]->x + cx;
 				float y0 = module->chord[i]->y + cy;
 				nvgMoveTo(vg, x0, y0);
 				int nx = module->chord[i]->nx;
 				int ny = module->chord[i]->ny;
-				if (module->type == Riemann::AUG_CHORD ) {
+				if (module->chord_type == Riemann::AUG_CHORD ) {
 					float x1 = module->notes[ny+1][nx].x + cx;
 					float y1 = module->notes[ny+1][nx].y + cy;
 					nvgLineTo(vg, x1, y1);			
 				}							
-				if (module->type == Riemann::DIM_CHORD ) {
+				if (module->chord_type == Riemann::DIM_CHORD ) {
 					float x1 = module->notes[ny+1][(nx+1)%12].x + cx;
 					float y1 = module->notes[ny+1][(nx+1)%12].y + cy;
 					nvgLineTo(vg, x1, y1);			
 				}				
-				if (module->type == Riemann::SUS_CHORD ) {
-					float x1 = module->notes[ny][(nx+1)%12].x + cx;
-					float y1 = module->notes[ny][(nx+1)%12].y + cy;
-					nvgLineTo(vg, x1, y1);			
-				}				
-			}	
-			nvgStroke(vg);
+				nvgStroke(vg);
+			}
+
 		}		
 
 	}
 
 	void drawTonnetzGrid(NVGcontext *vg) {
 
-		nvgStrokeWidth(vg, .7);				
-		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+		nvgStrokeWidth(vg, .75);				
+		nvgStrokeColor(vg, nvgRGBA(0xff, 0x20, 0x20, 0xff));
 
 		// grid
 		for ( int ny = 0; ny < 4; ny++) {
@@ -380,17 +403,23 @@ struct RiemannDisplay : TransparentWidget {
 		}
 	}
 
-	void drawTonnetzNotes(NVGcontext *vg) {
+	void drawActiveNotes(NVGcontext *vg) {
 
-		// circle for root note
+		// circles for played notes
+		int i=0;
+		//for (int i=0; i<module->parts; i++) {
 		nvgBeginPath(vg);
-		nvgStrokeWidth(vg, 2.);				
-		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+		nvgStrokeWidth(vg, 2.);
+		int b =	0; //0x40+module->octave[i]*0x0F;
+		nvgStrokeColor(vg, nvgRGBA(0xff, b, b, 0xff));
 		nvgFillColor(vg, nvgRGBA(0x30, 0x10, 0x10, 0xff));				
-		nvgCircle(vg, module->chord[0]->x + cx, module->chord[0]->y + cy, 8.);
+		nvgCircle(vg, module->chord[i]->x + cx, module->chord[i]->y + cy, 8.);
 		nvgFill(vg);
 		nvgStroke(vg);
+		//}
+    }
 
+	void drawTonnetzNotes(NVGcontext *vg) {
 		// names		
 		for ( int ny = 0; ny < 4; ny++) {
 			for ( int nx = 0; nx < 12; nx++) {
@@ -404,9 +433,9 @@ struct RiemannDisplay : TransparentWidget {
 				nvgCircle(vg, x, y, 6.);
 				nvgFill(vg);
 
-				nvgFontSize(vg, 12);
+				nvgFontSize(vg, 11);
 				nvgFontFaceId(vg, font->handle);
-				Vec textPos = Vec( x-2, y+4);
+				Vec textPos = Vec( x-4, y+4);
 				NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
 				nvgFillColor(vg, textColor);
 
@@ -453,12 +482,14 @@ struct RiemannDisplay : TransparentWidget {
 		nvgStrokeColor(vg, borderColor);
 		nvgStroke(vg);
 
-		if (module->type == Riemann::MAJ_CHORD || module->type == Riemann::MIN_CHORD ) {
+		if ( module->chord_type == Riemann::MAJ_CHORD || 
+			 module->chord_type == Riemann::MIN_CHORD ) {
 			drawChordTriads(vg);
 		}
 
 		drawTonnetzGrid(vg);
 		drawChordPath(vg);
+		drawActiveNotes(vg);
 		drawTonnetzNotes(vg);
 
 
@@ -474,7 +505,7 @@ struct RiemannDisplay : TransparentWidget {
 		nvgStrokeWidth(vg, 1.5);
 		nvgStroke(vg);
 
-		drawValues(vg);
+		//drawValues(vg);
 		
 	}
 };
@@ -507,16 +538,22 @@ RiemannWidget::RiemannWidget() {
 	float x1 = 4.;
 	float xw = 26;
 
-	addInput(createInput<sp_Port>(Vec(x1     		   , y1+12.5*yh), module, Riemann::X_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1+xw  		   , y1+12.5*yh), module, Riemann::Y_INPUT));
-	addInput(createInput<sp_Port>(Vec(			x1+xw*3, y1+12.5*yh), module, Riemann::TRANSP_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*4, y1+12.5*yh), module, Riemann::TRANSP_PARAM, 0., 1., 0.));
-	addInput(createInput<sp_Port>(Vec(x1+xw*5, 			 y1+12.5*yh), module, Riemann::PARTS_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1     	       , y1+12.5 *yh), module, Riemann::X_INPUT));
+	addInput(createInput<sp_Port>(Vec(x1  	   	       , y1+14.25*yh), module, Riemann::Y_INPUT));
+//CKSSThree
+    addParam(createParam<CKSS>(Vec(x1+xw*1.5, y1 + 12*yh ), module, Riemann::GROUP_PARAM, 0.0, 1.0, 0.0));
+    addParam(createParam<CKSS>(Vec(x1+xw*2.5, y1 + 12*yh ), module, Riemann::SUS_PARAM, 0.0, 1.0, 0.0));
+
+	addInput(createInput<sp_Port>(Vec(			x1+xw*3.5, y1+12.5*yh), module, Riemann::TRANSP_INPUT));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*4.5, y1+12.5*yh), module, Riemann::TRANSP_PARAM, 0., 1., 0.));
+	//addInput(createInput<sp_Port>(Vec(			x1+xw*5, y1+12.5*yh), module, Riemann::PARTS_INPUT));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*6, y1+12.5*yh), module, Riemann::PARTS_PARAM, 0., 1., 0.));
-	addInput(createInput<sp_Port>(Vec(x1+xw*7, 			 y1+12.5*yh), module, Riemann::VOICING_INPUT));
+	addInput(createInput<sp_Port>(Vec(			x1+xw*7, y1+12.5*yh), module, Riemann::VOICING_INPUT));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*8, y1+12.5*yh), module, Riemann::VOICING_PARAM, -1., 1., 0.));
 
 	for (int i=0; i<MAXPARTS+1; i++)	{
-		addOutput(createOutput<sp_Port>(Vec(x1+26*i,  y1+14.25*yh), module, Riemann::N0_OUTPUT + i));
+		addOutput(createOutput<sp_Port>(Vec(x1+26*(i+1),  y1+14.25*yh), module, Riemann::N0_OUTPUT + i));
 	}
+
+
 }
