@@ -34,8 +34,7 @@ There is a build script
 
 	./scripts/make_all.sh
 
-WARNING: Overwrites existing Southpole / SouthpoleParasites directories from eg. a regular download
-Inspect script before use		
+WARNING: Overwrites existing Southpole / SouthpoleParasites directories from eg. a regular download, inspect script before use		
 
 ## Modules copied from Audible Instruments / Arable Instruments
 
@@ -70,24 +69,23 @@ Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](http
 ## New modules
 
 ### Riemann
-  - chord generator based on Neo-Riemannian Tonnetz analysis
-  - inspired by NE Tonnetz Sequent, Navichord app, o_C Automatonnetz 
-    (and my incapability to compose / improvise diatonic music)
-  - Traversal via perfect fifth (P5/V) per volt and major triad per volt (M3/V) inputs  
-  - Major/minor, Augmented/diminished chord groups
-  - 3 - 7 parts per chord (from standard triads to thirteenth chords)
-  - Parts mostly display for now, outputs after last part output root note
-  - Switch for suspensions (sus4) close to fifth-axis
-  - Transpose rotates within octave
-  - Outputs in V/oct
-  - Tonic output (T) for tonic drone
-  - Voicing inc/decreases octaves to the right/left sequentially by part 
-    (small settings to the right give chord inversions)
+- chord generator based on Neo-Riemannian Tonnetz analysis
+- inspired by NE Tonnetz Sequent, Navichord app, o_C Automatonnetz (and my incapability to compose / improvise diatonic music)
+- Traversal via perfect fifth (P5/V) per volt and major triad per volt (M3/V) inputs  
+- Major/minor, Augmented/diminished chord groups
+- 3 - 7 parts per chord (from standard triads to thirteenth chords)
+- Parts mostly display for now, outputs after last part output root note
+- Switch for suspensions (sus4) close to fifth-axis
+- Transpose rotates within octave
+- Outputs in V/oct
+- Tonic output (T) for tonic drone
+- Voicing inc/decreases octaves to the right/left sequentially by part (small settings to the right give chord inversions)
 
 ### Falls - Attenumixer
 - Attenumixverter, inspired by Fonitronik Cascade
 - empty inputs provide offset voltages
 - empty outputs mix into output below
+- Range switch +/-1 or +/-10
 
 ### Aux - 2 stereo effect send/return loops 
   - with cross feedback (same or swapped stereo channels)
