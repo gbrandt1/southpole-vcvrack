@@ -83,7 +83,7 @@ struct Bjorklund
                 buildSeq(slot - 2);
         }
     }
-
+/*
     void pad(int p) {
         for (int i=0; i<p; i++) {
             sequence.push_back(0);
@@ -91,12 +91,11 @@ struct Bjorklund
     }
 
     void rotater(int r) {
-
         for (int i=0; i<r; i++) {
             std::rotate(sequence.rbegin(),sequence.rbegin() + 1,sequence.rend());
         }
     }
-
+*/
     void print() {
         for (unsigned int i = 0; i != sequence.size(); i++) {
             std::cout << sequence.at(i);
