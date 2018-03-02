@@ -160,7 +160,7 @@ AuxWidget::AuxWidget() {
 
 	{
 		SVGPanel *panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Aux.svg")));
+		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Aux_.svg")));
 		panel->box.size = box.size;
 		addChild(panel);	
 	}
