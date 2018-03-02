@@ -17,26 +17,27 @@ LDFLAGS +=
 # Add .cpp and .c files to the build
 # SOURCES += $(wildcard src/*.cpp)
 SOURCES += src/Southpole.cpp
+SOURCES += src/DSPUtilities.cpp
+SOURCES += src/VAStateVariableFilter.cpp
+
+SOURCES += src/Abr.cpp
+SOURCES += src/Aux.cpp
 SOURCES += src/Balaclava.cpp	
 SOURCES += src/Bandana.cpp
-SOURCES += src/Falls.cpp
-SOURCES += src/Aux.cpp
+SOURCES += src/Blanks.cpp
 SOURCES += src/But.cpp
-SOURCES += src/Abr.cpp
-SOURCES += src/Sssh.cpp
-SOURCES += src/Snake.cpp
-SOURCES += src/Gnome.cpp
-
-SOURCES += src/Etagere.cpp
+SOURCES += src/Bytes.cpp
 SOURCES += src/DeuxEtageres.cpp
-SOURCES += src/VAStateVariableFilter.cpp
-SOURCES += src/DSPUtilities.cpp
-
-SOURCES += src/Sns.cpp
-SOURCES += src/Piste.cpp
-SOURCES += src/Wriggle.cpp
+SOURCES += src/Etagere.cpp
+SOURCES += src/Falls.cpp
 SOURCES += src/Fuse.cpp
+SOURCES += src/Gnome.cpp
+SOURCES += src/Piste.cpp
 SOURCES += src/Riemann.cpp
+SOURCES += src/Snake.cpp
+SOURCES += src/Sns.cpp
+SOURCES += src/Sssh.cpp
+SOURCES += src/Wriggle.cpp
 
 SOURCES += src/Splash.cpp
 SOURCES += eurorack/stmlib/utils/random.cc
@@ -51,6 +52,8 @@ SOURCES += eurorack/stmlib/utils/random.cc
 SOURCES += eurorack/braids/analog_oscillator.cc
 SOURCES += eurorack/braids/digital_oscillator.cc
 SOURCES += eurorack/braids/resources.cc
+
+SOURCES += src/CornrowsX.cpp	
 
 SOURCES += src/Annuli.cpp
 SOURCES += eurorack/rings/dsp/fm_voice.cc
@@ -68,8 +71,6 @@ SOURCES += eurorack/clouds/dsp/pvoc/frame_transformation.cc
 SOURCES += eurorack/clouds/dsp/pvoc/phase_vocoder.cc
 SOURCES += eurorack/clouds/dsp/pvoc/stft.cc
 SOURCES += eurorack/clouds/resources.cc 
-
-SOURCES += src/Blanks.cpp
 
 # Add files to the ZIP package when running `make dist`
 # The compiled plugin is automatically added.
