@@ -62,10 +62,9 @@ struct CornrowsX : Module {
 	braids::SettingsData settings;
 	braids::VcoJitterSource jitter_source;
 	braids::SignatureWaveshaper ws;
-
 	braids::Envelope envelope;
-
 	braids::Quantizer quantizer;
+
 	uint8_t current_scale = 0xff;
 
 	bool trigger_detected_flag;
@@ -170,6 +169,8 @@ CornrowsX::CornrowsX() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {
 
 void CornrowsX::step() {
 
+	settings.quantizer_scale = params[SCALE_PARAM].value * 48.; //sizeof(quantization_values);
+	settings.quantizer_root  = params[ROOT_PARAM].value * 11.;
 	settings.pitch_range = params[PITCH_RANGE_PARAM].value*4.;
 	settings.pitch_octave = params[PITCH_OCTAVE_PARAM].value*4.;
 	settings.trig_delay  = params[TRIG_DELAY_PARAM].value*6.;
@@ -218,9 +219,6 @@ void CornrowsX::step() {
 	}
 
 	// Quantizer
-	settings.quantizer_scale = params[SCALE_PARAM].value * 48.; //sizeof(quantization_values);
-	settings.quantizer_root  = params[ROOT_PARAM].value * 11.;
-
     if (current_scale != settings.quantizer_scale) {
       current_scale = settings.quantizer_scale;
       quantizer.Configure(braids::scales[current_scale]);
@@ -300,8 +298,8 @@ void CornrowsX::step() {
     		pitch = braids::Interpolate88(braids::lut_vco_detune, pitch << 2);
   		}
 
-	    // pitch_transposition()
-		int32_t t = settings.pitch_range == braids::PITCH_RANGE_LFO ? -36 << 7 : 0;
+	    // pitch_transposition() 
+		int32_t t = settings.pitch_range == braids::PITCH_RANGE_LFO ? -(36 << 7) : 0;
     	t += (static_cast<int32_t>(settings.pitch_octave) - 2) * 12 * 128;
 		osc.set_pitch(pitch + t);
 		//osc.set_pitch(pitch);
@@ -514,24 +512,22 @@ CornrowsXWidget::CornrowsXWidget() {
     const float y1 = 115;	
     const float yh = 36.;
 
-	addParam(createParam<sp_Encoder>(Vec(x3+4, 68), module, CornrowsX::SHAPE_PARAM, 0.0, 1.0, 0.0));
+	addParam(createParam<sp_Encoder>(Vec(x3+4, 78), module, CornrowsX::SHAPE_PARAM, 0.0, 1.0, 0.0));
 
 	addInput(createInput<sp_Port>(Vec(x1, y1-1*yh), module, CornrowsX::TRIG_INPUT));
 	addParam(createParam<sp_Trimpot>(Vec(x2, y1-1*yh), module, CornrowsX::TRIG_DELAY_PARAM,  0.0, 1.0, 0.0));
 
-	addInput(createInput<sp_Port>(Vec(x1, y1), module, CornrowsX::PITCH_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1), module, CornrowsX::FINE_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1), module, CornrowsX::COARSE_PARAM, -2.0, 2.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x4, y1), module, CornrowsX::PITCH_OCTAVE_PARAM,  0.0, 1.0, 0.5));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+0*yh), module, CornrowsX::ATT_PARAM,   0.0, 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+0*yh), module, CornrowsX::DEC_PARAM,   0.0, 1.0, 0.5));
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+1*yh), module, CornrowsX::ROOT_PARAM,  0.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, CornrowsX::SCALE_PARAM, 0.0, 1.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x4, y1+yh), module, CornrowsX::PITCH_RANGE_PARAM,  0.0, 1.0, 0.));
+	addInput(createInput<sp_Port>(Vec(x1, y1+yh), module, CornrowsX::PITCH_INPUT));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+yh), module, CornrowsX::FINE_PARAM, -1.0, 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+yh), module, CornrowsX::COARSE_PARAM, -2.0, 2.0, 0.0));
+	addParam(createParam<sp_Trimpot>(Vec(x4, y1+yh), module, CornrowsX::PITCH_OCTAVE_PARAM,  0.0, 1.0, 0.5));
 
-	
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, CornrowsX::ATT_PARAM,   0.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, CornrowsX::DEC_PARAM,   0.0, 1.0, 0.5));
-
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, CornrowsX::ROOT_PARAM,  0.0, 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, CornrowsX::SCALE_PARAM, 0.0, 1.0, 0.0));
+	addParam(createParam<sp_Trimpot>(Vec(x4, y1+2*yh), module, CornrowsX::PITCH_RANGE_PARAM,  0.0, 1.0, 0.));
 	
 	addInput(createInput<sp_Port>(Vec(x1, y1+3*yh), module, CornrowsX::FM_INPUT));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+3*yh), module, CornrowsX::FM_PARAM, -1.0, 1.0, 0.0));
@@ -546,9 +542,9 @@ CornrowsXWidget::CornrowsXWidget() {
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+5*yh), module, CornrowsX::COLOR_PARAM, 0.0, 1.0, 0.5));
 	addParam(createParam<sp_Trimpot>(Vec(x4, y1+5*yh), module, CornrowsX::AD_COLOR_PARAM, 	   0.0, 1.0, 0.0));
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+15, y1+6*yh), module, CornrowsX::RATE_PARAM,  0.0, 1.0, 1.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2+15, y1+6*yh), module, CornrowsX::BITS_PARAM,  0.0, 1.0, 1.0));
-	addOutput(createOutput<sp_Port>(Vec(x4, y1+6*yh), module, CornrowsX::OUT_OUTPUT));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+15, y1+5.75*yh), module, CornrowsX::BITS_PARAM,  0.0, 1.0, 1.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2+15, y1+5.75*yh), module, CornrowsX::RATE_PARAM,  0.0, 1.0, 1.0));
+	addOutput(createOutput<sp_Port>(Vec(x4, y1+5.75*yh), module, CornrowsX::OUT_OUTPUT));
 
 }
 
