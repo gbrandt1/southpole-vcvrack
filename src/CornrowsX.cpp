@@ -183,8 +183,10 @@ void CornrowsX::step() {
 	settings.ad_color  	= params[AD_COLOR_PARAM].value*15.;
 
 	// Display - return to SHAPE after 2s
-	disp_timeout++;
-	if (disp_timeout > 2.0*engineGetSampleRate()) {
+	if (last_setting_changed != braids::SETTING_OSCILLATOR_SHAPE) {
+		disp_timeout++;
+	}
+	if (disp_timeout > 1.0*engineGetSampleRate()) {
 		last_setting_changed = braids::SETTING_OSCILLATOR_SHAPE;
 		disp_timeout=0;
 	}
@@ -395,6 +397,8 @@ struct CornrowsXDisplay : TransparentWidget {
 		nvgFillColor(vg, nvgTransRGBA(textColor, 16));
 		nvgText(vg, textPos.x, textPos.y, "~~~~", NULL);
 		nvgFillColor(vg, textColor);
+		//blink
+		if ( module->disp_timeout & 0x1000 ) return;
 		if (module->last_setting_changed == braids::SETTING_OSCILLATOR_SHAPE) {
 			shape = module->settings.shape;
 			if (module->paques) {
@@ -542,8 +546,8 @@ CornrowsXWidget::CornrowsXWidget() {
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+5*yh), module, CornrowsX::COLOR_PARAM, 0.0, 1.0, 0.5));
 	addParam(createParam<sp_Trimpot>(Vec(x4, y1+5*yh), module, CornrowsX::AD_COLOR_PARAM, 	   0.0, 1.0, 0.0));
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+15, y1+5.75*yh), module, CornrowsX::BITS_PARAM,  0.0, 1.0, 1.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2+15, y1+5.75*yh), module, CornrowsX::RATE_PARAM,  0.0, 1.0, 1.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+5.75*yh), module, CornrowsX::BITS_PARAM,  0.0, 1.0, 1.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5.75*yh), module, CornrowsX::RATE_PARAM,  0.0, 1.0, 1.0));
 	addOutput(createOutput<sp_Port>(Vec(x4, y1+5.75*yh), module, CornrowsX::OUT_OUTPUT));
 
 }
