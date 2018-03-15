@@ -10,8 +10,8 @@ struct Pulse : Module {
 		DELAY_PARAM,
 		TIME_PARAM,
 		AMP_PARAM,
-		OFFSET_PARAM,
-//		C_PARAM,
+//		OFFSET_PARAM,
+		SLEW_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -22,8 +22,8 @@ struct Pulse : Module {
 		DELAY_INPUT,
 		TIME_INPUT,
 		AMP_INPUT,
-		OFFSET_INPUT,
-//		C_INPUT,
+//		OFFSET_INPUT,
+		SLEW_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -33,7 +33,8 @@ struct Pulse : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
-//		DECAY1_LIGHT,
+		EOC_LIGHT,
+		GATE_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -51,6 +52,8 @@ struct Pulse : Module {
 	unsigned long delayTarget = 0;
 	unsigned long gateTarget = 0;
 
+	float level = 0;
+
 	bool reset  = true;
 	bool repeat = false;
 	bool range  = false;
@@ -58,7 +61,7 @@ struct Pulse : Module {
 	bool delayOn = false;
 
 	float amp;
-	float offset;
+	float slew;
 
 	static const int ndurations = 12;
 	const float durations[ndurations] = {
@@ -100,8 +103,10 @@ void Pulse::step() {
 	float dt = 1e-3*engineGetSampleRate();
 	float sr = engineGetSampleRate();
 
-	amp    = clampf(params[AMP_PARAM].value + inputs[AMP_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
-	offset = clampf(params[OFFSET_PARAM].value + inputs[OFFSET_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
+	amp  = clampf(params[AMP_PARAM].value + inputs[AMP_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
+	slew = clampf(params[SLEW_PARAM].value + inputs[SLEW_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
+	slew = pow(2.,(1.-slew)*log2(sr))/sr;
+	if (range) slew *= .1;
 
 	float delayTarget_ = clampf(params[DELAY_PARAM].value + inputs[DELAY_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
 	float gateTarget_  = clampf(params[TIME_PARAM].value + inputs[TIME_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
@@ -147,11 +152,23 @@ void Pulse::step() {
 				delayOn = true;		
 			}
 		}
+
+		if (level < 1.) level += slew;  
+		if (level > 1.) level = 1.;
+		
+
+	} else {
+		if (level > 0.)	level -= slew; 
+		if (level < 0.)	level = 0.;
 	}
 
 	outputs[CLOCK_OUTPUT].value = 10.*clkPulse.process(1.0 / engineGetSampleRate());
 	outputs[EOC_OUTPUT].value   = 10.*eocPulse.process(1.0 / engineGetSampleRate());
-	outputs[GATE_OUTPUT].value  = clampf( gateOn * 10. * amp + 5.*offset, -10., 10. );
+	outputs[GATE_OUTPUT].value  = clampf( 10. * level * amp, -10., 10. );
+
+	lights[EOC_LIGHT].setBrightnessSmooth( outputs[EOC_OUTPUT].value );
+	lights[GATE_LIGHT].setBrightnessSmooth( outputs[GATE_OUTPUT].value );
+	
 }
 
 
@@ -191,14 +208,15 @@ PulseWidget::PulseWidget() {
 	addInput(createInput<sp_Port>		   (Vec(x1, y1+6*yh), module, Pulse::AMP_INPUT));
 	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Pulse::AMP_PARAM, 0.0, 1.0, 1.0));
 
-	addInput(createInput<sp_Port>		   (Vec(x1, y1+7*yh), module, Pulse::OFFSET_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::OFFSET_PARAM, -1.0, 1.0, 0.));
+	//addInput(createInput<sp_Port>		   (Vec(x1, y1+7*yh), module, Pulse::OFFSET_INPUT));
+	//addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::OFFSET_PARAM, -1.0, 1.0, 0.));
 
-	//addInput(createInput<sp_Port>		   (Vec(x1, y1+8*yh), module, Pulse::C_INPUT));
-	//addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+8*yh), module, Pulse::C_PARAM, 0.0, 1.0, 0.5));
+	addInput(createInput<sp_Port>		   (Vec(x1, y1+7*yh), module, Pulse::SLEW_INPUT));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::SLEW_PARAM, 0.0, 1.0, 0.));
 
 	addOutput(createOutput<sp_Port>        (Vec(x1, y1+8.25*yh), module, Pulse::EOC_OUTPUT));
 	addOutput(createOutput<sp_Port>        (Vec(x2, y1+8.25*yh), module, Pulse::GATE_OUTPUT));
 
-//	addChild(createLight<SmallLight<RedLight>>(Vec(94, 109), module, Pulse::DECAY_LIGHT));
+	addChild(createLight<SmallLight<RedLight>>(Vec(x1+7, y1+7.65*yh), module, Pulse::EOC_LIGHT));
+	addChild(createLight<SmallLight<RedLight>>(Vec(x2+7, y1+7.65*yh), module, Pulse::GATE_LIGHT));
 }

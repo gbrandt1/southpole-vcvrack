@@ -5,6 +5,7 @@
 #define NSNAKEPORTS 10
 
 struct Snake : Module {
+
 	enum ParamIds {
 		PLUS_PARAM,
 		MINUS_PARAM,
@@ -12,24 +13,23 @@ struct Snake : Module {
 	};
 	enum InputIds {		
 		IN_INPUT,
-		NUM_INPUTS = IN_INPUT + NSNAKEPORTS
+		NUM_INPUTS = IN_INPUT + NSNAKEPORTS + 1
 	};
 	enum OutputIds {
 		OUT_OUTPUT,
-		NUM_OUTPUTS = OUT_OUTPUT + NSNAKEPORTS
+		NUM_OUTPUTS = OUT_OUTPUT + NSNAKEPORTS + 1
 	};
 	enum LightIds {
 		LOCK_LIGHT,
-		NUM_LIGHTS = LOCK_LIGHT + 2*NSNAKEPORTS 
+		NUM_LIGHTS = LOCK_LIGHT + 2*NSNAKEPORTS + 2
 	};
 
-	static float  		cable[NSNAKEBUSS][NSNAKEPORTS];
-	static int lockid[NSNAKEBUSS][NSNAKEPORTS];
-	static int counter[NSNAKEBUSS];
-	static int last_buss;
+	static int   nsnakes;
+	static float cable[NSNAKEBUSS][NSNAKEPORTS];
+	static int   lockid[NSNAKEBUSS][NSNAKEPORTS];
 
 	int buss = 0;
-	int id[NSNAKEBUSS];
+	int id;
 
   	SchmittTrigger plusTrigger;
   	SchmittTrigger minusTrigger;
@@ -37,14 +37,9 @@ struct Snake : Module {
 	Snake() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
 
 		// first Snake module instantiation
-		if (last_buss == -1) {
-			buss = 0;
-			last_buss = 0;
-
+		if (nsnakes == 0) {
+			//printf("initialize Snake system\n");		
 			for (int b=0; b< NSNAKEBUSS; b++) {
-
-				counter[b] = 0;									
-				id[b] 	   = 0;
 				for (int i=0; i< NSNAKEPORTS; i++) {
 					cable[b][i] = 0.;
 					lockid[b][i] = 0;
@@ -52,42 +47,106 @@ struct Snake : Module {
 			}
 		}
 
-		buss = last_buss;
-		counter[buss]++;
-		id[buss] = counter[buss];
+		nsnakes++;
+		buss = 0;
+		id = nsnakes;
+		//dump("constructor");
+	}
+
+	~Snake() {
+		// clean up
+		for (int i=0; i < NSNAKEPORTS; i++) {
+			if ( lockid[buss][i] == id ) {
+				lockid[buss][i] = 0;
+				cable[buss][i]  = 0;
+			}
+		}				
+		nsnakes--;
+		//dump("destructor");
 	}
 
 	void step() override;
+
+	json_t *toJson() override {
+		json_t *rootJ = json_object();
+		json_object_set_new(rootJ, "buss", json_integer(buss));
+		return rootJ;
+	}
+
+	void fromJson(json_t *rootJ) override {
+		json_t *bussJ = json_object_get(rootJ, "buss");
+		if (bussJ) { buss = json_integer_value(bussJ); }
+		dump("fromJson");
+	}
+
+	void dump( const char * where="" ) {
+		printf(	"%p [%s] (%d) buss %d: id %d, lockid: [ ", this, where, nsnakes, buss, id );
+		for (int i=0; i< NSNAKEPORTS; i++) {
+			printf("%d, ", lockid[buss][i]);
+		}
+		printf(" ] %f %f\n",	params[PLUS_PARAM].value, params[MINUS_PARAM].value);
+	}
+
 };
 
-float 		  Snake::cable[NSNAKEBUSS][NSNAKEPORTS];
-int  Snake::lockid[NSNAKEBUSS][NSNAKEPORTS];
-int  Snake::counter[NSNAKEBUSS];
-int  Snake::last_buss = -1;
+int   Snake::nsnakes = 0;
+float Snake::cable[NSNAKEBUSS][NSNAKEPORTS];
+int   Snake::lockid[NSNAKEBUSS][NSNAKEPORTS];
 
 void Snake::step() {
+
+	// change buss on trigger
+    if (plusTrigger.process(params[PLUS_PARAM].value)) {
+		if (buss < NSNAKEBUSS-1) {			
+			// free and clean up current buss
+			for (int i=0; i < NSNAKEPORTS; i++) {
+				if ( lockid[buss][i] == id ) {
+					lockid[buss][i] = 0;
+					cable[buss][i]  = 0;
+				}
+			}							
+			buss++;		
+			//dump("plus");
+	    } 
+    }
+
+    if (minusTrigger.process(params[MINUS_PARAM].value)) {
+		if (buss > 0) {
+			// free and clean up current buss
+			for (int i=0; i < NSNAKEPORTS; i++) {
+				if ( lockid[buss][i] == id ) {
+					lockid[buss][i] = 0;
+					cable[buss][i]  = 0;
+				}
+			}				
+			buss--;			
+			//dump("minus");
+		}
+    }
 
 	for (int i=0; i < NSNAKEPORTS; i++) {
 
 		// if active try to lock input
-		if ( inputs[IN_INPUT+i].active) {
+		if ( inputs[IN_INPUT+i].active ) {
 			if ( lockid[buss][i] == 0 ) {
-				lockid[buss][i] = id[buss];
+				lockid[buss][i] = id;
+				//dump("lock");
 			}
 
-			if ( lockid[buss][i] == id[buss] ) {
+			if ( lockid[buss][i] == id ) {
 				cable[buss][i] = inputs[IN_INPUT+i].value;
 			}
-		} else if ( lockid[buss][i] == id[buss] ) {
+		} else if ( lockid[buss][i] == id ) {
 			lockid[buss][i] = 0;
 			cable[buss][i]  = 0;
+			//dump("release");
 		}
 
 		// operate lights						
 		if ( lockid[buss][i] == 0 ) {
 			lights[LOCK_LIGHT+2*i  ].setBrightness(0);
 			lights[LOCK_LIGHT+2*i+1].setBrightness(0);
-		} else if ( lockid[buss][i] == id[buss] ) {
+		} else if ( lockid[buss][i] == id ) {
 			lights[LOCK_LIGHT+2*i  ].setBrightness(1.0);
 			lights[LOCK_LIGHT+2*i+1].setBrightness(0.);
 		} else {
@@ -99,41 +158,6 @@ void Snake::step() {
 		outputs[OUT_OUTPUT+i].value = cable[buss][i];
 	}
 
-	// change buss on trigger
-    if (plusTrigger.process(params[PLUS_PARAM].value)) {
-		if (buss < NSNAKEBUSS-1) {
-			for (int i=0; i < NSNAKEPORTS; i++) {
-				// free and clean up current buss
-				if ( lockid[buss][i] == id[buss] ) {
-					lockid[buss][i] = 0;
-					cable[buss][i]  = 0;
-				}
-			}				
-			buss++;		
-			if ( id[buss] == 0) {
-				counter[buss]++;
-				id[buss] = counter[buss];
-		    } 
-	    } 
-    }
-
-    if (minusTrigger.process(params[MINUS_PARAM].value)) {
-		if (buss > 0) {
-			for (int i=0; i < NSNAKEPORTS; i++) {
-				// free and clean up current buss
-				if ( lockid[buss][i] == id[buss] ) {
-					lockid[buss][i] = 0;
-					cable[buss][i]  = 0;
-				}
-			}				
-			buss--;
-			if ( id[buss] == 0) {
-				counter[buss]++;
-				id[buss] = counter[buss];
-		    } 
-		}
-    } 
-	
 }
 
 struct SnakeDisplay : TransparentWidget {
@@ -206,7 +230,7 @@ SnakeWidget::SnakeWidget() {
 		float y = y1+i*yh + floor(i/5)*yh*.4;
 		addInput(createInput<sp_Port>(	Vec( 5, y), module, Snake::IN_INPUT + i));
 		addOutput(createOutput<sp_Port>(Vec(34, y), module, Snake::OUT_OUTPUT + i));
-		addChild(createLight<SmallLight<GreenRedLight>>(Vec(28, y), module, Snake::LOCK_LIGHT + 2*i));
+		addChild(createLight<SmallLight<GreenRedLight>>(Vec(26, y), module, Snake::LOCK_LIGHT + 2*i));
 	}
 
 

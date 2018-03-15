@@ -19,6 +19,15 @@ struct SmokeWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
+#ifdef MUTATED
+
+struct HornetsWidget : ModuleWidget {
+	HornetsWidget();
+	Menu *createContextMenu() override;
+};
+
+#else
+
 #ifdef PARASITES
 
 struct SplashParasiteWidget : ModuleWidget {
@@ -28,6 +37,12 @@ struct SplashParasiteWidget : ModuleWidget {
 	SplashParasiteWidget();
 	void step() override;
 	Menu *createContextMenu() override;
+};
+
+struct CestodaWidget : ModuleWidget {
+	CestodaWidget();
+	//void step() override;
+	//Menu *createContextMenu() override;
 };
 
 
@@ -40,12 +55,14 @@ struct AnnuliWidget : ModuleWidget {
 	void step() override;
 	Menu *createContextMenu() override;
 };
-
 struct CornrowsWidget : ModuleWidget {
 	CornrowsWidget();
 	Menu *createContextMenu() override;
 };
-
+struct CornrowsXWidget : ModuleWidget {
+	CornrowsXWidget();
+	Menu *createContextMenu() override;
+};
 struct SplashWidget : ModuleWidget {
 	SVGPanel *tidesPanel;
 	SVGPanel *sheepPanel;
@@ -54,40 +71,50 @@ struct SplashWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
-struct BalaclavaWidget : ModuleWidget {	BalaclavaWidget(); };
-struct BandanaWidget : ModuleWidget { BandanaWidget(); };
-struct FallsWidget : ModuleWidget { FallsWidget(); };
-struct AuxWidget : ModuleWidget { AuxWidget(); };
 
 struct AbrWidget : ModuleWidget { AbrWidget(); };
-struct ButWidget : ModuleWidget { ButWidget(); };
-struct EtagereWidget : ModuleWidget { EtagereWidget(); };
-struct DeuxEtageresWidget : ModuleWidget { DeuxEtageresWidget(); };
-struct RiemannWidget : ModuleWidget { RiemannWidget(); };
-struct SnsWidget : ModuleWidget { SnsWidget(); };
+struct AuxWidget : ModuleWidget { AuxWidget(); };
+struct BalaclavaWidget : ModuleWidget {	BalaclavaWidget(); };
+struct BandanaWidget : ModuleWidget { BandanaWidget(); };
+struct Blank16HPWidget : ModuleWidget {	Blank16HPWidget(); };
+struct Blank1HPWidget : ModuleWidget {	Blank1HPWidget(); };
+struct Blank2HPWidget : ModuleWidget {	Blank2HPWidget(); };
+struct Blank42HPWidget : ModuleWidget {	Blank42HPWidget(); };
+struct Blank4HPWidget : ModuleWidget {	Blank4HPWidget(); };
+struct Blank8HPWidget : ModuleWidget {	Blank8HPWidget(); };
 struct BounceWidget : ModuleWidget { BounceWidget(); };
-struct WriggleWidget : ModuleWidget { WriggleWidget(); };
-struct PisteWidget : ModuleWidget {	PisteWidget(); };
+struct ButWidget : ModuleWidget { ButWidget(); };
+struct BytesWidget : ModuleWidget { BytesWidget(); };
+struct DeuxEtageresWidget : ModuleWidget { DeuxEtageresWidget(); };
+struct EtagereWidget : ModuleWidget { 
+	SVGPanel *blancPanel;
+	SVGPanel *noirPanel;	
+	EtagereWidget(); 
+	void step() override;
+	Menu *createContextMenu() override;
+};
+struct FallsWidget : ModuleWidget { FallsWidget(); };
+struct FtagnWidget : ModuleWidget { FtagnWidget(); };
 struct FuseWidget : ModuleWidget {
 	FuseWidget();
 	Menu *createContextMenu() override;
 };
-
-struct SsshWidget : ModuleWidget {	SsshWidget(); };
-struct SnakeWidget : ModuleWidget {	SnakeWidget(); };
 struct GnomeWidget : ModuleWidget {	GnomeWidget(); };
-struct Blank1HPWidget : ModuleWidget {	Blank1HPWidget(); };
-struct Blank2HPWidget : ModuleWidget {	Blank2HPWidget(); };
-struct Blank4HPWidget : ModuleWidget {	Blank4HPWidget(); };
-struct Blank8HPWidget : ModuleWidget {
-	Blank8HPWidget(); 
-//	TextField *textField;
-//	json_t *toJson() override;
-//	void fromJson(json_t *rootJ) override;
+struct PisteWidget : ModuleWidget {	PisteWidget(); };
+struct PulseWidget : ModuleWidget {	PulseWidget(); }; 
+struct RakesWidget : ModuleWidget { RakesWidget(); };
+struct RiemannWidget : ModuleWidget { RiemannWidget(); };
+struct SnakeWidget : ModuleWidget {	
+	SnakeWidget(); 
 };
-struct Blank16HPWidget : ModuleWidget {	Blank16HPWidget(); };
-struct Blank42HPWidget : ModuleWidget {	Blank42HPWidget(); };
+struct SnsWidget : ModuleWidget { 
+	SnsWidget();
+	Menu *createContextMenu() override;
+};
+struct SsshWidget : ModuleWidget {	SsshWidget(); };
+struct WriggleWidget : ModuleWidget { WriggleWidget(); };
 
+#endif
 #endif
 
 // GUI COMPONENTS

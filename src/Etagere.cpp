@@ -53,6 +53,8 @@ struct Etagere : Module {
 		NUM_LIGHTS
 	};
 
+    bool blanc;
+
     VAStateVariableFilter lpFilter;
     VAStateVariableFilter bp2Filter;
     VAStateVariableFilter bp3Filter;
@@ -69,39 +71,25 @@ struct Etagere : Module {
         hpFilter.setFilterType(SVFHighpass);        
 		bp2Filter.setFilterType(SVFBandpass);
         bp3Filter.setFilterType(SVFBandpass);
-        
+
+        blanc = true;   
     }
+
     void step() override;
 
-//    void reset() override {
-//    }
-//    void randomize() override {
-//    }
+	json_t *toJson() override {
+		json_t *rootJ = json_object();
+		json_object_set_new(rootJ, "blanc", json_boolean(blanc));
+		return rootJ;
+	}
 
-    json_t *toJson() override {
-        json_t *rootJ = json_object();
-        // states
-        //json_t *statesJ = json_array();
-        //for (int i = 0; i < NUM_CHANNELS; i++) {
-        //    json_t *stateJ = json_boolean(state[i]);
-        //    json_array_append_new(statesJ, stateJ);
-        //}
-        //json_object_set_new(rootJ, "states", statesJ);
-        return rootJ;
-    }
-    void fromJson(json_t *rootJ) override {
-        // states
-        //json_t *statesJ = json_object_get(rootJ, "states");
-        //if (statesJ) {
-        //    for (int i = 0; i < NUM_CHANNELS; i++) {
-        //        json_t *stateJ = json_array_get(statesJ, i);
-        //        if (stateJ)
-        //            state[i] = json_boolean_value(stateJ);
-        //    }
-        //}
-    }
+	void fromJson(json_t *rootJ) override {
+		json_t *blancJ = json_object_get(rootJ, "blanc");
+		if (blancJ) {
+			blanc = json_boolean_value(blancJ);
+		}
+	}
 
-    //unsigned timer;
 };
 
 void Etagere::step() {
@@ -200,10 +188,16 @@ EtagereWidget::EtagereWidget() {
 	box.size = Vec(15*6, 380);
 
 	{
-		SVGPanel *panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere.svg")));
-		panel->box.size = box.size;
-		addChild(panel);	
+		noirPanel = new SVGPanel();
+		noirPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere.svg")));
+		noirPanel->box.size = box.size;
+		addChild(noirPanel);	
+	}
+	{
+		blancPanel = new SVGPanel();
+		blancPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere_blanc.svg")));
+		blancPanel->box.size = box.size;
+		addChild(blancPanel);	
 	}
 
     const float x1 = 8;
@@ -257,4 +251,32 @@ EtagereWidget::EtagereWidget() {
     addOutput(createOutput<sp_Port>(Vec(x2, y1+13*yh), module, Etagere::OUT_OUTPUT));
 
 	addChild(createLight<SmallLight<RedLight>>(Vec(x2+10., y1+12.5*yh), module, Etagere::CLIP5_LIGHT));
+}
+
+void EtagereWidget::step() {
+	Etagere *m = dynamic_cast<Etagere*>(module);
+	assert(m);
+	blancPanel->visible = !m->blanc;
+	noirPanel->visible = m->blanc;
+	ModuleWidget::step();
+}
+
+struct EtagereBlancItem : MenuItem {
+	Etagere *m;
+	void onAction(EventAction &e) override {
+		m->blanc ^= true;
+	}
+	void step() override {
+		rightText = (!m->blanc) ? "✔" : "";
+		MenuItem::step();
+	}
+};
+
+Menu *EtagereWidget::createContextMenu() {
+	Menu *menu = ModuleWidget::createContextMenu();
+	Etagere *m = dynamic_cast<Etagere*>(module);
+	assert(m);
+	menu->addChild(construct<MenuEntry>());
+	menu->addChild(construct<EtagereBlancItem>(&MenuEntry::text, "blanc", &EtagereBlancItem::m, m));
+	return menu;
 }

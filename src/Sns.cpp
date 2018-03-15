@@ -1,9 +1,6 @@
-
 #include <array>
-
 #include "Southpole.hpp"
 #include "dsp/digital.hpp"
-
 #include "Bjorklund.hpp"
 
 struct Sns : Module {
@@ -39,20 +36,6 @@ struct Sns : Module {
 	enum LightIds {		
 		NUM_LIGHTS
 	};
-
-	Sns() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
-	
-		sequence.fill(0);
-		accents.fill(0);
-		reset();
-	}
-
-	void step() override;
-	void reset() override;
-
-	unsigned int fib(unsigned int n){
-   		return (n < 2) ? n : fib(n - 1) + fib(n - 2);
-	}
 
 	Bjorklund euclid;
 	Bjorklund euclid2;
@@ -107,6 +90,39 @@ struct Sns : Module {
 
 	unsigned int  currentStep = 0;
 	unsigned int  turing = 0;
+
+	Sns() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	
+		sequence.fill(0);
+		accents.fill(0);
+		reset();
+	}
+
+	void step() override;
+	void reset() override;
+
+	unsigned int fib(unsigned int n){
+   		return (n < 2) ? n : fib(n - 1) + fib(n - 2);
+	}
+
+	json_t *toJson() override {
+		json_t *rootJ = json_object();
+		json_object_set_new(rootJ, "mode", json_integer((int) gateMode));
+		json_object_set_new(rootJ, "style", json_integer((int) style));
+		return rootJ;
+	}
+
+	void fromJson(json_t *rootJ) override {
+		json_t *modeJ = json_object_get(rootJ, "mode");
+		if (modeJ) {
+			gateMode = (gateModes) json_integer_value(modeJ);
+		}
+		json_t *styleJ = json_object_get(rootJ, "style");
+		if (styleJ) {
+			style = (patternStyle) json_integer_value(styleJ);
+		}
+	}	
+
 };
 
 void Sns::reset() {
@@ -200,10 +216,10 @@ void Sns::reset() {
 	//if (seq0.size() != par_l+par_p) seq0.resize(par_l+par_p);
  	//for (unsigned int i=par_l; i<par_p; i++) { seq0.at(i) = 0; }
 
-	for (unsigned int i = 0; i != seq0.size(); i++) {	std::cout << seq0[i];	}
-	std::cout << '\n';
-	for (unsigned int i = 0; i != acc0.size(); i++) {	std::cout << acc0[i];	}
-	std::cout << '\n';
+	//for (unsigned int i = 0; i != seq0.size(); i++) {	std::cout << seq0[i];	}
+	//std::cout << '\n';
+	//for (unsigned int i = 0; i != acc0.size(); i++) {	std::cout << acc0[i];	}
+	//std::cout << '\n';
 
 	// distribute accents on sequence
 	unsigned int j = par_k-par_s;
@@ -217,10 +233,10 @@ void Sns::reset() {
 		}
 	}
 
-    for (unsigned int i = 0; i != sequence.size(); i++) {	std::cout << sequence[i];    }
-    std::cout << '\n';
-    for (unsigned int i = 0; i != accents.size(); i++) {	std::cout << accents[i];    }
-    std::cout << '\n';
+    //for (unsigned int i = 0; i != sequence.size(); i++) {	std::cout << sequence[i];    }
+    //std::cout << '\n';
+    //for (unsigned int i = 0; i != accents.size(); i++) {	std::cout << accents[i];    }
+    //std::cout << '\n';
 
    	calculate = false;
 	from_reset = true;
@@ -561,7 +577,7 @@ Menu *SnsWidget::createContextMenu() {
 
 	menu->addChild(construct<MenuLabel>(&MenuEntry::text, "Gate Mode"));
 	menu->addChild(construct<SnsGateModeItem>(&MenuEntry::text, "Trigger", &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TRIGGER_MODE));
-	menu->addChild(construct<SnsGateModeItem>(&MenuEntry::text, "Gate",    &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::GATE_MODE));
+    menu->addChild(construct<SnsGateModeItem>(&MenuEntry::text, "Gate",    &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::GATE_MODE));
 	menu->addChild(construct<SnsGateModeItem>(&MenuEntry::text, "Turing",  &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TURING_MODE));
 
 	menu->addChild(construct<MenuLabel>());;
@@ -570,7 +586,7 @@ Menu *SnsWidget::createContextMenu() {
 	menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Euclid", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::EUCLIDEAN_PATTERN));
 	menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Fibonacci", &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::FIBONACCI_PATTERN));
 	menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Random", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::RANDOM_PATTERN));
-	menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Cantor", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::CANTOR_PATTERN));
+  //menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Cantor", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::CANTOR_PATTERN));
 	menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Linear", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::LINEAR_PATTERN));
 
 	return menu;

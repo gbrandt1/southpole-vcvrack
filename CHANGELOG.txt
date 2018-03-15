@@ -1,4 +1,69 @@
 
+
+-- 0.5.3 ----
+
+- [NEWish] Cornrows X
+ - As complete implementation of Braids as possible
+ - so far not available features have been broken out as controls
+   (AD-envelope, bit crusher, scale quantizer, tuning)
+   or implemented as menu options (AUTO, VCA, FLAT, Paques)
+ - (i know Plaits is cooler now but this will get you quite far as synth voice)
+
+- Riemann
+  - new layout
+    - left: inputs/controls
+      - P5/V M3/V continuous play head
+      - PLR-transform trigger inputs
+
+    - right: 12 outputs with mute/volume (pair with VCA)
+    - bottom: options
+      - constrain to scales
+      - mute/attenuate out-of-scale notes
+
+- Snake
+  - implement persistency for buss
+  - clean up logic
+
+- Etagère
+  - optional white panel (to better match cf modular mixer modules)
+
+- SNS
+  - New generative modes: 
+    - Fibonacci, Random, Linear
+    - change Fill to trigger generation of new pattern
+  - Turing output mode
+    - steps are interpreted as bits and converted to stepped voltage at the output.
+
+NEW:
+
+- Byte: Bytebeat module
+  - so far implements
+
+- Ftagn: No Filter
+  - transgressive module for your nihilistic no-input patches at the noise show
+  - stereo - neither left nor right channel do anything at all
+  - patch example: 
+    - pair with timing module set to 4'33 and reverb for a modular rendition of John Cage's 4'33
+  - (somebody had to do it)
+
+- Pulse: Pulse Generator
+  - inspired by standard lab pulse generators (minus offset function)
+  - main purpose is to convert triggers to gates
+  - clock through sends 1ms triggers - clean your clock
+  - range selectable (1s / 10s)
+  - when clocked, duration/delay are quantized to "musically relevant" intervals
+
+- Rakes: Stereo Resonator
+  - (inspired by the Ableton Resonator effect)
+  - 6 stereo comb filters
+  - V/OCT inputs quantized to SEMI tones or FREE
+  - FINE detuning works with opposite sign on L/R channels
+  - small values produce Haas effect (stereo widening)
+  - individual GAINs
+  - best used together with a chord generator patched into the V/OCT inputs
+  - looking forward to your dub techno tracks
+  
+
 -- 0.5.3 ----
 
 - Parasites skins + libary:
