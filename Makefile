@@ -28,7 +28,7 @@ SOURCES += src/Falls.cpp
 SOURCES += src/Ftagn.cpp
 SOURCES += src/Aux_.cpp
 SOURCES += src/But.cpp
-SOURCES += src/Bytes.cpp
+#SOURCES += src/Bytes.cpp
 SOURCES += src/DeuxEtageres.cpp
 SOURCES += src/Etagere.cpp
 SOURCES += src/Fuse.cpp
@@ -49,14 +49,14 @@ SOURCES += eurorack/stmlib/dsp/units.cc
 SOURCES += eurorack/tides/generator.cc 
 SOURCES += eurorack/tides/resources.cc
 
-SOURCES += src/Cornrows.cpp	
+#SOURCES += src/Cornrows.cpp	
+SOURCES += src/CornrowsX.cpp	
 SOURCES += eurorack/braids/macro_oscillator.cc
 SOURCES += eurorack/stmlib/utils/random.cc
 SOURCES += eurorack/braids/analog_oscillator.cc
 SOURCES += eurorack/braids/digital_oscillator.cc
 SOURCES += eurorack/braids/resources.cc
 
-SOURCES += src/CornrowsX.cpp	
 
 SOURCES += src/Annuli.cpp
 SOURCES += eurorack/rings/dsp/fm_voice.cc

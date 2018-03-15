@@ -21,13 +21,13 @@ void init(rack::Plugin *p) {
 	// For each module, specify the ModuleWidget subclass, manufacturer slug (for saving in patches), manufacturer human-readable name, module slug, and module name
 	//p->addModel(createModel<MyModuleWidget>("Southpole", "MyModule", "My Module", //OSCILLATOR_TAG));
 
-	#ifdef MUTATED
-		p->addModel(createModel<HornetsWidget>("Southpole", "Hornets", "Hornets - macro osc (extended edition)", OSCILLATOR_TAG, WAVESHAPER_TAG));	
-	#else
+	//#ifdef MUTATED
+	//	p->addModel(createModel<HornetsWidget>("Southpole", "Hornets", "Hornets - macro osc (extended edition)", OSCILLATOR_TAG, WAVESHAPER_TAG));	
+	//#else
 	#ifdef PARASITES
 		p->addModel(createModel<SmokeWidget>(	"Southpole-parasites", "Smoke", "Smoke Parasite", GRANULAR_TAG, REVERB_TAG));
 		p->addModel(createModel<SplashParasiteWidget>("Southpole-parasites", "Splash Parasite", "Splash Parasites", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
-		p->addModel(createModel<CestodaWidget>(	"Southpole-parasites", "Cestoda", "Cestoda", GRANULAR_TAG, REVERB_TAG));
+	  //p->addModel(createModel<CestodaWidget>(	"Southpole-parasites", "Cestoda", "Cestoda", GRANULAR_TAG, REVERB_TAG));
 	#else
 		p->addModel(createModel<AbrWidget>(		 "Southpole", "Abr", 	"Abr - A/B switch", SWITCH_TAG, MIXER_TAG));
 		p->addModel(createModel<AnnuliWidget>( 	 "Southpole", "Annuli", "Annuli - resonator", SYNTH_VOICE_TAG, OSCILLATOR_TAG));
@@ -41,9 +41,9 @@ void init(rack::Plugin *p) {
 		p->addModel(createModel<Blank4HPWidget>( "Southpole", "Blank4HP", 	"Blank 4 HP", BLANK_TAG));
 		p->addModel(createModel<Blank8HPWidget>( "Southpole", "Blank8HP", 	"Blank 8 HP", BLANK_TAG));
 		p->addModel(createModel<ButWidget>(		 "Southpole", "But", 		"But - A/B buss", SWITCH_TAG, MIXER_TAG));
-		p->addModel(createModel<BytesWidget>(	 "Southpole", "Bytes", 		"Bytes - bytebeats", OSCILLATOR_TAG));
-		p->addModel(createModel<CornrowsWidget>( "Southpole", "Cornrows", 	"Cornrows - macro oscillator", OSCILLATOR_TAG, WAVESHAPER_TAG));
-		p->addModel(createModel<CornrowsXWidget>("Southpole", "CornrowsX", 	"CornrowsX - macro osc (extended edition)", OSCILLATOR_TAG, WAVESHAPER_TAG));
+		//p->addModel(createModel<BytesWidget>(	 "Southpole", "Bytes", 		"Bytes", OSCILLATOR_TAG));
+		//p->addModel(createModel<CornrowsWidget>( "Southpole", "Cornrows", 	"Cornrows - macro osc", OSCILLATOR_TAG, WAVESHAPER_TAG));
+		p->addModel(createModel<CornrowsXWidget>("Southpole", "CornrowsX", 	"CornrowsX - macro osc", OSCILLATOR_TAG, WAVESHAPER_TAG));
 		p->addModel(createModel<DeuxEtageresWidget>("Southpole", "DeuxEtageres", "Deux Etageres - Stereo EQ", FILTER_TAG));
 		p->addModel(createModel<EtagereWidget>(	 "Southpole", "Etagere", 	"Etagere - EQ", FILTER_TAG));
 		p->addModel(createModel<FallsWidget>(	 "Southpole", "Falls", 		"Falls - attenumixverter", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
@@ -61,5 +61,5 @@ void init(rack::Plugin *p) {
 		p->addModel(createModel<SsshWidget>(	 "Southpole", "Sssh", 		"Sssh - noise and S+H", NOISE_TAG, SAMPLE_AND_HOLD_TAG));
 		p->addModel(createModel<WriggleWidget>(	 "Southpole", "Wriggle", 	"Wriggle - spring model", LFO_TAG, FUNCTION_GENERATOR_TAG));
 	#endif
-	#endif
+	//#endif
 }

@@ -19,14 +19,12 @@ struct SmokeWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
-#ifdef MUTATED
-
-struct HornetsWidget : ModuleWidget {
-	HornetsWidget();
-	Menu *createContextMenu() override;
-};
-
-#else
+//#ifdef MUTATED
+//struct HornetsWidget : ModuleWidget {
+//	HornetsWidget();
+//	Menu *createContextMenu() override;
+//};
+//#else
 
 #ifdef PARASITES
 
@@ -39,11 +37,11 @@ struct SplashParasiteWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 };
 
-struct CestodaWidget : ModuleWidget {
-	CestodaWidget();
+//struct CestodaWidget : ModuleWidget {
+//	CestodaWidget();
 	//void step() override;
 	//Menu *createContextMenu() override;
-};
+//};
 
 
 #else
@@ -55,10 +53,10 @@ struct AnnuliWidget : ModuleWidget {
 	void step() override;
 	Menu *createContextMenu() override;
 };
-struct CornrowsWidget : ModuleWidget {
-	CornrowsWidget();
-	Menu *createContextMenu() override;
-};
+//struct CornrowsWidget : ModuleWidget {
+//	CornrowsWidget();
+//	Menu *createContextMenu() override;
+//};
 struct CornrowsXWidget : ModuleWidget {
 	CornrowsXWidget();
 	Menu *createContextMenu() override;
@@ -115,7 +113,7 @@ struct SsshWidget : ModuleWidget {	SsshWidget(); };
 struct WriggleWidget : ModuleWidget { WriggleWidget(); };
 
 #endif
-#endif
+//#endif
 
 // GUI COMPONENTS
 
