@@ -1,17 +1,15 @@
 # southpole-vcvrack
 
-![All](./doc/sp-all-2018-02-23.png)
+![All](./doc/sp-all-2018-03-15.png)
 
-Southpole VCV Rack Modules 0.5.3
+Southpole VCV Rack Modules 0.5.4
 
 A personal collection of modules I've always wanted for my workflow.
 
-Some of the modules are simply reskins of the existing Audible Instruments /
-Arable Instruments VCV Rack versions of Mutable Instruments eurorack modules.
-
-- The skins are inspired by hardware micro versions of various MI modules.
-- Some skins are additonal modes of firmware with appropriate labels for knobs and ports to make usage easier.
-- Some skins do not exist yet in hardware.
+- Some of the modules are simply reskins of the existing Audible Instruments / Arable Instruments VCV Rack versions of Mutable Instruments eurorack modules.
+  - The skins are inspired by hardware micro versions of various MI modules.
+  - Some skins are additonal modes of firmware with appropriate labels for knobs and ports to make usage easier.
+  - Some skins do not exist yet in hardware.
 - Some modules did not yet exist in VCV Rack versions.
 - Some modules are new.
 
@@ -38,10 +36,15 @@ WARNING: Overwrites existing Southpole / SouthpoleParasites directories from eg.
 
 ## Modules copied from Audible Instruments / Arable Instruments
 
-### Cornrows - Macro Oscillator
+### Cornrows X - Macro Oscillator
 
 - Based on [Braids](https://mutable-instruments.net/modules/braids), [Manual](https://mutable-instruments.net/modules/braids/manual/)
 
+- Extended as follows
+  - As complete implementation of Braids / macro oscillator as possible
+  - so far not available features in the Audible Instruments version have been activated and broken out as controls: AD-envelope, bit crusher, scale quantizer, tuning
+  - Implemented as menu options: AUTO, VCA, FLAT, Paques
+  
 ### Splash - Tidal Modulator / Lambs - Wavetable Oscillator
 
 - Based on [Tides](https://mutable-instruments.net/modules/tides), [Manual](https://mutable-instruments.net/modules/tides/manual/)
@@ -67,6 +70,26 @@ Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](http
 - Based on [Veils](https://mutable-instruments.net/modules/veils), [Manual](https://mutable-instruments.net/modules/veils/manual/)
 
 ## New modules
+
+
+### Ftagn: No Filter
+  - transgressive module for your nihilistic no-input patches at the noise show
+  - stereo - neither left nor right channel do anything at all
+
+### Pulse: Pulse Generator
+  - main purpose is to convert triggers to gates
+  - clock through sends 1ms triggers - clean your clock
+  - range selectable (1s / 10s)
+  - when clocked, duration/delay are quantized to "musically relevant" intervals
+
+### Rakes: Stereo Resonator
+  - inspired by the Ableton Resonator effect
+  - 6 stereo comb filters
+  - V/OCT inputs quantized to SEMI tones or FREE
+  - FINE detuning works with opposite sign on L/R channels
+  - small values produce Haas effect (stereo widening)
+  - individual GAINs
+  - best used together with a chord generator patched into the V/OCT inputs
 
 ### Riemann
 - chord generator based on Neo-Riemannian Tonnetz analysis
@@ -122,6 +145,7 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual]
 - Up to 32 pads (silent steps)
 - All inputs scaled to each other in what i think is a sensible way - great for LFO modulation of inputs
 - CLK/RST thru for easy chaining
+- Turing mode to translate pattern into CV a la Turing Machine
 
 ### Piste - Drum Processor
 

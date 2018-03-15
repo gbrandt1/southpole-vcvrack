@@ -1,43 +1,15 @@
 
 
--- 0.5.3 ----
+-- 0.5.4 ----
 
-- [NEWish] Cornrows X
- - As complete implementation of Braids as possible
- - so far not available features have been broken out as controls
-   (AD-envelope, bit crusher, scale quantizer, tuning)
-   or implemented as menu options (AUTO, VCA, FLAT, Paques)
- - (i know Plaits is cooler now but this will get you quite far as synth voice)
-
-- Riemann
-  - new layout
-    - left: inputs/controls
-      - P5/V M3/V continuous play head
-      - PLR-transform trigger inputs
-
-    - right: 12 outputs with mute/volume (pair with VCA)
-    - bottom: options
-      - constrain to scales
-      - mute/attenuate out-of-scale notes
-
-- Snake
-  - implement persistency for buss
-  - clean up logic
-
-- Etagère
-  - optional white panel (to better match cf modular mixer modules)
-
-- SNS
-  - New generative modes: 
-    - Fibonacci, Random, Linear
-    - change Fill to trigger generation of new pattern
-  - Turing output mode
-    - steps are interpreted as bits and converted to stepped voltage at the output.
-
-NEW:
-
-- Byte: Bytebeat module
-  - so far implements
+- Cornrows X
+ - As complete implementation of Braids / macro oscillator as possible
+ - so far not available features in the Audible Instruments version
+   have been activated and broken out as controls:
+   AD-envelope, bit crusher, scale quantizer, tuning
+ - or implemented as menu options: AUTO, VCA, FLAT, Paques
+ - old Cornrows has been deactivated for now at the cost of 2HP more (lmk if you want it back)
+ - i know Plaits is cooler now but this will get you quite far as stand-alone synth voice
 
 - Ftagn: No Filter
   - transgressive module for your nihilistic no-input patches at the noise show
@@ -54,7 +26,7 @@ NEW:
   - when clocked, duration/delay are quantized to "musically relevant" intervals
 
 - Rakes: Stereo Resonator
-  - (inspired by the Ableton Resonator effect)
+  - inspired by the Ableton Resonator effect
   - 6 stereo comb filters
   - V/OCT inputs quantized to SEMI tones or FREE
   - FINE detuning works with opposite sign on L/R channels
@@ -62,6 +34,21 @@ NEW:
   - individual GAINs
   - best used together with a chord generator patched into the V/OCT inputs
   - looking forward to your dub techno tracks
+
+- Snake
+  - implemented persistency for buss
+  - cleaned up logic
+
+- Etagère
+  - selectable white panel (to better match cf modular mixer modules)
+
+- SNS
+  - New generative modes: 
+    - Fibonacci, Random, Linear
+    - change Fill to trigger generation of new pattern
+  - Turing Machine style output mode
+    - steps are interpreted as bits and converted to stepped voltage at the output.
+
   
 
 -- 0.5.3 ----

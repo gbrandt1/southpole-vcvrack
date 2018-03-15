@@ -294,75 +294,6 @@
       }
     },
     {
-      "plugin": "Southpole-parasites",
-      "model": "SplashParasites",
-      "pos": [
-        540.0,
-        380.0
-      ],
-      "params": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "data": {
-        "mode": 1,
-        "range": 1,
-        "sheep": false,
-        "featureMode": 0
-      }
-    },
-    {
-      "plugin": "Southpole-parasites",
-      "model": "SplashParasites",
-      "pos": [
-        660.0,
-        380.0
-      ],
-      "params": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "data": {
-        "mode": 1,
-        "range": 1,
-        "sheep": false,
-        "featureMode": 1
-      }
-    },
-    {
-      "plugin": "Southpole-parasites",
-      "model": "SplashParasites",
-      "pos": [
-        780.0,
-        380.0
-      ],
-      "params": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "data": {
-        "mode": 1,
-        "range": 1,
-        "sheep": false,
-        "featureMode": 2
-      }
-    },
-    {
       "plugin": "Southpole",
       "model": "Splash",
       "pos": [
@@ -601,8 +532,8 @@
       "plugin": "Southpole",
       "model": "Etagere",
       "pos": [
-        900.0,
-        380.0
+        450.0,
+        760.0
       ],
       "params": [
         0.0,
@@ -616,14 +547,16 @@
         0.0,
         0.0
       ],
-      "data": {}
+      "data": {
+        "blanc": true
+      }
     },
     {
       "plugin": "Southpole",
       "model": "DeuxEtageres",
       "pos": [
-        990.0,
-        380.0
+        630.0,
+        760.0
       ],
       "params": [
         0.0,
@@ -643,7 +576,7 @@
       "plugin": "Southpole",
       "model": "Riemann",
       "pos": [
-        1080.0,
+        900.0,
         380.0
       ],
       "params": [
@@ -658,23 +591,27 @@
       "plugin": "Southpole",
       "model": "SNS",
       "pos": [
-        1320.0,
-        380.0
+        360.0,
+        760.0
       ],
       "params": [
-        0.25,
+        0.611500084400177,
         0.5,
-        0.0,
+        0.46500006318092346,
         0.0,
         0.0,
         0.0
-      ]
+      ],
+      "data": {
+        "mode": 2,
+        "style": 1
+      }
     },
     {
       "plugin": "Southpole",
       "model": "Piste",
       "pos": [
-        1410.0,
+        1140.0,
         380.0
       ],
       "params": [
@@ -691,8 +628,8 @@
       "plugin": "Southpole",
       "model": "Wriggle",
       "pos": [
-        1440.0,
-        0.0
+        1260.0,
+        380.0
       ],
       "params": [
         0.5,
@@ -705,7 +642,7 @@
       "plugin": "Southpole",
       "model": "Fuse",
       "pos": [
-        1470.0,
+        1200.0,
         380.0
       ],
       "params": [
@@ -720,52 +657,10 @@
     },
     {
       "plugin": "Southpole",
-      "model": "Cornrows",
-      "pos": [
-        1200.0,
-        0.0
-      ],
-      "params": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.5,
-        0.0,
-        0.5
-      ],
-      "data": {
-        "settings": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "lowCpu": false
-      }
-    },
-    {
-      "plugin": "Southpole",
       "model": "Sssh",
       "pos": [
-        1530.0,
-        0.0
+        1290.0,
+        380.0
       ],
       "params": []
     },
@@ -773,19 +668,22 @@
       "plugin": "Southpole",
       "model": "Snake",
       "pos": [
-        1470.0,
-        0.0
+        720.0,
+        760.0
       ],
       "params": [
         0.0,
         0.0
-      ]
+      ],
+      "data": {
+        "buss": 0
+      }
     },
     {
       "plugin": "Southpole",
       "model": "Gnome",
       "pos": [
-        1290.0,
+        1200.0,
         0.0
       ],
       "params": [
@@ -812,11 +710,242 @@
       ]
     },
     {
+      "plugin": "Southpole-parasites",
+      "model": "Splash Parasite",
+      "pos": [
+        540.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": false,
+        "featureMode": 0
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "Splash Parasite",
+      "pos": [
+        660.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": false,
+        "featureMode": 1
+      }
+    },
+    {
+      "plugin": "Southpole-parasites",
+      "model": "Splash Parasite",
+      "pos": [
+        780.0,
+        380.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": false,
+        "featureMode": 2
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "model": "CornrowsX",
+      "pos": [
+        0.0,
+        760.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.5,
+        0.0,
+        0.0,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "data": {
+        "settings": [
+          0,
+          6,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lowCpu": false
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Ftagn",
+      "pos": [
+        120.0,
+        760.0
+      ],
+      "params": []
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Rakes",
+      "pos": [
+        180.0,
+        760.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.5
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Pulse",
+      "pos": [
+        300.0,
+        760.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Etagere",
+      "pos": [
+        540.0,
+        760.0
+      ],
+      "params": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "data": {
+        "blanc": false
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Blank16HP",
+      "pos": [
+        780.0,
+        760.0
+      ],
+      "params": []
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Blank16HP",
+      "pos": [
+        1020.0,
+        760.0
+      ],
+      "params": []
+    },
+    {
       "plugin": "Southpole",
       "model": "Blank4HP",
       "pos": [
-        1530.0,
-        380.0
+        1260.0,
+        760.0
+      ],
+      "params": []
+    },
+    {
+      "plugin": "Southpole",
+      "model": "Blank2HP",
+      "pos": [
+        1320.0,
+        760.0
       ],
       "params": []
     }
