@@ -141,12 +141,12 @@ void Splash::step() {
 		pitch += 60.0;
 		// Scale to the global sample rate
 		pitch += log2f(48000.0 / engineGetSampleRate()) * 12.0;
-		generator.set_pitch(clampf(pitch * 0x80, -0x8000, 0x7fff));
+		generator.set_pitch(clamp(int(pitch) * 0x80, -0x8000, 0x7fff));
 
 		// Slope, smoothness, pitch
-		int16_t shape = clampf(params[SHAPE_PARAM].value + inputs[SHAPE_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
-		int16_t slope = clampf(params[SLOPE_PARAM].value + inputs[SLOPE_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
-		int16_t smoothness = clampf(params[SMOOTHNESS_PARAM].value + inputs[SMOOTHNESS_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
+		int16_t shape = clamp(params[SHAPE_PARAM].value + inputs[SHAPE_INPUT].value / 5.0, -1.0f, 1.0f) * 0x7fff;
+		int16_t slope = clamp(params[SLOPE_PARAM].value + inputs[SLOPE_INPUT].value / 5.0, -1.0f, 1.0f) * 0x7fff;
+		int16_t smoothness = clamp(params[SMOOTHNESS_PARAM].value + inputs[SMOOTHNESS_INPUT].value / 5.0, -1.0f, 1.0f) * 0x7fff;
 		generator.set_shape(shape);
 		generator.set_slope(slope);
 		generator.set_smoothness(smoothness);
@@ -161,7 +161,7 @@ void Splash::step() {
 	}
 
 	// Level
-	uint16_t level = clampf(inputs[LEVEL_INPUT].normalize(8.0) / 8.0, 0.0, 1.0) * 0xffff;
+	uint16_t level = clamp(inputs[LEVEL_INPUT].normalize(8.0) / 8.0, 0.0f, 1.0f) * 0xffff;
 	if (level < 32)
 		level = 0;
 
@@ -201,66 +201,74 @@ void Splash::step() {
 	lights[PHASE_RED_LIGHT].setBrightnessSmooth(fmaxf(0.0, -unif));
 }
 
+struct SplashWidget : ModuleWidget {
+	SVGPanel *tidesPanel;
+	SVGPanel *sheepPanel;
+	void step() override;
+	Menu *createContextMenu() override;
 
-SplashWidget::SplashWidget() {
-	Splash *module = new Splash();
-	setModule(module);
-	box.size = Vec(15 * 8, 380);
+	SplashWidget(Splash *module) : ModuleWidget(module) {
 
-    {
-		tidesPanel = new SVGPanel();
-		tidesPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Splash.svg")));
-		tidesPanel->box.size = box.size;
-		addChild(tidesPanel);
+		box.size = Vec(15 * 8, 380);
+
+		{
+			tidesPanel = new SVGPanel();
+			tidesPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Splash.svg")));
+			tidesPanel->box.size = box.size;
+			addChild(tidesPanel);
+		}
+		{
+			sheepPanel = new SVGPanel();
+			sheepPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Lambs.svg")));
+			sheepPanel->box.size = box.size;
+			addChild(sheepPanel);
+		}
+		const float x1 = 0.5*RACK_GRID_WIDTH;
+		const float x2 = 3.25*RACK_GRID_WIDTH;
+		const float x3 = 5.75*RACK_GRID_WIDTH; 
+		const float y1 = 40.0f;
+		const float y2 = 25.0f;
+		const float yh = 38.0f;
+
+
+		addParam(ParamWidget::create<CKD6>(Vec(x3-3,y1-3), module, Splash::MODE_PARAM, 0.0, 1.0, 0.0));
+		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, Splash::MODE_GREEN_LIGHT));
+
+		addParam(ParamWidget::create<CKD6>(Vec(x3-3,y1+1.45*yh), module, Splash::RANGE_PARAM, 0.0, 1.0, 0.0));
+		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, Splash::RANGE_GREEN_LIGHT));
+
+		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, Splash::PHASE_GREEN_LIGHT));
+		addParam(ParamWidget::create<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
+
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, Splash::SHAPE_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, Splash::SLOPE_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, Splash::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
+
+
+		addInput(Port::create<sp_Port>(Vec(x1, y1), Port::INPUT, module, Splash::TRIG_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x2, y1), Port::INPUT, module, Splash::FREEZE_INPUT));
+
+		addInput(Port::create<sp_Port>(Vec(x1, y2+2*yh), Port::INPUT, module, Splash::PITCH_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1,   y2+3.25*yh), Port::INPUT, module, Splash::FM_INPUT));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, Splash::FM_PARAM, -12.0, 12.0, 0.0));
+
+		addInput(Port::create<sp_Port>(Vec(x1, y2+4*yh), Port::INPUT, module, Splash::SHAPE_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y2+4.75*yh), Port::INPUT, module, Splash::SLOPE_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y2+5.5*yh), Port::INPUT, module, Splash::SMOOTHNESS_INPUT));
+
+		addInput(Port::create<sp_Port>(Vec(x3, y1+5.9*yh), Port::INPUT, module, Splash::LEVEL_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y1+5.9*yh), Port::INPUT, module, Splash::CLOCK_INPUT));
+
+		addOutput(Port::create<sp_Port>(Vec(x1, y1+7.125*yh), Port::OUTPUT, module, Splash::HIGH_OUTPUT));
+		addOutput(Port::create<sp_Port>(Vec(x1+1*28., y1+7.125*yh), Port::OUTPUT, module, Splash::LOW_OUTPUT));
+		addOutput(Port::create<sp_Port>(Vec(x1+2*28., y1+7.125*yh), Port::OUTPUT, module, Splash::UNI_OUTPUT));
+		addOutput(Port::create<sp_Port>(Vec(x1+3*28., y1+7.125*yh), Port::OUTPUT, module, Splash::BI_OUTPUT));
+
 	}
-    {
-		sheepPanel = new SVGPanel();
-		sheepPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Lambs.svg")));
-		sheepPanel->box.size = box.size;
-		addChild(sheepPanel);
-	}
-  	const float x1 = 0.5*RACK_GRID_WIDTH;
-  	const float x2 = 3.25*RACK_GRID_WIDTH;
-  	const float x3 = 5.75*RACK_GRID_WIDTH; 
-  	const float y1 = 40.0f;
-  	const float y2 = 25.0f;
-  	const float yh = 38.0f;
+};
 
+Model *modelSplash 	= Model::create<Splash,SplashWidget>(	 "Southpole", "Splash", 	"Splash / Lambs - tidal modulator", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG);
 
-	addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, Splash::MODE_PARAM, 0.0, 1.0, 0.0));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, Splash::MODE_GREEN_LIGHT));
-
-	addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, Splash::RANGE_PARAM, 0.0, 1.0, 0.0));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, Splash::RANGE_GREEN_LIGHT));
-
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, Splash::PHASE_GREEN_LIGHT));
-	addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
-
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, Splash::SHAPE_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, Splash::SLOPE_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, Splash::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
-
-
-	addInput(createInput<sp_Port>(Vec(x1, y1), module, Splash::TRIG_INPUT));
-	addInput(createInput<sp_Port>(Vec(x2, y1), module, Splash::FREEZE_INPUT));
-
-	addInput(createInput<sp_Port>(Vec(x1, y2+2*yh), module, Splash::PITCH_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1,   y2+3.25*yh), module, Splash::FM_INPUT));
-	addParam(createParam<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, Splash::FM_PARAM, -12.0, 12.0, 0.0));
-
-	addInput(createInput<sp_Port>(Vec(x1, y2+4*yh), module, Splash::SHAPE_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y2+4.75*yh), module, Splash::SLOPE_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y2+5.5*yh), module, Splash::SMOOTHNESS_INPUT));
-
-	addInput(createInput<sp_Port>(Vec(x3, y1+5.9*yh), module, Splash::LEVEL_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y1+5.9*yh), module, Splash::CLOCK_INPUT));
-
-	addOutput(createOutput<sp_Port>(Vec(x1, y1+7.125*yh), module, Splash::HIGH_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x1+1*28., y1+7.125*yh), module, Splash::LOW_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x1+2*28., y1+7.125*yh), module, Splash::UNI_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x1+3*28., y1+7.125*yh), module, Splash::BI_OUTPUT));
-
-}
 
 void SplashWidget::step() {
 	Splash *tides = dynamic_cast<Splash*>(module);
@@ -291,8 +299,8 @@ Menu *SplashWidget::createContextMenu() {
 	Splash *tides = dynamic_cast<Splash*>(module);
 	assert(tides);
 
-	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<SplashSheepItem>(&MenuEntry::text, "Lambs", &SplashSheepItem::tides, tides));
+	menu->addChild(construct<MenuLabel>());
+	menu->addChild(construct<SplashSheepItem>(&MenuItem::text, "Lambs", &SplashSheepItem::tides, tides));
 
 	return menu;
 }

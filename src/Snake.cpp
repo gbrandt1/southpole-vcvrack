@@ -196,42 +196,43 @@ struct SnakeDisplay : TransparentWidget {
 	}
 };
 
+struct SnakeWidget : ModuleWidget {
+	
+	SnakeWidget(Snake *module) : ModuleWidget(module) {
 
-SnakeWidget::SnakeWidget() {
+		box.size = Vec(15*4, 380);
 
-	Snake *module = new Snake();
-	setModule(module);
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->box.size = box.size;
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Snake.svg")));
+			addChild(panel);
+		}
 
-	box.size = Vec(15*4, 380);
+		{
+			SnakeDisplay *display = new SnakeDisplay();
+			display->box.pos = Vec(5., 30.);
+			display->box.size = Vec(25., 34.);
+			display->module = module;
+			addChild(display);
+		}
 
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Snake.svg")));
-		addChild(panel);
+		addParam(ParamWidget::create<TL1105>(Vec( 40, 30 ), module, Snake::PLUS_PARAM, 0.0, 1.0, 0.0));
+		addParam(ParamWidget::create<TL1105>(Vec( 40, 50 ), module, Snake::MINUS_PARAM, 0.0, 1.0, 0.0));
+
+		float y1 = 85;	
+		float yh = 26;
+
+		for (int i=0; i< NSNAKEPORTS; i++)
+		{
+			float y = y1+i*yh + floor(i/5)*yh*.4;
+			addInput(Port::create<sp_Port>(	Vec( 5, y), Port::INPUT, module, Snake::IN_INPUT + i));
+			addOutput(Port::create<sp_Port>(Vec(34, y), Port::OUTPUT, module, Snake::OUT_OUTPUT + i));
+			addChild(ModuleLightWidget::create<SmallLight<GreenRedLight>>(Vec(26, y), module, Snake::LOCK_LIGHT + 2*i));
+		}
+
 	}
 
-	{
-		SnakeDisplay *display = new SnakeDisplay();
-		display->box.pos = Vec(5., 30.);
-		display->box.size = Vec(25., 34.);
-		display->module = module;
-		addChild(display);
-	}
+};
 
-	addParam(createParam<TL1105>(Vec( 40, 30 ), module, Snake::PLUS_PARAM, 0.0, 1.0, 0.0));
-  	addParam(createParam<TL1105>(Vec( 40, 50 ), module, Snake::MINUS_PARAM, 0.0, 1.0, 0.0));
-
-	float y1 = 85;	
-	float yh = 26;
-
-	for (int i=0; i< NSNAKEPORTS; i++)
-	{
-		float y = y1+i*yh + floor(i/5)*yh*.4;
-		addInput(createInput<sp_Port>(	Vec( 5, y), module, Snake::IN_INPUT + i));
-		addOutput(createOutput<sp_Port>(Vec(34, y), module, Snake::OUT_OUTPUT + i));
-		addChild(createLight<SmallLight<GreenRedLight>>(Vec(26, y), module, Snake::LOCK_LIGHT + 2*i));
-	}
-
-
-}
+Model *modelSnake 	= Model::create<Snake,SnakeWidget>(	 "Southpole", "Snake", 		"Snake - multicore", UTILITY_TAG);

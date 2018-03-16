@@ -84,29 +84,32 @@ void Sssh::step() {
 	}
 }
 
+struct SsshWidget : ModuleWidget {	
+	
+	SsshWidget(Sssh *module) : ModuleWidget(module) {
 
-SsshWidget::SsshWidget() {
-	Sssh *module = new Sssh();
-	setModule(module);
-	box.size = Vec(15*4, 380);
+		box.size = Vec(15*4, 380);
 
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Sssh.svg")));
-		addChild(panel);
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->box.size = box.size;
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Sssh.svg")));
+			addChild(panel);
+		}
+
+		float y1 = 50;	
+		float yh = 80;
+
+		for (unsigned int i=0; i<4; i++)
+		{
+			addInput(Port::create<sp_Port>(Vec(  5, y1+i*yh), Port::INPUT, module, Sssh::SH1_INPUT + i));
+			addInput(Port::create<sp_Port>(Vec( 34, y1+i*yh), Port::INPUT, module, Sssh::TRIG1_INPUT + i));
+			addOutput(Port::create<sp_Port>(Vec(5, 35+y1+i*yh), Port::OUTPUT, module, Sssh::NOISE1_OUTPUT + i));
+			addOutput(Port::create<sp_Port>(Vec(34, 35+y1+i*yh), Port::OUTPUT, module, Sssh::SH1_OUTPUT + i));
+
+			addChild(ModuleLightWidget::create<SmallLight<GreenRedLight>>(Vec(26, y1+i*yh-4), module, Sssh::SH_POS1_LIGHT + 2*i));
+		}
 	}
+};
 
-	float y1 = 50;	
-	float yh = 80;
-
-	for (unsigned int i=0; i<4; i++)
-	{
-		addInput(createInput<sp_Port>(Vec(  5, y1+i*yh), module, Sssh::SH1_INPUT + i));
-		addInput(createInput<sp_Port>(Vec( 34, y1+i*yh), module, Sssh::TRIG1_INPUT + i));
-		addOutput(createOutput<sp_Port>(Vec(5, 35+y1+i*yh), module, Sssh::NOISE1_OUTPUT + i));
-		addOutput(createOutput<sp_Port>(Vec(34, 35+y1+i*yh), module, Sssh::SH1_OUTPUT + i));
-
-		addChild(createLight<SmallLight<GreenRedLight>>(Vec(26, y1+i*yh-4), module, Sssh::SH_POS1_LIGHT + 2*i));
-	}
-}
+Model *modelSssh 	= Model::create<Sssh,SsshWidget>(	 "Southpole", "Sssh", 		"Sssh - noise and S+H", NOISE_TAG, SAMPLE_AND_HOLD_TAG);

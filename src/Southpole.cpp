@@ -18,48 +18,39 @@ void init(rack::Plugin *p) {
 	p->website = "https://github.com/gbrandt1/southpole-vcvrack";
 	p->manual = "https://github.com/gbrandt1/southpole-vcvrack/blob/master/README.md";
 
-	// For each module, specify the ModuleWidget subclass, manufacturer slug (for saving in patches), manufacturer human-readable name, module slug, and module name
-	//p->addModel(createModel<MyModuleWidget>("Southpole", "MyModule", "My Module", //OSCILLATOR_TAG));
-
-	//#ifdef MUTATED
-	//	p->addModel(createModel<HornetsWidget>("Southpole", "Hornets", "Hornets - macro osc (extended edition)", OSCILLATOR_TAG, WAVESHAPER_TAG));	
-	//#else
 	#ifdef PARASITES
-		p->addModel(createModel<SmokeWidget>(	"Southpole-parasites", "Smoke", "Smoke Parasite", GRANULAR_TAG, REVERB_TAG));
-		p->addModel(createModel<SplashParasiteWidget>("Southpole-parasites", "Splash Parasite", "Splash Parasites", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
-	  //p->addModel(createModel<CestodaWidget>(	"Southpole-parasites", "Cestoda", "Cestoda", GRANULAR_TAG, REVERB_TAG));
-	#else
-		p->addModel(createModel<AbrWidget>(		 "Southpole", "Abr", 	"Abr - A/B switch", SWITCH_TAG, MIXER_TAG));
-		p->addModel(createModel<AnnuliWidget>( 	 "Southpole", "Annuli", "Annuli - resonator", SYNTH_VOICE_TAG, OSCILLATOR_TAG));
-		p->addModel(createModel<AuxWidget>(		 "Southpole", "Aux", 	"Aux - effect loop", AMPLIFIER_TAG, MIXER_TAG));
-		p->addModel(createModel<BalaclavaWidget>("Southpole", "Balaclava", 	"Balaclava - quad VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
-		p->addModel(createModel<BandanaWidget>(	 "Southpole", "Bandana", 	"Bandana - quad polarizer", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
-		p->addModel(createModel<Blank16HPWidget>("Southpole", "Blank16HP",	"Blank 16 HP", BLANK_TAG));
-		p->addModel(createModel<Blank1HPWidget>( "Southpole", "Blank1HP", 	"Blank 1 HP", BLANK_TAG));
-		p->addModel(createModel<Blank2HPWidget>( "Southpole", "Blank2HP", 	"Blank 2 HP", BLANK_TAG));
-		p->addModel(createModel<Blank42HPWidget>("Southpole", "Blank42HP", 	"Blank 42 HP", BLANK_TAG));
-		p->addModel(createModel<Blank4HPWidget>( "Southpole", "Blank4HP", 	"Blank 4 HP", BLANK_TAG));
-		p->addModel(createModel<Blank8HPWidget>( "Southpole", "Blank8HP", 	"Blank 8 HP", BLANK_TAG));
-		p->addModel(createModel<ButWidget>(		 "Southpole", "But", 		"But - A/B buss", SWITCH_TAG, MIXER_TAG));
-		//p->addModel(createModel<BytesWidget>(	 "Southpole", "Bytes", 		"Bytes", OSCILLATOR_TAG));
-		//p->addModel(createModel<CornrowsWidget>( "Southpole", "Cornrows", 	"Cornrows - macro osc", OSCILLATOR_TAG, WAVESHAPER_TAG));
-		p->addModel(createModel<CornrowsXWidget>("Southpole", "CornrowsX", 	"CornrowsX - macro osc", OSCILLATOR_TAG, WAVESHAPER_TAG));
-		p->addModel(createModel<DeuxEtageresWidget>("Southpole", "DeuxEtageres", "Deux Etageres - Stereo EQ", FILTER_TAG));
-		p->addModel(createModel<EtagereWidget>(	 "Southpole", "Etagere", 	"Etagere - EQ", FILTER_TAG));
-		p->addModel(createModel<FallsWidget>(	 "Southpole", "Falls", 		"Falls - attenumixverter", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG));
-		p->addModel(createModel<FtagnWidget>(	 "Southpole", "Ftagn", 		"Ftagn - no filter", FILTER_TAG));
-		p->addModel(createModel<FuseWidget>(	 "Southpole", "Fuse", 		"Fuse - next pattern", SEQUENCER_TAG));
-		p->addModel(createModel<GnomeWidget>(	 "Southpole", "Gnome", 		"Gnome - synth voice", SYNTH_VOICE_TAG, OSCILLATOR_TAG, LFO_TAG, ENVELOPE_GENERATOR_TAG, FILTER_TAG, AMPLIFIER_TAG, MIXER_TAG));
-		p->addModel(createModel<PisteWidget>(	 "Southpole", "Piste", 		"Piste - drum processor", ENVELOPE_GENERATOR_TAG, EFFECT_TAG));
-		p->addModel(createModel<PulseWidget>(	 "Southpole", "Pulse", 		"Pulse - pulse generator", ENVELOPE_GENERATOR_TAG));
-		p->addModel(createModel<RakesWidget>(	 "Southpole", "Rakes", 	    "Rakes - resonator bank", FILTER_TAG));
-		p->addModel(createModel<RiemannWidget>(	 "Southpole", "Riemann", 	"Riemann - chord generator", SEQUENCER_TAG));
-		p->addModel(createModel<SmokeWidget>( 	 "Southpole", "Smoke", 		"Smoke - texture synth", GRANULAR_TAG, REVERB_TAG));
-		p->addModel(createModel<SnakeWidget>(	 "Southpole", "Snake", 		"Snake - multicore", UTILITY_TAG));
-		p->addModel(createModel<SnsWidget>(		 "Southpole", "SNS", 		"SNS - euclidean sequencer", SEQUENCER_TAG));
-		p->addModel(createModel<SplashWidget>(	 "Southpole", "Splash", 	"Splash / Lambs - tidal modulator", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG));
-		p->addModel(createModel<SsshWidget>(	 "Southpole", "Sssh", 		"Sssh - noise and S+H", NOISE_TAG, SAMPLE_AND_HOLD_TAG));
-		p->addModel(createModel<WriggleWidget>(	 "Southpole", "Wriggle", 	"Wriggle - spring model", LFO_TAG, FUNCTION_GENERATOR_TAG));
+		Model *modelSmoke  			= Model::create<Smoke,SmokeWidget>(	"Southpole-parasites", "Smoke", "Smoke Parasite", GRANULAR_TAG, REVERB_TAG);
+		Model *modelSplashParasite 	= Model::create<SplashParasite,SplashParasiteWidget>("Southpole-parasites", "Splash Parasite", "Splash Parasites", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG);
 	#endif
 	//#endif
+
+		p->addModel(modelAbr 	);
+		p->addModel(modelAnnuli );	
+		p->addModel(modelAux 	);
+		p->addModel(modelBalaclava );
+		p->addModel(modelBandana );
+		p->addModel(modelBlank1HP );	
+		p->addModel(modelBlank2HP );	
+		p->addModel(modelBlank4HP );	
+		p->addModel(modelBlank8HP );	
+		p->addModel(modelBlank16HP );	
+		p->addModel(modelBlank42HP );	
+		p->addModel(modelBut 	);
+		p->addModel(modelCornrowsX );
+		p->addModel(modelDeuxEtageres); 
+		p->addModel(modelEtagere );
+		p->addModel(modelFalls 	);
+		p->addModel(modelFtagn 	);
+		p->addModel(modelFuse 	);
+		p->addModel(modelGnome 	);
+		p->addModel(modelPiste 	);
+		p->addModel(modelPulse	);
+		p->addModel(modelRakes 	);
+		p->addModel(modelRiemann); 
+		p->addModel(modelSmoke); 	
+		p->addModel(modelSnake); 	
+		p->addModel(modelSns);
+		p->addModel(modelSplash); 	
+		p->addModel(modelSssh); 	
+		p->addModel(modelWriggle);
 }

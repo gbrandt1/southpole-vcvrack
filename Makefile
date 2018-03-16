@@ -1,20 +1,11 @@
 SLUG = Southpole
-VERSION = 0.5.4
+VERSION = 0.6.0
 
-# FLAGS will be passed to both the C and C++ compiler
 FLAGS += \
-	-DTEST \
-	-I./eurorack \
-	-Wno-unused-local-typedefs
+        -DTEST \
+        -I./eurorack \
+        -Wno-unused-local-typedefs
 
-CFLAGS +=
-CXXFLAGS +=
-
-# Careful about linking to shared libraries, since you can't assume much about the user's environment and library search path.
-# Static libraries are fine.
-LDFLAGS +=
-
-# Add .cpp and .c files to the build
 # SOURCES += $(wildcard src/*.cpp)
 SOURCES += src/Southpole.cpp
 SOURCES += src/DSPUtilities.cpp
@@ -56,7 +47,7 @@ SOURCES += eurorack/stmlib/utils/random.cc
 SOURCES += eurorack/braids/analog_oscillator.cc
 SOURCES += eurorack/braids/digital_oscillator.cc
 SOURCES += eurorack/braids/resources.cc
-
+SOURCES += eurorack/braids/quantizer.cc
 
 SOURCES += src/Annuli.cpp
 SOURCES += eurorack/rings/dsp/fm_voice.cc
@@ -79,6 +70,6 @@ SOURCES += eurorack/clouds/resources.cc
 # The compiled plugin is automatically added.
 DISTRIBUTABLES += $(wildcard LICENSE*) res
 
-# Include the VCV plugin Makefile framework
-include ../../plugin.mk
+RACK_DIR ?= ../..
+include $(RACK_DIR)/plugin.mk
 

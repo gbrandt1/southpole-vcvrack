@@ -242,7 +242,7 @@ void CornrowsX::step() {
 			if (settings.meta_modulation) {
 				shape += roundf(fm / 10.0 * braids::MACRO_OSC_SHAPE_LAST_ACCESSIBLE_FROM_META);
 			}
-			settings.shape = clampi(shape, 0, braids::MACRO_OSC_SHAPE_LAST_ACCESSIBLE_FROM_META);
+			settings.shape = clamp(shape, 0, braids::MACRO_OSC_SHAPE_LAST_ACCESSIBLE_FROM_META);
 
 			// Setup oscillator from settings
 			osc.set_shape((braids::MacroOscillatorShape) settings.shape);
@@ -255,8 +255,8 @@ void CornrowsX::step() {
 	    timbre += ad_value/65535. * settings.ad_timbre / 16.;
 	    modulation += ad_value/65535. * settings.ad_color / 16.;
 
-		int16_t param1 = rescalef(clampf(timbre, 0.0, 1.0), 0.0, 1.0, 0, INT16_MAX);
-		int16_t param2 = rescalef(clampf(modulation, 0.0, 1.0), 0.0, 1.0, 0, INT16_MAX);
+		int16_t param1 = rescale(clamp(timbre, 0.0, 1.0), 0.0, 1.0, 0, INT16_MAX);
+		int16_t param2 = rescale(clamp(modulation, 0.0, 1.0), 0.0, 1.0, 0, INT16_MAX);
 		osc.set_parameters(param1, param2);
 
 		// Set pitch
@@ -294,7 +294,7 @@ void CornrowsX::step() {
 		pitch += jitter_source.Render(settings.vco_drift);
 		pitch += ad_value * settings.ad_fm >> 7;
 
-		pitch = clampi(pitch, 0, 16383);
+		pitch = clamp(int(pitch), 0, 16383);
 
   		if (settings.vco_flatten) {
     		pitch = braids::Interpolate88(braids::lut_vco_detune, pitch << 2);
@@ -348,7 +348,7 @@ void CornrowsX::step() {
 			for (int i = 0; i < 24; i++) {
 				in[i].samples[0] = render_buffer[i] / 32768.0;
 			}
-			src.setRatio(engineGetSampleRate() / 96000.0);
+			src.setRates(96000, engineGetSampleRate());
 
 			int inLen = 24;
 			int outLen = outputBuffer.capacity();
@@ -484,73 +484,76 @@ struct CornrowsXDisplay : TransparentWidget {
 	}
 };
 
+struct CornrowsXWidget : ModuleWidget {
 
-CornrowsXWidget::CornrowsXWidget() {
-	CornrowsX *module = new CornrowsX();
-	setModule(module);
-	box.size = Vec( 8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT );
+	Menu *createContextMenu() override;
 
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Cornrows.svg")));
-		panel->box.size = box.size;
-		addChild(panel);	
+	CornrowsXWidget(CornrowsX *module)  : ModuleWidget(module) {
+
+		box.size = Vec( 8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT );
+
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Cornrows.svg")));
+			panel->box.size = box.size;
+			addChild(panel);	
+		}
+
+		{
+			CornrowsXDisplay *display = new CornrowsXDisplay();
+			display->box.pos = Vec(8, 32);
+			display->box.size = Vec(80., 34.);
+			display->module = module;
+			addChild(display);
+		}
+
+		const float x1 = 4.;
+		const float xh = 30.;
+		const float x2 = x1+xh;
+		const float x3 = x1+2*xh;
+		const float x4 = x1+3*xh;
+//		const float x5 = x1+4*xh;
+//		const float x6 = x1+5*xh;
+
+		const float y1 = 115;	
+		const float yh = 36.;
+
+		addParam(ParamWidget::create<sp_Encoder>(Vec(x3+4, 78), module, CornrowsX::SHAPE_PARAM, 0.0, 1.0, 0.0));
+
+		addInput(Port::create<sp_Port>(Vec(x1, y1-1*yh), Port::INPUT, module, CornrowsX::TRIG_INPUT));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1-1*yh), module, CornrowsX::TRIG_DELAY_PARAM,  0.0, 1.0, 0.0));
+
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+0*yh), module, CornrowsX::ATT_PARAM,   0.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+0*yh), module, CornrowsX::DEC_PARAM,   0.0, 1.0, 0.5));
+
+		addInput(Port::create<sp_Port>(Vec(x1, y1+yh), Port::INPUT, module, CornrowsX::PITCH_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+yh), module, CornrowsX::FINE_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+yh), module, CornrowsX::COARSE_PARAM, -2.0, 2.0, 0.0));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+yh), module, CornrowsX::PITCH_OCTAVE_PARAM,  0.0, 1.0, 0.5));
+
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, CornrowsX::ROOT_PARAM,  0.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, CornrowsX::SCALE_PARAM, 0.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+2*yh), module, CornrowsX::PITCH_RANGE_PARAM,  0.0, 1.0, 0.));
+		
+		addInput(Port::create<sp_Port>(Vec(x1, y1+3*yh), Port::INPUT, module, CornrowsX::FM_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+3*yh), module, CornrowsX::FM_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+3*yh), module, CornrowsX::AD_MODULATION_PARAM, 0.0, 1.0, 0.0));
+
+		addInput(Port::create<sp_Port>(Vec(x1, y1+4*yh), Port::INPUT, module, CornrowsX::TIMBRE_INPUT));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1+4*yh), module, CornrowsX::MODULATION_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+4*yh), module, CornrowsX::TIMBRE_PARAM, 0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+4*yh), module, CornrowsX::AD_TIMBRE_PARAM,	   0.0, 1.0, 0.0));
+
+		addInput(Port::create<sp_Port>(Vec(x1, y1+5*yh), Port::INPUT, module, CornrowsX::COLOR_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+5*yh), module, CornrowsX::COLOR_PARAM, 0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+5*yh), module, CornrowsX::AD_COLOR_PARAM, 	   0.0, 1.0, 0.0));
+
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+5.75*yh), module, CornrowsX::BITS_PARAM,  0.0, 1.0, 1.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+5.75*yh), module, CornrowsX::RATE_PARAM,  0.0, 1.0, 1.0));
+		addOutput(Port::create<sp_Port>(Vec(x4, y1+5.75*yh), Port::OUTPUT, module, CornrowsX::OUT_OUTPUT));
+
 	}
-
-	{
-		CornrowsXDisplay *display = new CornrowsXDisplay();
-		display->box.pos = Vec(8, 32);
-		display->box.size = Vec(80., 34.);
-		display->module = module;
-		addChild(display);
-	}
-
-    const float x1 = 4.;
-	const float xh = 30.;
-    const float x2 = x1+xh;
-    const float x3 = x1+2*xh;
-    const float x4 = x1+3*xh;
-    const float x5 = x1+4*xh;
-    const float x6 = x1+5*xh;
-
-    const float y1 = 115;	
-    const float yh = 36.;
-
-	addParam(createParam<sp_Encoder>(Vec(x3+4, 78), module, CornrowsX::SHAPE_PARAM, 0.0, 1.0, 0.0));
-
-	addInput(createInput<sp_Port>(Vec(x1, y1-1*yh), module, CornrowsX::TRIG_INPUT));
-	addParam(createParam<sp_Trimpot>(Vec(x2, y1-1*yh), module, CornrowsX::TRIG_DELAY_PARAM,  0.0, 1.0, 0.0));
-
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+0*yh), module, CornrowsX::ATT_PARAM,   0.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+0*yh), module, CornrowsX::DEC_PARAM,   0.0, 1.0, 0.5));
-
-	addInput(createInput<sp_Port>(Vec(x1, y1+yh), module, CornrowsX::PITCH_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+yh), module, CornrowsX::FINE_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+yh), module, CornrowsX::COARSE_PARAM, -2.0, 2.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x4, y1+yh), module, CornrowsX::PITCH_OCTAVE_PARAM,  0.0, 1.0, 0.5));
-
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, CornrowsX::ROOT_PARAM,  0.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, CornrowsX::SCALE_PARAM, 0.0, 1.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x4, y1+2*yh), module, CornrowsX::PITCH_RANGE_PARAM,  0.0, 1.0, 0.));
-	
-	addInput(createInput<sp_Port>(Vec(x1, y1+3*yh), module, CornrowsX::FM_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+3*yh), module, CornrowsX::FM_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x4, y1+3*yh), module, CornrowsX::AD_MODULATION_PARAM, 0.0, 1.0, 0.0));
-
-	addInput(createInput<sp_Port>(Vec(x1, y1+4*yh), module, CornrowsX::TIMBRE_INPUT));
-	addParam(createParam<sp_Trimpot>(Vec(x2, y1+4*yh), module, CornrowsX::MODULATION_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+4*yh), module, CornrowsX::TIMBRE_PARAM, 0.0, 1.0, 0.5));
-	addParam(createParam<sp_Trimpot>(Vec(x4, y1+4*yh), module, CornrowsX::AD_TIMBRE_PARAM,	   0.0, 1.0, 0.0));
-
-	addInput(createInput<sp_Port>(Vec(x1, y1+5*yh), module, CornrowsX::COLOR_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+5*yh), module, CornrowsX::COLOR_PARAM, 0.0, 1.0, 0.5));
-	addParam(createParam<sp_Trimpot>(Vec(x4, y1+5*yh), module, CornrowsX::AD_COLOR_PARAM, 	   0.0, 1.0, 0.0));
-
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+5.75*yh), module, CornrowsX::BITS_PARAM,  0.0, 1.0, 1.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5.75*yh), module, CornrowsX::RATE_PARAM,  0.0, 1.0, 1.0));
-	addOutput(createOutput<sp_Port>(Vec(x4, y1+5.75*yh), module, CornrowsX::OUT_OUTPUT));
-
-}
+};
 
 struct CornrowsXSettingItem : MenuItem {
 	uint8_t *setting = NULL;
@@ -595,15 +598,17 @@ Menu *CornrowsXWidget::createContextMenu() {
 	assert(braids);
 
 	menu->addChild(construct<MenuLabel>());
-	menu->addChild(construct<MenuLabel>(&MenuEntry::text, "Options"));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuEntry::text, "META", &CornrowsXSettingItem::setting, &braids->settings.meta_modulation));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuEntry::text, "AUTO", &CornrowsXSettingItem::setting, &braids->settings.auto_trig));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuEntry::text, "|\\VCA", &CornrowsXSettingItem::setting, &braids->settings.ad_vca));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuEntry::text, "FLAT", &CornrowsXSettingItem::setting, &braids->settings.vco_flatten, &CornrowsXSettingItem::onValue, 4));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuEntry::text, "DRFT", &CornrowsXSettingItem::setting, &braids->settings.vco_drift, &CornrowsXSettingItem::onValue, 4));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuEntry::text, "SIGN", &CornrowsXSettingItem::setting, &braids->settings.signature, &CornrowsXSettingItem::onValue, 4));
-	menu->addChild(construct<CornrowsXLowCpuItem>(&MenuEntry::text, "Low CPU", &CornrowsXLowCpuItem::braids, braids));
-	menu->addChild(construct<CornrowsXPaquesItem>(&MenuEntry::text, "Paques",  &CornrowsXPaquesItem::braids, braids));
+	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Options"));
+	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "META", &CornrowsXSettingItem::setting, &braids->settings.meta_modulation));
+	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "AUTO", &CornrowsXSettingItem::setting, &braids->settings.auto_trig));
+	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "|\\VCA", &CornrowsXSettingItem::setting, &braids->settings.ad_vca));
+	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "FLAT", &CornrowsXSettingItem::setting, &braids->settings.vco_flatten, &CornrowsXSettingItem::onValue, 4));
+	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "DRFT", &CornrowsXSettingItem::setting, &braids->settings.vco_drift, &CornrowsXSettingItem::onValue, 4));
+	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "SIGN", &CornrowsXSettingItem::setting, &braids->settings.signature, &CornrowsXSettingItem::onValue, 4));
+	menu->addChild(construct<CornrowsXLowCpuItem>(&MenuItem::text, "Low CPU", &CornrowsXLowCpuItem::braids, braids));
+	menu->addChild(construct<CornrowsXPaquesItem>(&MenuItem::text, "Paques",  &CornrowsXPaquesItem::braids, braids));
 
 	return menu;
 }
+
+Model *modelCornrowsX = Model::create<CornrowsX,CornrowsXWidget>("Southpole", "CornrowsX", 	"CornrowsX - macro osc", OSCILLATOR_TAG, WAVESHAPER_TAG);

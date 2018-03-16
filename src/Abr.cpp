@@ -79,7 +79,7 @@ struct Abr : Module
     {
         for (int i = 0; i < 8; i++) 
         {
-            swState[i] = (randomf() < 0.5);
+            swState[i] = (randomUniform() < 0.5);
 		}
     }
     
@@ -144,44 +144,44 @@ void Abr::step()
     outputs[SUM_OUTPUT].value = out;
 }
 
-AbrWidget::AbrWidget() 
-{
-	auto *module = new Abr();
-	setModule(module);
-	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
-	{
-		auto *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Abr.svg")));
-		addChild(panel);
-	}
-
-    const float x1 = 3.;
-    const float x2 = 4.+20.;
-    const float x3 = 5.+43.;
-    const float x4 = 5.+63.;
-
-    float yPos = 18.;
-
-    for(int i = 0; i < 8; i++)
+struct AbrWidget : ModuleWidget { 
+    AbrWidget(Abr *module) : ModuleWidget(module) 
     {
-        yPos += 32.;
+        box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
-        addInput(createInput<sp_Port>(Vec(x1, yPos), module, Abr::INA1_INPUT + i));
-        addParam(createParam<sp_Switch>(Vec(x2+1, 3 + yPos), module, Abr::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
-        addInput(createInput<sp_Port>(Vec(x3, yPos), module, Abr::INB1_INPUT + i));
-        addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, Abr::OUT1_OUTPUT + i));
+        {
+            auto *panel = new SVGPanel();
+            panel->box.size = box.size;
+            panel->setBackground(SVG::load(assetPlugin(plugin, "res/Abr.svg")));
+            addChild(panel);
+        }
+
+        const float x1 = 3.;
+        const float x2 = 4.+20.;
+        const float x3 = 5.+43.;
+        const float x4 = 5.+63.;
+
+        float yPos = 18.;
+
+        for(int i = 0; i < 8; i++)
+        {
+            yPos += 32.;
+
+            addInput(Port::create<sp_Port>(Vec(x1, yPos), Port::INPUT, module, Abr::INA1_INPUT + i));
+            addParam(ParamWidget::create<sp_Switch>(Vec(x2+1, 3 + yPos), module, Abr::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
+            addInput(Port::create<sp_Port>(Vec(x3, yPos), Port::INPUT, module, Abr::INB1_INPUT + i));
+            addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, Abr::OUT1_OUTPUT + i));
+        }
+
+        yPos += 48.;
+        addOutput(Port::create<sp_Port>(Vec(x1, yPos), Port::OUTPUT, module, Abr::SUMA_OUTPUT));
+        addOutput(Port::create<sp_Port>(Vec(x3, yPos), Port::OUTPUT, module, Abr::SUMB_OUTPUT));
+        addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, Abr::SUM_OUTPUT));
     }
 
-    yPos += 48.;
-    addOutput(createOutput<sp_Port>(Vec(x1, yPos), module, Abr::SUMA_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec(x3, yPos), module, Abr::SUMB_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, Abr::SUM_OUTPUT));
-}
+};
 
-
-
+Model *modelAbr = Model::create<Abr,AbrWidget>("Southpole", "Abr", "Abr - A/B switch", SWITCH_TAG, MIXER_TAG);
 
 
 

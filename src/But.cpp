@@ -90,7 +90,7 @@ struct But : Module
     {
         for (int i = 0; i < 8; i++) 
         {
-            swState[i] = (randomf() < 0.5);
+            swState[i] = (randomUniform() < 0.5);
 		}
     }
     
@@ -151,47 +151,46 @@ void But::step()
     outputs[SUMB2_OUTPUT].value = outb;
 }
 
-ButWidget::ButWidget() 
-{
-	auto *module = new But();
-	setModule(module);
-	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
-	{
-		auto *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/But.svg")));
-		addChild(panel);
-	}
-
-    const float x1 = 3.;
-    const float x2 = 4.+20.;
-    const float x3 = 5.+40.;
-    const float x4 = 5.+63.;
-
-    float yPos = 18.;
-
-    for(int i = 0; i < 8; i++)
+struct ButWidget : ModuleWidget { 
+ 
+    ButWidget(But *module)  : ModuleWidget(module) 
     {
-        yPos += 32.;
+        box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
-        addInput(createInput<sp_Port>(Vec(x1, yPos), module, But::IN1_INPUT + i));
-        addOutput(createOutput<sp_Port>(Vec(x2, yPos), module, But::OUTA1_OUTPUT + i));
-        addParam(createParam<sp_Switch>(Vec(x3+1, 3 + yPos), module, But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
-        addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, But::OUTB1_OUTPUT + i));
+        {
+            auto *panel = new SVGPanel();
+            panel->box.size = box.size;
+            panel->setBackground(SVG::load(assetPlugin(plugin, "res/But.svg")));
+            addChild(panel);
+        }
+
+        const float x1 = 3.;
+        const float x2 = 4.+20.;
+        const float x3 = 5.+40.;
+        const float x4 = 5.+63.;
+
+        float yPos = 18.;
+
+        for(int i = 0; i < 8; i++)
+        {
+            yPos += 32.;
+
+            addInput(Port::create<sp_Port>(Vec(x1, yPos), Port::INPUT, module, But::IN1_INPUT + i));
+            addOutput(Port::create<sp_Port>(Vec(x2, yPos), Port::OUTPUT, module, But::OUTA1_OUTPUT + i));
+            addParam(ParamWidget::create<sp_Switch>(Vec(x3+1, 3 + yPos), module, But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
+            addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, But::OUTB1_OUTPUT + i));
+        }
+
+        yPos += 48.;
+        addOutput(Port::create<sp_Port>(Vec(x1, yPos), Port::OUTPUT, module, But::SUMA1_OUTPUT));
+        addOutput(Port::create<sp_Port>(Vec(x2, yPos), Port::OUTPUT, module, But::SUMA2_OUTPUT));
+        addOutput(Port::create<sp_Port>(Vec(x3+3, yPos), Port::OUTPUT, module, But::SUMB1_OUTPUT));
+        addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, But::SUMB2_OUTPUT));
     }
 
-    yPos += 48.;
-    addOutput(createOutput<sp_Port>(Vec(x1, yPos), module, But::SUMA1_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec(x2, yPos), module, But::SUMA2_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec(x3+3, yPos), module, But::SUMB1_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, But::SUMB2_OUTPUT));
-}
+};
 
-
-
-
-
+Model *modelBut 	= Model::create<But,ButWidget>(		 "Southpole", "But", 		"But - A/B buss", SWITCH_TAG, MIXER_TAG);
 
 
 

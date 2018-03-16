@@ -102,19 +102,19 @@ struct DeuxEtageres : Module {
 void DeuxEtageres::step() {
 
 		float g_gain  = 0.;
-        float gain1 = clampf(g_gain + params[GAIN1_PARAM].value + inputs[GAIN1_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
-        float gain2 = clampf(g_gain + params[GAIN2_PARAM].value + inputs[GAIN2_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
-        float gain3 = clampf(g_gain + params[GAIN3_PARAM].value + inputs[GAIN3_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
-        float gain4 = clampf(g_gain + params[GAIN4_PARAM].value + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
+        float gain1 = clamp(g_gain + params[GAIN1_PARAM].value + inputs[GAIN1_INPUT].normalize(0.) / 10.0f, -1.0f, 1.0f);
+        float gain2 = clamp(g_gain + params[GAIN2_PARAM].value + inputs[GAIN2_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
+        float gain3 = clamp(g_gain + params[GAIN3_PARAM].value + inputs[GAIN3_INPUT].normalize(0.) / 10.0, -1.0, 1.0f);
+        float gain4 = clamp(g_gain + params[GAIN4_PARAM].value + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0, 1.0f);
 
 		float g_cutoff = 0.;
-        float freq1 = clampf(g_cutoff + params[FREQ1_PARAM].value + inputs[FREQ1_INPUT].normalize(0.), -4.0, 6.0);
-        float freq2 = clampf(g_cutoff + params[FREQ2_PARAM].value + inputs[FREQ2_INPUT].normalize(0.), -4.0, 6.0);
-        float freq3 = clampf(g_cutoff + params[FREQ3_PARAM].value + inputs[FREQ3_INPUT].normalize(0.), -4.0, 6.0);
-        float freq4 = clampf(g_cutoff + params[FREQ4_PARAM].value + inputs[FREQ4_INPUT].normalize(0.), -4.0, 6.0);
+        float freq1 = clamp(g_cutoff + params[FREQ1_PARAM].value + inputs[FREQ1_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq2 = clamp(g_cutoff + params[FREQ2_PARAM].value + inputs[FREQ2_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].value + inputs[FREQ3_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].value + inputs[FREQ4_INPUT].normalize(0.), -4.0f, 6.0f);
 
-        float reso2 = clampf(g_cutoff + params[Q2_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, .0, 1.0);
-        float reso3 = clampf(g_cutoff + params[Q3_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, .0, 1.0);
+        float reso2 = clamp(g_cutoff + params[Q2_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+        float reso3 = clamp(g_cutoff + params[Q3_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
 
         for (int i=0; i<2; i++) {
             lpFilter[i].setQ(.5); //Resonance(.5);
@@ -166,63 +166,65 @@ void DeuxEtageres::step() {
             lights[CLIPL_LIGHT + i].setBrightnessSmooth( fabs(sumout) > 10. ? 1. : 0. );    
         }
 }
-
-DeuxEtageresWidget::DeuxEtageresWidget() {
-
-    DeuxEtageres *module = new DeuxEtageres();
-    setModule(module);
-	box.size = Vec(15*6, 380);
-
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/DeuxEtageres.svg")));
-		panel->box.size = box.size;
-		addChild(panel);	
-	}
-
-    const float x1 = 8;
-	const float x2 = 65;
-	
-    const float y1 = 5.;
-    const float yh = 25.;
-
-    const float vfmin = -4.;
-    const float vfmax =  6.;
-
-    const float gmax = -1.;
-    const float gmin =  1.;
-
-    // TO DO possible default freqs: 880, 5000
-
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 1* yh), module, DeuxEtageres::FREQ4_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 2* yh), module, DeuxEtageres::GAIN4_INPUT));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 1*yh), module, DeuxEtageres::FREQ4_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, DeuxEtageres::GAIN4_PARAM,  gmin,  gmax, 0.));
-
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 3* yh), module, DeuxEtageres::FREQ2_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 4* yh), module, DeuxEtageres::GAIN2_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 5* yh), module, DeuxEtageres::Q2_INPUT));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 3*yh), module, DeuxEtageres::FREQ2_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 4*yh), module, DeuxEtageres::GAIN2_PARAM,  gmin,  gmax, 0.));
-    addParam(createParam<sp_Trimpot>(Vec(x2, y1+ 5*yh), module, DeuxEtageres::Q2_PARAM,      0.0,   1.0, 0.));
+struct DeuxEtageresWidget : ModuleWidget { 
     
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 6* yh), module, DeuxEtageres::FREQ3_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 7* yh), module, DeuxEtageres::GAIN3_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 8* yh), module, DeuxEtageres::Q3_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 6*yh), module, DeuxEtageres::FREQ3_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 7*yh), module, DeuxEtageres::GAIN3_PARAM,  gmin,  gmax, 0.));
-    addParam(createParam<sp_Trimpot>(Vec(x2, y1+ 8*yh), module, DeuxEtageres::Q3_PARAM,      0.0,   1.0, 0.));
-    
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 9* yh), module, DeuxEtageres::FREQ1_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+10* yh), module, DeuxEtageres::GAIN1_INPUT));    
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 9*yh), module, DeuxEtageres::FREQ1_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+10*yh), module, DeuxEtageres::GAIN1_PARAM,  gmin,  gmax, 0.));
-	
-    addInput(createInput<sp_Port>(  Vec(x1, y1+12*yh), module, DeuxEtageres::INL_INPUT));    
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+12*yh), module, DeuxEtageres::OUTL_OUTPUT));
-	addChild(createLight<SmallLight<RedLight>>(Vec(x2-10., y1+12.2*yh), module, DeuxEtageres::CLIPL_LIGHT));
+    DeuxEtageresWidget(DeuxEtageres *module)  : ModuleWidget(module) {
 
-    addInput(createInput<sp_Port>(  Vec(x1, y1+13*yh), module, DeuxEtageres::INR_INPUT));    
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+13*yh), module, DeuxEtageres::OUTR_OUTPUT));
-	addChild(createLight<SmallLight<RedLight>>(Vec(x2-10., y1+13.2*yh), module, DeuxEtageres::CLIPR_LIGHT));
-}
+        box.size = Vec(15*6, 380);
+
+        {
+            SVGPanel *panel = new SVGPanel();
+            panel->setBackground(SVG::load(assetPlugin(plugin, "res/DeuxEtageres.svg")));
+            panel->box.size = box.size;
+            addChild(panel);	
+        }
+
+        const float x1 = 8;
+        const float x2 = 65;
+        
+        const float y1 = 5.;
+        const float yh = 25.;
+
+        const float vfmin = -4.;
+        const float vfmax =  6.;
+
+        const float gmax = -1.;
+        const float gmin =  1.;
+
+        // TO DO possible default freqs: 880, 5000
+
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 1* yh), Port::INPUT, module, DeuxEtageres::FREQ4_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 2* yh), Port::INPUT, module, DeuxEtageres::GAIN4_INPUT));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 1*yh), module, DeuxEtageres::FREQ4_PARAM, vfmin, vfmax, 0.));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, DeuxEtageres::GAIN4_PARAM,  gmin,  gmax, 0.));
+
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 3* yh), Port::INPUT, module, DeuxEtageres::FREQ2_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 4* yh), Port::INPUT, module, DeuxEtageres::GAIN2_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 5* yh), Port::INPUT, module, DeuxEtageres::Q2_INPUT));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 3*yh), module, DeuxEtageres::FREQ2_PARAM, vfmin, vfmax, 0.));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 4*yh), module, DeuxEtageres::GAIN2_PARAM,  gmin,  gmax, 0.));
+        addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1+ 5*yh), module, DeuxEtageres::Q2_PARAM,      0.0,   1.0, 0.));
+        
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 6* yh), Port::INPUT, module, DeuxEtageres::FREQ3_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 7* yh), Port::INPUT, module, DeuxEtageres::GAIN3_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 8* yh), Port::INPUT, module, DeuxEtageres::Q3_INPUT));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 6*yh), module, DeuxEtageres::FREQ3_PARAM, vfmin, vfmax, 0.));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 7*yh), module, DeuxEtageres::GAIN3_PARAM,  gmin,  gmax, 0.));
+        addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1+ 8*yh), module, DeuxEtageres::Q3_PARAM,      0.0,   1.0, 0.));
+        
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 9* yh), Port::INPUT, module, DeuxEtageres::FREQ1_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+10* yh), Port::INPUT, module, DeuxEtageres::GAIN1_INPUT));    
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 9*yh), module, DeuxEtageres::FREQ1_PARAM, vfmin, vfmax, 0.));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+10*yh), module, DeuxEtageres::GAIN1_PARAM,  gmin,  gmax, 0.));
+        
+        addInput(Port::create<sp_Port>(  Vec(x1, y1+12*yh), Port::INPUT, module, DeuxEtageres::INL_INPUT));    
+        addOutput(Port::create<sp_Port>(Vec(x2, y1+12*yh), Port::OUTPUT, module, DeuxEtageres::OUTL_OUTPUT));
+        addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x2-10., y1+12.2*yh), module, DeuxEtageres::CLIPL_LIGHT));
+
+        addInput(Port::create<sp_Port>(  Vec(x1, y1+13*yh), Port::INPUT, module, DeuxEtageres::INR_INPUT));    
+        addOutput(Port::create<sp_Port>(Vec(x2, y1+13*yh), Port::OUTPUT, module, DeuxEtageres::OUTR_OUTPUT));
+        addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x2-10., y1+13.2*yh), module, DeuxEtageres::CLIPR_LIGHT));
+    }
+};
+
+Model *modelDeuxEtageres = Model::create<DeuxEtageres,DeuxEtageresWidget>("Southpole", "DeuxEtageres", "Deux Etageres - Stereo EQ", FILTER_TAG);

@@ -45,7 +45,7 @@ struct VoltageControlledOscillator {
 
 	void setPulseWidth(float pulseWidth) {
 		const float pwMin = 0.01;
-		pw = clampf(pulseWidth, pwMin, 1.0 - pwMin);
+		pw = clamp(pulseWidth, pwMin, 1.0f - pwMin);
 	}
 
 	void process(float deltaTime) {
@@ -57,14 +57,14 @@ struct VoltageControlledOscillator {
 		}
 
 		// Advance phase
-		float deltaPhase = clampf(freq * deltaTime, 1e-6, 0.5);
+		float deltaPhase = clamp(freq * deltaTime, 1e-6, 0.5);
 
 		sqrFilter.setCutoff(40.0 * deltaTime);
 
 		for (int i = 0; i < OVERSAMPLE; i++) {
 
-			triBuffer[i] = 1.25f * interpf(triTable, phase * 2047.f);
-			sawBuffer[i] = 1.66f * interpf(sawTable, phase * 2047.f);
+			triBuffer[i] = 1.25f * interpolateLinear(triTable, phase * 2047.f);
+			sawBuffer[i] = 1.66f * interpolateLinear(sawTable, phase * 2047.f);
 
 			sqrBuffer[i] = (phase < pw) ? 1.f : -1.f;
 			// Simply filter here
@@ -250,12 +250,12 @@ void Gnome::step() {
 	//lfo.setReset(inputs[RESET_INPUT].value);
 
 	float wave = params[LFOWAVE_PARAM].value; // + inputs[WAVE_INPUT].value;
-	//wave = clampf(wave, 0.0, 3.0);
+	//wave = clamp(wave, 0.0, 3.0);
 	float interp;
-	if (wave < 1.0)	 	 interp = crossf(.5-lfo.saw(), lfo.tri(), wave);
-	else if (wave < 2.0) interp = crossf(lfo.tri(), lfo.saw(), wave - 1.0);
-	else if (wave < 3.0) interp = crossf(lfo.saw(), lfo.sqr(), wave - 2.0);
-	else				 interp = crossf(lfo.sqr(), lfo.sh(), wave - 3.0);
+	if (wave < 1.0)	 	 interp = crossfade(.5-lfo.saw(), lfo.tri(), wave);
+	else if (wave < 2.0) interp = crossfade(lfo.tri(), lfo.saw(), wave - 1.0);
+	else if (wave < 3.0) interp = crossfade(lfo.saw(), lfo.sqr(), wave - 2.0);
+	else				 interp = crossfade(lfo.sqr(), lfo.sh(), wave - 3.0);
 
 	outputs[LFO_OUTPUT].value = 5.0 * interp;
 	
@@ -322,10 +322,10 @@ void Gnome::step() {
 
 	// Set output
 	float oscwave = params[OSC_PARAM].value + inputs[OSC_INPUT].normalize(0.)/10.;
-	//wave = clampf(wave, 0.0, 3.0);
+	//wave = clamp(wave, 0.0, 3.0);
 	float osc = 0.;
-	if (oscwave < 1.0)  osc = crossf(tri, saw, oscwave);
-	else                osc = crossf(saw, sqr, oscwave - 1.0);
+	if (oscwave < 1.0)  osc = crossfade(tri, saw, oscwave);
+	else                osc = crossfade(saw, sqr, oscwave - 1.0);
 	
 	subosc.process( tri );
 	float sub1 = subosc.count & 2 ? 5.0 : -5.0;
@@ -334,17 +334,17 @@ void Gnome::step() {
 
 	float sub =	0; 
 	float subwave = params[SUBWAVE_PARAM].value;
-	if    (subwave < 1.0) sub = crossf(sub1, sub2, subwave);
-	else  sub = crossf(sub2, noise, subwave - 1.0);
+	if    (subwave < 1.0) sub = crossfade(sub1, sub2, subwave);
+	else  sub = crossfade(sub2, noise, subwave - 1.0);
 
 	float submix = params[Gnome::SUB_PARAM].value;
 	float extmix = params[Gnome::EXT_PARAM].value;
 
 	float ext = inputs[EXT_INPUT].value;
 
-	osc = crossf( osc, sub, submix );
+	osc = crossfade( osc, sub, submix );
 
-	float vco_out = crossf( osc, ext, extmix );
+	float vco_out = crossfade( osc, ext, extmix );
 
 	outputs[VCO_OUTPUT].value = vco_out;
 
@@ -356,12 +356,12 @@ void Gnome::step() {
     hpfilter.setSampleRate(engineGetSampleRate());
     ntfilter.setSampleRate(engineGetSampleRate());
 
-	float freq = clampf(
+	float freq = clamp(
 	  inputs[VCFFREQ_INPUT].normalize(0.)
 	+ params[VCFPITCH_PARAM].value 
 	+ params[VCFENV_PARAM].value * 11.*env
 	+ params[VCFLFO_PARAM].value * 11.*interp
-	, -4.0, 6.0);
+	, -4.0f, 6.0f);
 	float reso = params[VCFQ_PARAM].value;
 
   	const float f0 = 261.626;
@@ -384,9 +384,9 @@ void Gnome::step() {
 
 	float ftyp = params[VCFTYPE_PARAM].value;
 	float fout;
-	if (ftyp < 1.0)	 	 fout = crossf(lpout, bpout, ftyp);
-	else if (ftyp < 2.0) fout = crossf(bpout, hpout, ftyp - 1.0);
-	else 				 fout = crossf(hpout, ntout, ftyp - 2.0);
+	if (ftyp < 1.0)	 	 fout = crossfade(lpout, bpout, ftyp);
+	else if (ftyp < 2.0) fout = crossfade(bpout, hpout, ftyp - 1.0);
+	else 				 fout = crossfade(hpout, ntout, ftyp - 2.0);
 
 	fout = fout - 0.8*reso*fout;
 
@@ -400,78 +400,79 @@ void Gnome::step() {
 	lights[PHASE_NEG_LIGHT].setBrightnessSmooth(fmaxf(0.0,-lfo.light()));
 }
 
-
-GnomeWidget::GnomeWidget() {
-	Gnome *module = new Gnome();
-	setModule(module);
-	box.size = Vec(15*10, 380);
-
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Gnome.svg")));
-		addChild(panel);
-	}
-
-	float y1 = 10;
-	float yh = 40;
-
-	float x1 = 5;
-	float x2 = 35;
-	float x3 = 65;
-	float x4 = 95;
-	float x5 = 125;
-
-	//VCO
-  	addInput(createInput<sp_Port>(			Vec(x1, y1+1*yh), module, Gnome::PITCH_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Gnome::PITCH_PARAM, -54.0, 54.0, 0.0));
-  	addInput(createInput<sp_Port>(			Vec(x1, y1+2*yh), module, Gnome::OSC_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, Gnome::OSC_PARAM, 0, 2, 1));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+3*yh), module, Gnome::SUBWAVE_PARAM, 0.0, 2.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+3*yh), module, Gnome::SUB_PARAM, .0, 1.0, 0.0));
-  	addInput(createInput<sp_Port>(			Vec(x1, y1+4*yh), module, Gnome::EXT_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Gnome::EXT_PARAM, .0, 1.0, 0.0));
-	addInput(createInput<sp_Port>(			Vec(x1, y1+5*yh), module, Gnome::PW_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Gnome::PW_PARAM, 0.0, .5, 0.25));
-	addInput(createInput<sp_Port>(			Vec(x1, y1+6*yh), module, Gnome::FM_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Gnome::FM_PARAM, 0.0, 1.0, 0.0));
-	addOutput(createOutput<sp_Port>(		Vec(x2, y1+7*yh), module, Gnome::VCO_OUTPUT));
-
-	//LFO
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+1*yh), module, Gnome::LFOWAVE_PARAM, 0., 4., 0.));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+1*yh), module, Gnome::LFOPITCH_PARAM, -8.0, 6.0, -1.0));
-	addInput(createInput<sp_Port>(			Vec(x3, y1+2*yh), module, Gnome::LFOFM_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+2*yh), module, Gnome::LFOFM_PARAM, -1, 1, 1));
-	addOutput(createOutput<sp_Port>(		Vec(x4, y1+3*yh), module, Gnome::LFO_OUTPUT));
+struct GnomeWidget : ModuleWidget {	
 	
-	//ADSR
-  	addInput(createInput<sp_Port>(			Vec(x3, y1+4*yh), module, Gnome::GATE_INPUT));
-	addParam(createParam<CKSS>(       		Vec(x3, y1+5*yh), module, Gnome::GATE_PARAM, 0.0, 1.0, 0.0));
-	addChild(createLight<SmallLight<RedLight>>(Vec(x3, y1+6*yh), module, Gnome::ENV_LIGHT));
-	addOutput(createOutput<sp_Port>(Vec(x3, y1+7*yh), module, Gnome::ENVELOPE_OUTPUT));
+	GnomeWidget(Module *module)  : ModuleWidget(module) {	
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+4*yh), module, Gnome::ATTACK_PARAM,  0.0, 1.0, 0.5));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+5*yh), module, Gnome::DECAY_PARAM,   0.0, 1.0, 0.5));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+6*yh), module, Gnome::SUSTAIN_PARAM, 0.0, 1.0, 0.5));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+7*yh), module, Gnome::RELEASE_PARAM, 0.0, 1.0, 0.5));
+		box.size = Vec(15*10, 380);
 
-	//VCF
-	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+1*yh), module, Gnome::VCFTYPE_PARAM, 0.0, 3.0, 0.0));
-  	addInput(createInput<sp_Port>(			 Vec(x5, y1+2*yh), module, Gnome::VCFFREQ_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+3*yh), module, Gnome::VCFPITCH_PARAM, -4.0,  7.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+4*yh), module, Gnome::VCFQ_PARAM,     0.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+5*yh), module, Gnome::VCFENV_PARAM,  -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+6*yh), module, Gnome::VCFLFO_PARAM,  -1.0, 1.0, 0.0));
-	addOutput(createOutput<sp_Port>( 	  	 Vec(x5, y1+7*yh), module, Gnome::VCF_OUTPUT));
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->box.size = box.size;
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Gnome.svg")));
+			addChild(panel);
+		}
 
- 	//VCA
-	addOutput(createOutput<sp_Port>(Vec(x3, y1+8*yh), module, Gnome::AUDIO_OUTPUT));
- 
+		float y1 = 10;
+		float yh = 40;
 
-	addChild(createLight<SmallLight<GreenRedLight>>(Vec(x3, y1+3*yh), module, Gnome::PHASE_POS_LIGHT));
-}
+		float x1 = 5;
+		float x2 = 35;
+		float x3 = 65;
+		float x4 = 95;
+		float x5 = 125;
 
+		//VCO
+		addInput(Port::create<sp_Port>(			Vec(x1, y1+1*yh), Port::INPUT, module, Gnome::PITCH_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Gnome::PITCH_PARAM, -54.0, 54.0, 0.0));
+		addInput(Port::create<sp_Port>(			Vec(x1, y1+2*yh), Port::INPUT, module, Gnome::OSC_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, Gnome::OSC_PARAM, 0, 2, 1));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+3*yh), module, Gnome::SUBWAVE_PARAM, 0.0, 2.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+3*yh), module, Gnome::SUB_PARAM, .0, 1.0, 0.0));
+		addInput(Port::create<sp_Port>(			Vec(x1, y1+4*yh), Port::INPUT, module, Gnome::EXT_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Gnome::EXT_PARAM, .0, 1.0, 0.0));
+		addInput(Port::create<sp_Port>(			Vec(x1, y1+5*yh), Port::INPUT, module, Gnome::PW_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Gnome::PW_PARAM, 0.0, .5, 0.25));
+		addInput(Port::create<sp_Port>(			Vec(x1, y1+6*yh), Port::INPUT, module, Gnome::FM_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Gnome::FM_PARAM, 0.0, 1.0, 0.0));
+		addOutput(Port::create<sp_Port>(		Vec(x2, y1+7*yh), Port::OUTPUT, module, Gnome::VCO_OUTPUT));
 
+		//LFO
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+1*yh), module, Gnome::LFOWAVE_PARAM, 0., 4., 0.));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x4, y1+1*yh), module, Gnome::LFOPITCH_PARAM, -8.0, 6.0, -1.0));
+		addInput(Port::create<sp_Port>(			Vec(x3, y1+2*yh), Port::INPUT, module, Gnome::LFOFM_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x4, y1+2*yh), module, Gnome::LFOFM_PARAM, -1, 1, 1));
+		addOutput(Port::create<sp_Port>(		Vec(x4, y1+3*yh), Port::OUTPUT, module, Gnome::LFO_OUTPUT));
+		
+		//ADSR
+		addInput(Port::create<sp_Port>(			Vec(x3, y1+4*yh), Port::INPUT, module, Gnome::GATE_INPUT));
+		addParam(ParamWidget::create<CKSS>(       		Vec(x3, y1+5*yh), module, Gnome::GATE_PARAM, 0.0, 1.0, 0.0));
+		addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x3, y1+6*yh), module, Gnome::ENV_LIGHT));
+		addOutput(Port::create<sp_Port>(Vec(x3, y1+7*yh), Port::OUTPUT, module, Gnome::ENVELOPE_OUTPUT));
+
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x4, y1+4*yh), module, Gnome::ATTACK_PARAM,  0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x4, y1+5*yh), module, Gnome::DECAY_PARAM,   0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x4, y1+6*yh), module, Gnome::SUSTAIN_PARAM, 0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x4, y1+7*yh), module, Gnome::RELEASE_PARAM, 0.0, 1.0, 0.5));
+
+		//VCF
+		addParam(ParamWidget::create<sp_SmallBlackKnob>( Vec(x5, y1+1*yh), module, Gnome::VCFTYPE_PARAM, 0.0, 3.0, 0.0));
+		addInput(Port::create<sp_Port>(			 Vec(x5, y1+2*yh), Port::INPUT, module, Gnome::VCFFREQ_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>( Vec(x5, y1+3*yh), module, Gnome::VCFPITCH_PARAM, -4.0,  7.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>( Vec(x5, y1+4*yh), module, Gnome::VCFQ_PARAM,     0.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>( Vec(x5, y1+5*yh), module, Gnome::VCFENV_PARAM,  -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>( Vec(x5, y1+6*yh), module, Gnome::VCFLFO_PARAM,  -1.0, 1.0, 0.0));
+		addOutput(Port::create<sp_Port>( 	  	 Vec(x5, y1+7*yh), Port::OUTPUT, module, Gnome::VCF_OUTPUT));
+
+		//VCA
+		addOutput(Port::create<sp_Port>(Vec(x3, y1+8*yh), Port::OUTPUT, module, Gnome::AUDIO_OUTPUT));
+	
+
+		addChild(ModuleLightWidget::create<SmallLight<GreenRedLight>>(Vec(x3, y1+3*yh), module, Gnome::PHASE_POS_LIGHT));
+	}
+};
+
+Model *modelGnome 	= Model::create<Gnome,GnomeWidget>(	 "Southpole", "Gnome", 		"Gnome - synth voice", SYNTH_VOICE_TAG, OSCILLATOR_TAG, LFO_TAG, ENVELOPE_GENERATOR_TAG, FILTER_TAG, AMPLIFIER_TAG, MIXER_TAG);
 
 
 

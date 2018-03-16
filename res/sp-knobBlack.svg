@@ -9,54 +9,54 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="37.556625"
-   height="37.556622"
-   viewBox="0 0 9.9368575 9.9368564"
+   width="20"
+   height="20"
+   viewBox="0 0 5.2916669 5.2916668"
    version="1.1"
    id="svg49872"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="gb-knobBlack.svg">
+   sodipodi:docname="sp-knobBlack.svg">
   <defs
      id="defs49866">
     <clipPath
        id="clip12">
       <path
-         d="m 143,129.75 h 3 V 158 h -3 z m 0,0"
+         d="m 143,129.75 3,0 0,28.25 -3,0 z m 0,0"
          id="path28860"
          inkscape:connector-curvature="0" />
     </clipPath>
     <clipPath
        id="clip11">
       <path
-         d="m 117.39453,129.75 h 54 v 54.00391 h -54 z m 0,0"
+         d="m 117.39453,129.75 54,0 0,54.00391 -54,0 z m 0,0"
          id="path28857"
          inkscape:connector-curvature="0" />
     </clipPath>
     <clipPath
        id="clip150">
       <path
-         d="m 176,208.92578 h 2 V 228 h -2 z m 0,0"
+         d="m 176,208.92578 2,0 0,19.07422 -2,0 z m 0,0"
          id="path29465"
          inkscape:connector-curvature="0" />
     </clipPath>
     <clipPath
        id="clip149">
       <path
-         d="m 159.27734,208.92578 h 36 v 36 h -36 z m 0,0"
+         d="m 159.27734,208.92578 36,0 0,36 -36,0 z m 0,0"
          id="path29462"
          inkscape:connector-curvature="0" />
     </clipPath>
     <clipPath
        id="clip142">
       <path
-         d="m 110,208.92578 h 3 V 228 h -3 z m 0,0"
+         d="m 110,208.92578 3,0 0,19.07422 -3,0 z m 0,0"
          id="path29320"
          inkscape:connector-curvature="0" />
     </clipPath>
     <clipPath
        id="clip141">
       <path
-         d="m 93.511719,208.92578 h 36.000001 v 36 H 93.511719 Z m 0,0"
+         d="m 93.511719,208.92578 36.000001,0 0,36 -36.000001,0 z m 0,0"
          id="path29317"
          inkscape:connector-curvature="0" />
     </clipPath>
@@ -68,9 +68,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="15.109749"
-     inkscape:cx="5.192699"
-     inkscape:cy="21.496911"
+     inkscape:zoom="16.090909"
+     inkscape:cx="11"
+     inkscape:cy="11"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -79,10 +79,10 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      units="px"
-     inkscape:window-width="1695"
-     inkscape:window-height="1317"
-     inkscape:window-x="369"
-     inkscape:window-y="144"
+     inkscape:window-width="965"
+     inkscape:window-height="788"
+     inkscape:window-x="381"
+     inkscape:window-y="0"
      inkscape:window-maximized="0"
      inkscape:snap-global="true"
      inkscape:snap-bbox="true"
@@ -100,7 +100,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -108,12 +108,12 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-73.816227,-78.610433)">
+     transform="translate(-73.816227,-83.255623)">
     <path
        inkscape:connector-curvature="0"
        id="path6445"
-       style="fill:#191919;fill-opacity:1;fill-rule:nonzero;stroke:#adb2bd;stroke-width:0.76269382;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 83.357437,83.587693 c 0,2.520644 -2.043698,4.564088 -4.564088,4.564088 -2.520645,0 -4.564088,-2.043444 -4.564088,-4.564088 0,-2.520645 2.043443,-4.564088 4.564088,-4.564088 2.52039,0 4.564088,2.043443 4.564088,4.564088" />
+       style="fill:#191919;fill-opacity:1;fill-rule:nonzero;stroke:#adb2bd;stroke-width:0.40459204;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 78.883207,85.909685 c 0,1.337145 -1.084135,2.421147 -2.421146,2.421147 -1.337146,0 -2.421147,-1.084002 -2.421147,-2.421147 0,-1.337146 1.084001,-2.421146 2.421147,-2.421146 1.337011,0 2.421146,1.084 2.421146,2.421146" />
     <g
        id="g879">
       <path
@@ -142,7 +142,7 @@
              cy="81.337395"
              cx="78.784653"
              id="path830"
-             style="opacity:1;vector-effect:none;fill:#bcbcbc;fill-opacity:1;stroke:none;stroke-width:0.80542296;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers" />
+             style="opacity:1;fill:#bcbcbc;fill-opacity:1;stroke:none;stroke-width:0.80542296;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers" />
         </g>
       </g>
     </g>
@@ -150,14 +150,14 @@
        id="g914"
        transform="translate(-3.1099673e-7,-0.05861626)" />
     <g
-       transform="matrix(0.33444816,0,0,-0.21775211,78.984656,79.169606)"
+       transform="matrix(0.17741728,0,0,-0.11551263,76.568156,83.565988)"
        id="g900"
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.98729373;stroke:#ffffff;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none">
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.98729372;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
       <path
          inkscape:connector-curvature="0"
          id="path898"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.98729373;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-         d="M 0,0 C -0.195,0.045 -0.393,0.069 -0.598,0.069 -0.804,0.069 -1.002,0.045 -1.196,0 V -18.157 H 0 Z" />
+         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.98729372;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 0,0 C -0.195,0.045 -0.393,0.069 -0.598,0.069 -0.804,0.069 -1.002,0.045 -1.196,0 l 0,-18.157 1.196,0 z" />
     </g>
   </g>
 </svg>

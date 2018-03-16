@@ -1,7 +1,6 @@
 #include <string.h>
-
 #include "Southpole.hpp"
-
+#include "dsp/functions.hpp"
 #include "dsp/samplerate.hpp"
 #include "dsp/ringbuffer.hpp"
 #include "dsp/digital.hpp"
@@ -120,8 +119,8 @@ Annuli::Annuli() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
 	part.Init(reverb_buffer);
 	string_synth.Init(reverb_buffer);
 
-	polyphonyTrigger.setThresholds(0.0, 1.0);
-	modelTrigger.setThresholds(0.0, 1.0);
+	//polyphonyTrigger.setThresholds(0.0, 1.0);
+	//modelTrigger.setThresholds(0.0, 1.0);
 }
 
 void Annuli::step() {
@@ -157,7 +156,7 @@ void Annuli::step() {
 		float in[24] = {};
 		// Convert input buffer
 		{
-			inputSrc.setRatio(48000.0 / engineGetSampleRate());
+			inputSrc.setRates(engineGetSampleRate(), 48000.0);
 			int inLen = inputBuffer.size();
 			int outLen = 24;
 			inputSrc.process(inputBuffer.startData(), &inLen, (Frame<1>*) in, &outLen);
@@ -176,11 +175,11 @@ void Annuli::step() {
 
 		// Patch
 		rings::Patch patch;
-		float structure = params[STRUCTURE_PARAM].value + 3.3*quadraticBipolar(params[STRUCTURE_MOD_PARAM].value)*inputs[STRUCTURE_MOD_INPUT].value/5.0;
-		patch.structure = clampf(structure, 0.0, 0.9995);
-		patch.brightness = clampf(params[BRIGHTNESS_PARAM].value + 3.3*quadraticBipolar(params[BRIGHTNESS_MOD_PARAM].value)*inputs[BRIGHTNESS_MOD_INPUT].value/5.0, 0.0, 1.0);
-		patch.damping = clampf(params[DAMPING_PARAM].value + 3.3*quadraticBipolar(params[DAMPING_MOD_PARAM].value)*inputs[DAMPING_MOD_INPUT].value/5.0, 0.0, 0.9995);
-		patch.position = clampf(params[POSITION_PARAM].value + 3.3*quadraticBipolar(params[POSITION_MOD_PARAM].value)*inputs[POSITION_MOD_INPUT].value/5.0, 0.0, 0.9995);
+		float structure 	= params[STRUCTURE_PARAM].value + 3.3*quadraticBipolar(params[STRUCTURE_MOD_PARAM].value)*inputs[STRUCTURE_MOD_INPUT].value/5.0;
+		patch.structure 	= clamp(structure, 0.0f, 0.9995f);
+		patch.brightness 	= clamp(params[BRIGHTNESS_PARAM].value + 3.3*quadraticBipolar(params[BRIGHTNESS_MOD_PARAM].value)*inputs[BRIGHTNESS_MOD_INPUT].value/5.0, 0.0f, 1.0f);
+		patch.damping 		= clamp(params[DAMPING_PARAM].value + 3.3*quadraticBipolar(params[DAMPING_MOD_PARAM].value)*inputs[DAMPING_MOD_INPUT].value/5.0, 0.0f, 0.9995f);
+		patch.position	 	= clamp(params[POSITION_PARAM].value + 3.3*quadraticBipolar(params[POSITION_MOD_PARAM].value)*inputs[POSITION_MOD_INPUT].value/5.0, 0.0f, 0.9995f);
 
 		// Performance
 		rings::PerformanceState performance_state;
@@ -190,8 +189,8 @@ void Annuli::step() {
 		if (inputs[PITCH_INPUT].active) {
 			transpose = roundf(transpose);
 		}
-		performance_state.tonic = 12.0 + clampf(transpose, 0, 60.0);
-		performance_state.fm = clampf(48.0 * 3.3*quarticBipolar(params[FREQUENCY_MOD_PARAM].value) * inputs[FREQUENCY_MOD_INPUT].normalize(1.0)/5.0, -48.0, 48.0);
+		performance_state.tonic = 12.0 + clamp(transpose, 0.0f, 60.0f);
+		performance_state.fm = clamp(48.0 * 3.3*quarticBipolar(params[FREQUENCY_MOD_PARAM].value) * inputs[FREQUENCY_MOD_INPUT].normalize(1.0)/5.0, -48.0f, 48.0f);
 
 		performance_state.internal_exciter = !inputs[IN_INPUT].active;
 		performance_state.internal_strum = !inputs[STRUM_INPUT].active;
@@ -203,7 +202,7 @@ void Annuli::step() {
 		lastStrum = strum;
 		strum = false;
 
-		performance_state.chord = clampf(roundf(structure * (rings::kNumChords - 1)), 0, rings::kNumChords - 1);
+		performance_state.chord = clamp((int)roundf(structure * (rings::kNumChords - 1)), 0, rings::kNumChords - 1);
 
 		// Process audio
 		float out[24];
@@ -225,7 +224,7 @@ void Annuli::step() {
 				outputFrames[i].samples[1] = aux[i];
 			}
 
-			outputSrc.setRatio(engineGetSampleRate() / 48000.0);
+			outputSrc.setRates(48000.0, engineGetSampleRate());
 			int inLen = 24;
 			int outLen = outputBuffer.capacity();
 			outputSrc.process(outputFrames, &inLen, outputBuffer.endData(), &outLen);
@@ -238,73 +237,77 @@ void Annuli::step() {
 		Frame<2> outputFrame = outputBuffer.shift();
 		// "Note that you need to insert a jack into each output to split the signals: when only one jack is inserted, both signals are mixed together."
 		if (outputs[ODD_OUTPUT].active && outputs[EVEN_OUTPUT].active) {
-			outputs[ODD_OUTPUT].value = clampf(outputFrame.samples[0], -1.0, 1.0)*5.0;
-			outputs[EVEN_OUTPUT].value = clampf(outputFrame.samples[1], -1.0, 1.0)*5.0;
+			outputs[ODD_OUTPUT].value = clamp(outputFrame.samples[0], -1.0f, 1.0f)*5.0;
+			outputs[EVEN_OUTPUT].value = clamp(outputFrame.samples[1], -1.0f, 1.0f)*5.0;
 		}
 		else {
-			float v = clampf(outputFrame.samples[0] + outputFrame.samples[1], -1.0, 1.0)*5.0;
+			float v = clamp(outputFrame.samples[0] + outputFrame.samples[1], -1.0f, 1.0f)*5.0;
 			outputs[ODD_OUTPUT].value = v;
 			outputs[EVEN_OUTPUT].value = v;
 		}
 	}
 }
 
+struct AnnuliWidget : ModuleWidget {
+	SVGPanel *panel;
+	SVGPanel *panel2;
+	void step() override;
+	Menu *createContextMenu() override;
 
-AnnuliWidget::AnnuliWidget() {
-	Annuli *module = new Annuli();
-	setModule(module);
-	box.size = Vec(15*6, 380);
-	{
-		panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Annuli.svg")));
-		panel->box.size = box.size;
-		addChild(panel);
-	}
-	{
-		panel2 = new SVGPanel();
-		panel2->setBackground(SVG::load(assetPlugin(plugin, "res/DisastrousPeace.svg")));
-		panel2->box.size = box.size;
-		addChild(panel2);		
-	}
-    const float x1 = 5;
-    const float x2 = 35;
-    const float x3 = 65;
+	AnnuliWidget(Annuli *module) : ModuleWidget(module) {
+
+		box.size = Vec(15*6, 380);
+		{
+			panel = new SVGPanel();
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Annuli.svg")));
+			panel->box.size = box.size;
+			addChild(panel);
+		}
+		{
+			panel2 = new SVGPanel();
+			panel2->setBackground(SVG::load(assetPlugin(plugin, "res/DisastrousPeace.svg")));
+			panel2->box.size = box.size;
+			addChild(panel2);		
+		}
+		const float x1 = 5;
+		const float x2 = 35;
+		const float x3 = 65;
+			
+		const float y1 = 20.0f;
+		const float yh = 33.0f;
 		
-    const float y1 = 20.0f;
-    const float yh = 33.0f;
-	
-	addParam(createParam<TL1105>(Vec(x3, y1+.25*yh), module, Annuli::POLYPHONY_PARAM, 0.0, 1.0, 0.0));
-	addParam(createParam<TL1105>(Vec(x3, y1+yh), module, Annuli::RESONATOR_PARAM, 0.0, 1.0, 0.0));
+		addParam(ParamWidget::create<TL1105>(Vec(x3, y1+.25*yh), module, Annuli::POLYPHONY_PARAM, 0.0, 1.0, 0.0));
+		addParam(ParamWidget::create<TL1105>(Vec(x3, y1+yh), module, Annuli::RESONATOR_PARAM, 0.0, 1.0, 0.0));
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2.12*yh), module, Annuli::FREQUENCY_PARAM, 0.0, 60.0, 30.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+3.12*yh), module, Annuli::STRUCTURE_PARAM, 0.0, 1.0, 0.5));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+4.12*yh), module, Annuli::BRIGHTNESS_PARAM, 0.0, 1.0, 0.5));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+5.12*yh), module, Annuli::DAMPING_PARAM, 0.0, 1.0, 0.5));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+6.12*yh), module, Annuli::POSITION_PARAM, 0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+2.12*yh), module, Annuli::FREQUENCY_PARAM, 0.0, 60.0, 30.0));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+3.12*yh), module, Annuli::STRUCTURE_PARAM, 0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+4.12*yh), module, Annuli::BRIGHTNESS_PARAM, 0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+5.12*yh), module, Annuli::DAMPING_PARAM, 0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+6.12*yh), module, Annuli::POSITION_PARAM, 0.0, 1.0, 0.5));
 
-	addParam(createParam<sp_Trimpot>(Vec(x2, y1+2*yh+6), module, Annuli::BRIGHTNESS_MOD_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x2, y1+3*yh+6), module, Annuli::FREQUENCY_MOD_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x2, y1+4*yh+6), module, Annuli::DAMPING_MOD_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x2, y1+5*yh+6), module, Annuli::STRUCTURE_MOD_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_Trimpot>(Vec(x2, y1+6*yh+6), module, Annuli::POSITION_MOD_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1+2*yh+6), module, Annuli::BRIGHTNESS_MOD_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1+3*yh+6), module, Annuli::FREQUENCY_MOD_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1+4*yh+6), module, Annuli::DAMPING_MOD_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1+5*yh+6), module, Annuli::STRUCTURE_MOD_PARAM, -1.0, 1.0, 0.0));
+		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1+6*yh+6), module, Annuli::POSITION_MOD_PARAM, -1.0, 1.0, 0.0));
 
-	addInput(createInput<sp_Port>(Vec(x1, y1+2.12*yh), module, Annuli::BRIGHTNESS_MOD_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y1+3.12*yh), module, Annuli::FREQUENCY_MOD_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y1+4.12*yh), module, Annuli::DAMPING_MOD_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y1+5.12*yh), module, Annuli::STRUCTURE_MOD_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y1+6.12*yh), module, Annuli::POSITION_MOD_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y1+2.12*yh), Port::INPUT, module, Annuli::BRIGHTNESS_MOD_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y1+3.12*yh), Port::INPUT, module, Annuli::FREQUENCY_MOD_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y1+4.12*yh), Port::INPUT, module, Annuli::DAMPING_MOD_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y1+5.12*yh), Port::INPUT, module, Annuli::STRUCTURE_MOD_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y1+6.12*yh), Port::INPUT, module, Annuli::POSITION_MOD_INPUT));
 
-	addInput(createInput<sp_Port>(Vec(x1+10, y1+7*yh), module, Annuli::STRUM_INPUT));
-	addInput(createInput<sp_Port>(Vec(x3-10, y1+7*yh), module, Annuli::PITCH_INPUT));
-	
-	addInput(createInput<sp_Port>(Vec(x1, y1+8.875*yh), module, Annuli::IN_INPUT));
-	addOutput(createOutput<sp_Port>(Vec(x3, y1+8.25*yh), module, Annuli::ODD_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x3, y1+9.125*yh), module, Annuli::EVEN_OUTPUT));
+		addInput(Port::create<sp_Port>(Vec(x1+10, y1+7*yh), Port::INPUT, module, Annuli::STRUM_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x3-10, y1+7*yh), Port::INPUT, module, Annuli::PITCH_INPUT));
+		
+		addInput(Port::create<sp_Port>(Vec(x1, y1+8.875*yh), Port::INPUT, module, Annuli::IN_INPUT));
+		addOutput(Port::create<sp_Port>(Vec(x3, y1+8.25*yh), Port::OUTPUT, module, Annuli::ODD_OUTPUT));
+		addOutput(Port::create<sp_Port>(Vec(x3, y1+9.125*yh), Port::OUTPUT, module, Annuli::EVEN_OUTPUT));
 
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+18, y1+.25*yh+3), module, Annuli::POLYPHONY_GREEN_LIGHT));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+18, y1+yh+3), module, Annuli::RESONATOR_GREEN_LIGHT));
-}
-
+		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x2+18, y1+.25*yh+3), module, Annuli::POLYPHONY_GREEN_LIGHT));
+		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x2+18, y1+yh+3), module, Annuli::RESONATOR_GREEN_LIGHT));
+	}
+};
 void AnnuliWidget::step() {
 	Annuli *annuli = dynamic_cast<Annuli*>(module);
 	assert(annuli);
@@ -344,17 +347,19 @@ Menu *AnnuliWidget::createContextMenu() {
 	Annuli *rings = dynamic_cast<Annuli*>(module);
 	assert(rings);
 
-	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Resonator"));
-	menu->addChild(construct<AnnuliModelItem>(&MenuEntry::text, "Modal resonator", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_MODAL));
-	menu->addChild(construct<AnnuliModelItem>(&MenuEntry::text, "Sympathetic strings", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_SYMPATHETIC_STRING));
-	menu->addChild(construct<AnnuliModelItem>(&MenuEntry::text, "Modulated/inharmonic string", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_STRING));
-	menu->addChild(construct<AnnuliModelItem>(&MenuEntry::text, "FM voice", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_FM_VOICE));
-	menu->addChild(construct<AnnuliModelItem>(&MenuEntry::text, "Quantized sympathetic strings", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_SYMPATHETIC_STRING_QUANTIZED));
-	menu->addChild(construct<AnnuliModelItem>(&MenuEntry::text, "Reverb string", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_STRING_AND_REVERB));
+	menu->addChild(construct<MenuItem>());
+	menu->addChild(construct<MenuItem>(&MenuItem::text, "Resonator"));
+	menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Modal resonator", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_MODAL));
+	menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Sympathetic strings", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_SYMPATHETIC_STRING));
+	menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Modulated/inharmonic string", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_STRING));
+	menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "FM voice", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_FM_VOICE));
+	menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Quantized sympathetic strings", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_SYMPATHETIC_STRING_QUANTIZED));
+	menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Reverb string", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_STRING_AND_REVERB));
 
-	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<AnnuliEasterEggItem>(&MenuEntry::text, "Disastrous Peace", &AnnuliEasterEggItem::rings, rings));
+	menu->addChild(construct<MenuItem>());
+	menu->addChild(construct<AnnuliEasterEggItem>(&MenuItem::text, "Disastrous Peace", &AnnuliEasterEggItem::rings, rings));
 
 	return menu;
 }
+
+Model *modelAnnuli 	= Model::create<Annuli,AnnuliWidget>( 	 "Southpole", "Annuli", "Annuli - resonator", SYNTH_VOICE_TAG, OSCILLATOR_TAG);

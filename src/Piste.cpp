@@ -70,16 +70,16 @@ struct Piste : Module {
 
 void Piste::step() {
     
-	float drive = clampf(params[DRIVE_PARAM].value, 0, 1.0);
+	float drive = clamp(params[DRIVE_PARAM].value, 0.0f, 1.0f);
 
-	float freq = clampf(params[FREQ_PARAM].value, -1., 1.0);
-    float reso = clampf(params[RESO_PARAM].value, .0, 1.0);
+	float freq = clamp(params[FREQ_PARAM].value, -1.0f, 1.0f);
+    float reso = clamp(params[RESO_PARAM].value, 0.0f, 1.0f);
 
-	float decay1 = 			clampf(params[DECAY1_PARAM].value + inputs[DECAY1_INPUT].value / 10.0, 0.0, 1.0);
-	float decay2 = decay1 * clampf(params[DECAY2_PARAM].value + inputs[DECAY2_INPUT].value / 10.0, 0.0, 1.0);
+	float decay1 = 			clamp(params[DECAY1_PARAM].value + inputs[DECAY1_INPUT].value / 10.0f, 0.0f, 1.0f);
+	float decay2 = decay1 * clamp(params[DECAY2_PARAM].value + inputs[DECAY2_INPUT].value / 10.0f, 0.0f, 1.0f);
 
-	float scale1 = 			clampf(params[SCALE1_PARAM].value, 0.0, 1.0);
-	float scale2 = scale1 * clampf(params[SCALE2_PARAM].value, 0.0, 1.0);
+	float scale1 = 			clamp(params[SCALE1_PARAM].value, 0.0, 1.0);
+	float scale2 = scale1 * clamp(params[SCALE2_PARAM].value, 0.0, 1.0);
 
 	bool muted = inputs[MUTE_INPUT].normalize(0.) >= 1.0;
 	
@@ -145,49 +145,52 @@ void Piste::step() {
 	lights[DECAY2_LIGHT].value = env2;
 }
 
-
-PisteWidget::PisteWidget() {
-	Piste *module = new Piste();
-	setModule(module);
-	box.size = Vec(15*4, 380);
-
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Piste.svg")));
-		addChild(panel);
-	}
-
-	const float x1 = 5.;	
-	const float x2 = 36.;
-
-	const float y1 = 47.;
-	const float yh = 31.;
-
-	addInput(createInput<sp_Port>(Vec(x1, y1), module, Piste::IN_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1), module, Piste::DRIVE_PARAM, 0.0, 1.0, 0.0));
+struct PisteWidget : ModuleWidget {	
 	
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+1*yh), module, Piste::FREQ_PARAM, -1.0, 1.0, 0.));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Piste::RESO_PARAM, .0, 1.0, 0.));
+	PisteWidget(Module *module)  : ModuleWidget(module) {
 
-	addChild(createLight<SmallLight<RedLight>>(Vec(x1+6, y1+2*yh+5), module, Piste::DECAY1_LIGHT));
-	addChild(createLight<SmallLight<RedLight>>(Vec(x2+6, y1+2*yh+5), module, Piste::DECAY2_LIGHT));
+		box.size = Vec(15*4, 380);
 
-	addInput(createInput<sp_Port>(Vec(x1, y1+2.5*yh), module, Piste::TRIG1_INPUT));
-	addInput(createInput<sp_Port>(Vec(x2, y1+2.5*yh), module, Piste::TRIG2_INPUT));
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->box.size = box.size;
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Piste.svg")));
+			addChild(panel);
+		}
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+3.5*yh), module, Piste::SCALE1_PARAM, 0.0, 1.0, .5));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+3.5*yh), module, Piste::SCALE2_PARAM, 0.0, 1.0, 1.));
+		const float x1 = 5.;	
+		const float x2 = 36.;
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+4.5*yh), module, Piste::DECAY1_PARAM, 0.0, 1.0, 0.5));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4.5*yh), module, Piste::DECAY2_PARAM, 0.0, 1.0, 1.));
-	addInput(createInput<sp_Port>(Vec(x1, y1+5.25*yh), module, Piste::DECAY1_INPUT));
-	addInput(createInput<sp_Port>(Vec(x2, y1+5.25*yh), module, Piste::DECAY2_INPUT));
+		const float y1 = 47.;
+		const float yh = 31.;
 
-	addOutput(createOutput<sp_Port>(Vec(x1, y1+6.5*yh), module, Piste::ENV1_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x2, y1+6.5*yh), module, Piste::ENV2_OUTPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y1), Port::INPUT, module, Piste::IN_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1), module, Piste::DRIVE_PARAM, 0.0, 1.0, 0.0));
+		
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+1*yh), module, Piste::FREQ_PARAM, -1.0, 1.0, 0.));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Piste::RESO_PARAM, .0, 1.0, 0.));
 
-	addInput(createInput<sp_Port>(Vec(0.5*(x1+x2), 7.75*yh+y1), module, Piste::MUTE_INPUT));
-	addOutput(createOutput<sp_Port>(Vec(0.5*(x1+x2), y1+9*yh), module, Piste::OUT_OUTPUT));
+		addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x1+6, y1+2*yh+5), module, Piste::DECAY1_LIGHT));
+		addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x2+6, y1+2*yh+5), module, Piste::DECAY2_LIGHT));
 
-}
+		addInput(Port::create<sp_Port>(Vec(x1, y1+2.5*yh), Port::INPUT, module, Piste::TRIG1_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x2, y1+2.5*yh), Port::INPUT, module, Piste::TRIG2_INPUT));
+
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+3.5*yh), module, Piste::SCALE1_PARAM, 0.0, 1.0, .5));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+3.5*yh), module, Piste::SCALE2_PARAM, 0.0, 1.0, 1.));
+
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+4.5*yh), module, Piste::DECAY1_PARAM, 0.0, 1.0, 0.5));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+4.5*yh), module, Piste::DECAY2_PARAM, 0.0, 1.0, 1.));
+		addInput(Port::create<sp_Port>(Vec(x1, y1+5.25*yh), Port::INPUT, module, Piste::DECAY1_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x2, y1+5.25*yh), Port::INPUT, module, Piste::DECAY2_INPUT));
+
+		addOutput(Port::create<sp_Port>(Vec(x1, y1+6.5*yh), Port::OUTPUT, module, Piste::ENV1_OUTPUT));
+		addOutput(Port::create<sp_Port>(Vec(x2, y1+6.5*yh), Port::OUTPUT, module, Piste::ENV2_OUTPUT));
+
+		addInput(Port::create<sp_Port>(Vec(0.5*(x1+x2), 7.75*yh+y1), Port::INPUT, module, Piste::MUTE_INPUT));
+		addOutput(Port::create<sp_Port>(Vec(0.5*(x1+x2), y1+9*yh), Port::OUTPUT, module, Piste::OUT_OUTPUT));
+
+	}
+};
+
+Model *modelPiste 	= Model::create<Piste,PisteWidget>(	 "Southpole", "Piste", 		"Piste - drum processor", ENVELOPE_GENERATOR_TAG, EFFECT_TAG);

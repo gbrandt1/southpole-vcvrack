@@ -94,20 +94,20 @@ struct Etagere : Module {
 
 void Etagere::step() {
 
-		float g_gain   = clampf(inputs[GAIN5_INPUT].normalize(0.), -1.0, 1.0);
-        float gain1 = clampf(g_gain + params[GAIN1_PARAM].value + inputs[GAIN1_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
-        float gain2 = clampf(g_gain + params[GAIN2_PARAM].value + inputs[GAIN2_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
-        float gain3 = clampf(g_gain + params[GAIN3_PARAM].value + inputs[GAIN3_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
-        float gain4 = clampf(g_gain + params[GAIN4_PARAM].value + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0, 1.0);
+		float g_gain   = clamp(inputs[GAIN5_INPUT].normalize(0.), -1.0, 1.0);
+        float gain1 = clamp(g_gain + params[GAIN1_PARAM].value + inputs[GAIN1_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
+        float gain2 = clamp(g_gain + params[GAIN2_PARAM].value + inputs[GAIN2_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
+        float gain3 = clamp(g_gain + params[GAIN3_PARAM].value + inputs[GAIN3_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
+        float gain4 = clamp(g_gain + params[GAIN4_PARAM].value + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
 
-		float g_cutoff = clampf(inputs[FREQ5_INPUT].normalize(0.), -4.0, 6.0);
-        float freq1 = clampf(g_cutoff + params[FREQ1_PARAM].value + inputs[FREQ1_INPUT].normalize(0.), -4.0, 6.0);
-        float freq2 = clampf(g_cutoff + params[FREQ2_PARAM].value + inputs[FREQ2_INPUT].normalize(0.), -4.0, 6.0);
-        float freq3 = clampf(g_cutoff + params[FREQ3_PARAM].value + inputs[FREQ3_INPUT].normalize(0.), -4.0, 6.0);
-        float freq4 = clampf(g_cutoff + params[FREQ4_PARAM].value + inputs[FREQ4_INPUT].normalize(0.), -4.0, 6.0);
+		float g_cutoff = clamp(inputs[FREQ5_INPUT].normalize(0.), -4.0, 6.0);
+        float freq1 = clamp(g_cutoff + params[FREQ1_PARAM].value + inputs[FREQ1_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq2 = clamp(g_cutoff + params[FREQ2_PARAM].value + inputs[FREQ2_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].value + inputs[FREQ3_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].value + inputs[FREQ4_INPUT].normalize(0.), -4.0f, 6.0f);
 
-        float reso2 = clampf(g_cutoff + params[Q2_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, .0, 1.0);
-        float reso3 = clampf(g_cutoff + params[Q3_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, .0, 1.0);
+        float reso2 = clamp(g_cutoff + params[Q2_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+        float reso3 = clamp(g_cutoff + params[Q3_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
 
         lpFilter.setQ(.5); //Resonance(.5);
         hpFilter.setQ(.5); //Resonance(.5);
@@ -181,77 +181,84 @@ void Etagere::step() {
     lights[CLIP5_LIGHT].setBrightnessSmooth( fabs(sumout) > 10. ? 1. : 0. );    
 }
 
-EtagereWidget::EtagereWidget() {
+struct EtagereWidget : ModuleWidget { 
 
-    Etagere *module = new Etagere();
-    setModule(module);
-	box.size = Vec(15*6, 380);
+	SVGPanel *blancPanel;
+	SVGPanel *noirPanel;	
 
-	{
-		noirPanel = new SVGPanel();
-		noirPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere.svg")));
-		noirPanel->box.size = box.size;
-		addChild(noirPanel);	
-	}
-	{
-		blancPanel = new SVGPanel();
-		blancPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere_blanc.svg")));
-		blancPanel->box.size = box.size;
-		addChild(blancPanel);	
-	}
+	void step() override;
+	Menu *createContextMenu() override;
 
-    const float x1 = 8;
-    const float x15 = 32;
-	const float x2 = 65;
-	
-    const float y1 = 5.;
-    const float yh = 25.;
+    EtagereWidget(Etagere *module)  : ModuleWidget(module) {
 
-    const float vfmin = -4.;
-    const float vfmax =  6.;
+        box.size = Vec(15*6, 380);
 
-    const float gmax = -1.;
-    const float gmin =  1.;
+        {
+            noirPanel = new SVGPanel();
+            noirPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere.svg")));
+            noirPanel->box.size = box.size;
+            addChild(noirPanel);	
+        }
+        {
+            blancPanel = new SVGPanel();
+            blancPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere_blanc.svg")));
+            blancPanel->box.size = box.size;
+            addChild(blancPanel);	
+        }
 
-    // TO DO possible default freqs: 880, 5000
+        const float x1 = 8;
+        const float x15 = 32;
+        const float x2 = 65;
+        
+        const float y1 = 5.;
+        const float yh = 25.;
 
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 1* yh), module, Etagere::FREQ4_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 2* yh), module, Etagere::GAIN4_INPUT));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 1*yh), module, Etagere::FREQ4_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, Etagere::GAIN4_PARAM,  gmin,  gmax, 0.));
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+0*yh), module, Etagere::HP_OUTPUT + 0));
+        const float vfmin = -4.;
+        const float vfmax =  6.;
 
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 3* yh), module, Etagere::FREQ2_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 4* yh), module, Etagere::GAIN2_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 5* yh), module, Etagere::Q2_INPUT));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 3*yh), module, Etagere::FREQ2_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 4*yh), module, Etagere::GAIN2_PARAM,  gmin,  gmax, 0.));
-    addParam(createParam<sp_Trimpot>(Vec(x15, y1+ 5*yh), module, Etagere::Q2_PARAM,      0.0,   1.0, 0.));
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+5*yh), module, Etagere::BP2_OUTPUT));
-    
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 6* yh), module, Etagere::FREQ3_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 7* yh), module, Etagere::GAIN3_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 8* yh), module, Etagere::Q3_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 6*yh), module, Etagere::FREQ3_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 7*yh), module, Etagere::GAIN3_PARAM,  gmin,  gmax, 0.));
-    addParam(createParam<sp_Trimpot>(Vec(x15, y1+ 8*yh), module, Etagere::Q3_PARAM,      0.0,   1.0, 0.));
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+8*yh), module, Etagere::BP3_OUTPUT));
-    
-    addInput(createInput<sp_Port>(Vec(x1, y1+ 9* yh), module, Etagere::FREQ1_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+10* yh), module, Etagere::GAIN1_INPUT));    
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 9*yh), module, Etagere::FREQ1_PARAM, vfmin, vfmax, 0.));
-    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+10*yh), module, Etagere::GAIN1_PARAM,  gmin,  gmax, 0.));
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+11*yh), module, Etagere::LP_OUTPUT + 0));
+        const float gmax = -1.;
+        const float gmin =  1.;
 
-	
-    addInput(createInput<sp_Port>(Vec(x1, y1+11* yh), module, Etagere::FREQ5_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1+12* yh), module, Etagere::GAIN5_INPUT));    
-	
-    addInput(createInput<sp_Port>(  Vec(x1, y1+13* yh), module, Etagere::IN_INPUT));    
-    addOutput(createOutput<sp_Port>(Vec(x2, y1+13*yh), module, Etagere::OUT_OUTPUT));
+        // TO DO possible default freqs: 880, 5000
 
-	addChild(createLight<SmallLight<RedLight>>(Vec(x2+10., y1+12.5*yh), module, Etagere::CLIP5_LIGHT));
-}
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 1* yh), Port::INPUT, module, Etagere::FREQ4_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 2* yh), Port::INPUT, module, Etagere::GAIN4_INPUT));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 1*yh), module, Etagere::FREQ4_PARAM, vfmin, vfmax, 0.));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, Etagere::GAIN4_PARAM,  gmin,  gmax, 0.));
+        addOutput(Port::create<sp_Port>(Vec(x2, y1+0*yh), Port::OUTPUT, module, Etagere::HP_OUTPUT + 0));
+
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 3* yh), Port::INPUT, module, Etagere::FREQ2_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 4* yh), Port::INPUT, module, Etagere::GAIN2_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 5* yh), Port::INPUT, module, Etagere::Q2_INPUT));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 3*yh), module, Etagere::FREQ2_PARAM, vfmin, vfmax, 0.));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 4*yh), module, Etagere::GAIN2_PARAM,  gmin,  gmax, 0.));
+        addParam(ParamWidget::create<sp_Trimpot>(Vec(x15, y1+ 5*yh), module, Etagere::Q2_PARAM,      0.0,   1.0, 0.));
+        addOutput(Port::create<sp_Port>(Vec(x2, y1+5*yh), Port::OUTPUT, module, Etagere::BP2_OUTPUT));
+        
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 6* yh), Port::INPUT, module, Etagere::FREQ3_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 7* yh), Port::INPUT, module, Etagere::GAIN3_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 8* yh), Port::INPUT, module, Etagere::Q3_INPUT));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 6*yh), module, Etagere::FREQ3_PARAM, vfmin, vfmax, 0.));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 7*yh), module, Etagere::GAIN3_PARAM,  gmin,  gmax, 0.));
+        addParam(ParamWidget::create<sp_Trimpot>(Vec(x15, y1+ 8*yh), module, Etagere::Q3_PARAM,      0.0,   1.0, 0.));
+        addOutput(Port::create<sp_Port>(Vec(x2, y1+8*yh), Port::OUTPUT, module, Etagere::BP3_OUTPUT));
+        
+        addInput(Port::create<sp_Port>(Vec(x1, y1+ 9* yh), Port::INPUT, module, Etagere::FREQ1_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+10* yh), Port::INPUT, module, Etagere::GAIN1_INPUT));    
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+ 9*yh), module, Etagere::FREQ1_PARAM, vfmin, vfmax, 0.));
+        addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+10*yh), module, Etagere::GAIN1_PARAM,  gmin,  gmax, 0.));
+        addOutput(Port::create<sp_Port>(Vec(x2, y1+11*yh), Port::OUTPUT, module, Etagere::LP_OUTPUT + 0));
+
+        
+        addInput(Port::create<sp_Port>(Vec(x1, y1+11* yh), Port::INPUT, module, Etagere::FREQ5_INPUT));
+        addInput(Port::create<sp_Port>(Vec(x1, y1+12* yh), Port::INPUT, module, Etagere::GAIN5_INPUT));    
+        
+        addInput(Port::create<sp_Port>(  Vec(x1, y1+13* yh), Port::INPUT, module, Etagere::IN_INPUT));    
+        addOutput(Port::create<sp_Port>(Vec(x2, y1+13*yh), Port::OUTPUT, module, Etagere::OUT_OUTPUT));
+
+        addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x2+10., y1+12.5*yh), module, Etagere::CLIP5_LIGHT));
+    }
+};
 
 void EtagereWidget::step() {
 	Etagere *m = dynamic_cast<Etagere*>(module);
@@ -276,7 +283,9 @@ Menu *EtagereWidget::createContextMenu() {
 	Menu *menu = ModuleWidget::createContextMenu();
 	Etagere *m = dynamic_cast<Etagere*>(module);
 	assert(m);
-	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<EtagereBlancItem>(&MenuEntry::text, "blanc", &EtagereBlancItem::m, m));
+	menu->addChild(construct<MenuLabel>());
+	menu->addChild(construct<EtagereBlancItem>(&MenuItem::text, "blanc", &EtagereBlancItem::m, m));
 	return menu;
 }
+
+Model *modelEtagere = Model::create<Etagere,EtagereWidget>(	 "Southpole", "Etagere", 	"Etagere - EQ", FILTER_TAG);

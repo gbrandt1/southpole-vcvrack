@@ -158,10 +158,10 @@ void Riemann::step() {
 	x0 = inputs[X_INPUT].normalize(0.)+6;
 	y0 = inputs[Y_INPUT].normalize(0.)+1;
 
-	//parts   = clampf( inputs[PARTS_INPUT].value/10. + params[PARTS_PARAM].value, 0., 1.)*(MAXPARTS-3.)+3.;
-	parts   = clampf( params[PARTS_PARAM].value, 0., 1.)*(MAXPARTS-3.)+3.;
-	voicing = clampf( inputs[VOICING_INPUT].value/10. + params[VOICING_PARAM].value, -1., 1.)*4.*parts;
-	transp  = clampf( inputs[TRANSP_INPUT].value/10. + params[TRANSP_PARAM].value, 0., 1.)*11.;
+	//parts   = clamp( inputs[PARTS_INPUT].value/10. + params[PARTS_PARAM].value, 0., 1.)*(MAXPARTS-3.)+3.;
+	parts   = clamp( params[PARTS_PARAM].value, 0.f, 1.f)*(MAXPARTS-3.)+3.;
+	voicing = clamp( inputs[VOICING_INPUT].value/10. + params[VOICING_PARAM].value, -1.f, 1.f)*4.*parts;
+	transp  = clamp( inputs[TRANSP_INPUT].value/10. + params[TRANSP_PARAM].value, 0.f, 1.f)*11.;
 
 	while (x0 <   0.) { x0 += 12.; }
 	while (x0 >= 12.) { x0 -= 12.; }
@@ -510,50 +510,51 @@ struct RiemannDisplay : TransparentWidget {
 	}
 };
 
+struct RiemannWidget : ModuleWidget { 
+	
+	RiemannWidget(Riemann *module) : ModuleWidget(module) {
 
-RiemannWidget::RiemannWidget() {
+		box.size = Vec(15*16, 380);
 
-	Riemann *module = new Riemann();
-	setModule(module);
-	box.size = Vec(15*16, 380);
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->box.size = box.size;
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Riemann.svg")));
+			addChild(panel);
+		}
 
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Riemann.svg")));
-		addChild(panel);
+		{
+			RiemannDisplay *display = new RiemannDisplay();
+			display->module = module;
+			display->box.pos = Vec( 5., 30);
+			display->box.size = Vec(box.size.x-10.,box.size.x-10. );
+			addChild(display);
+		}
+
+		const float y1 = 16;
+		const float yh = 22;
+
+		float x1 = 4.;
+		float xw = 26;
+
+		addInput(Port::create<sp_Port>(Vec(x1     	       , y1+12.5 *yh), Port::INPUT, module, Riemann::X_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1  	   	       , y1+14.25*yh), Port::INPUT, module, Riemann::Y_INPUT));
+	//CKSSThree
+		addParam(ParamWidget::create<CKSS>(Vec(x1+xw*1.5, y1 + 12*yh ), module, Riemann::GROUP_PARAM, 0.0, 1.0, 0.0));
+		addParam(ParamWidget::create<CKSS>(Vec(x1+xw*2.5, y1 + 12*yh ), module, Riemann::SUS_PARAM, 0.0, 1.0, 0.0));
+
+		addInput(Port::create<sp_Port>(Vec(			x1+xw*3.5, y1+12.5*yh), Port::INPUT, module, Riemann::TRANSP_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1+xw*4.5, y1+12.5*yh), module, Riemann::TRANSP_PARAM, 0., 1., 0.));
+		//addInput(Port::create<sp_Port>(Vec(			x1+xw*5, y1+12.5*yh), Port::INPUT, module, Riemann::PARTS_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1+xw*6, y1+12.5*yh), module, Riemann::PARTS_PARAM, 0., 1., 0.));
+		addInput(Port::create<sp_Port>(Vec(			x1+xw*7, y1+12.5*yh), Port::INPUT, module, Riemann::VOICING_INPUT));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1+xw*8, y1+12.5*yh), module, Riemann::VOICING_PARAM, -1., 1., 0.));
+
+		for (int i=0; i<MAXPARTS+1; i++)	{
+			addOutput(Port::create<sp_Port>(Vec(x1+26*(i+1),  y1+14.25*yh), Port::OUTPUT, module, Riemann::N0_OUTPUT + i));
+		}
+
 	}
+};
 
-	{
-		RiemannDisplay *display = new RiemannDisplay();
-		display->module = module;
-		display->box.pos = Vec( 5., 30);
-		display->box.size = Vec(box.size.x-10.,box.size.x-10. );
-		addChild(display);
-	}
-
-	const float y1 = 16;
-	const float yh = 22;
-
-	float x1 = 4.;
-	float xw = 26;
-
-	addInput(createInput<sp_Port>(Vec(x1     	       , y1+12.5 *yh), module, Riemann::X_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1  	   	       , y1+14.25*yh), module, Riemann::Y_INPUT));
-//CKSSThree
-    addParam(createParam<CKSS>(Vec(x1+xw*1.5, y1 + 12*yh ), module, Riemann::GROUP_PARAM, 0.0, 1.0, 0.0));
-    addParam(createParam<CKSS>(Vec(x1+xw*2.5, y1 + 12*yh ), module, Riemann::SUS_PARAM, 0.0, 1.0, 0.0));
-
-	addInput(createInput<sp_Port>(Vec(			x1+xw*3.5, y1+12.5*yh), module, Riemann::TRANSP_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*4.5, y1+12.5*yh), module, Riemann::TRANSP_PARAM, 0., 1., 0.));
-	//addInput(createInput<sp_Port>(Vec(			x1+xw*5, y1+12.5*yh), module, Riemann::PARTS_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*6, y1+12.5*yh), module, Riemann::PARTS_PARAM, 0., 1., 0.));
-	addInput(createInput<sp_Port>(Vec(			x1+xw*7, y1+12.5*yh), module, Riemann::VOICING_INPUT));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*8, y1+12.5*yh), module, Riemann::VOICING_PARAM, -1., 1., 0.));
-
-	for (int i=0; i<MAXPARTS+1; i++)	{
-		addOutput(createOutput<sp_Port>(Vec(x1+26*(i+1),  y1+14.25*yh), module, Riemann::N0_OUTPUT + i));
-	}
-
-
-}
+Model *modelRiemann = Model::create<Riemann,RiemannWidget>(	 "Southpole", "Riemann", 	"Riemann - chord generator", SEQUENCER_TAG);

@@ -31,22 +31,25 @@ void Ftagn::step() {
 	outputs[OUT2_OUTPUT].value = 0.0;
 }
 
+struct FtagnWidget : ModuleWidget { 
+	
+	FtagnWidget(Ftagn *module)  : ModuleWidget(module) {
+ 
+		box.size = Vec(15*4, 380);
 
-FtagnWidget::FtagnWidget() {
-	Ftagn *module = new Ftagn();
-	setModule(module);
-	box.size = Vec(15*4, 380);
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Ftagn.svg")));
+			panel->box.size = box.size;
+			addChild(panel);	
+		}
 
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Ftagn.svg")));
-		panel->box.size = box.size;
-		addChild(panel);	
+		addInput(Port::create<sp_Port>(Vec( 6.,  380./2.-30.), Port::INPUT, module, Ftagn::IN1_INPUT));
+		addInput(Port::create<sp_Port>(Vec( 6.,  380./2.), Port::INPUT, module, Ftagn::IN2_INPUT));
+
+		addOutput(Port::create<sp_Port>(Vec(35.,  380./2.-30.), Port::OUTPUT, module, Ftagn::OUT1_OUTPUT));
+		addOutput(Port::create<sp_Port>(Vec(35.,  380./2.), Port::OUTPUT, module, Ftagn::OUT2_OUTPUT));
 	}
+};
 
-	addInput(createInput<sp_Port>(Vec( 6.,  380./2.-30.), module, Ftagn::IN1_INPUT));
-	addInput(createInput<sp_Port>(Vec( 6.,  380./2.), module, Ftagn::IN2_INPUT));
-
-    addOutput(createOutput<sp_Port>(Vec(35.,  380./2.-30.), module, Ftagn::OUT1_OUTPUT));
-    addOutput(createOutput<sp_Port>(Vec(35.,  380./2.), module, Ftagn::OUT2_OUTPUT));
-}
+Model *modelFtagn 	= Model::create<Ftagn,FtagnWidget>(	 "Southpole", "Ftagn", 		"Ftagn - no filter", FILTER_TAG);

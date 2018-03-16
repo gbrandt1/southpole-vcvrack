@@ -164,44 +164,44 @@ struct FuseDisplay : TransparentWidget {
 	}	
 };
 
-FuseWidget::FuseWidget() {
+struct FuseWidget : ModuleWidget {
+	Menu *createContextMenu() override;
 
-	Fuse *module = new Fuse();
-	setModule(module);
+   	FuseWidget(Fuse *module)  : ModuleWidget(module) {
 
-	box.size = Vec(4 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Fuse.svg")));
-		addChild(panel);
+		box.size = Vec(4 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->box.size = box.size;
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Fuse.svg")));
+			addChild(panel);
+		}
+
+		{
+			FuseDisplay *display = new FuseDisplay();
+			display->module = module;
+			display->box.pos = Vec( 32, 25.);
+			display->box.size = Vec( 24., box.size.y-85. );
+			addChild(display);
+		}
+
+		float y1 = 76;
+		float yh = 73;
+		float x1 = 5;	
+		float x2 = 35;
+		
+		for(int i = 0; i < 4; i++)
+		{
+			addParam(ParamWidget::create<LEDButton>     (Vec(x1+1, y1 + i*yh-22), module, Fuse::SWITCH1_PARAM + 3 - i, 0.0, 1.0, 0.0));
+			addChild(ModuleLightWidget::create<MediumLight<YellowLight>>(Vec(x1+5, y1+ i*yh-18), module, Fuse::ARM1_LIGHT + 3 - i));
+			addInput(createInput<sp_Port>    (Vec(x1, y1 + i*yh-45), module, Fuse::ARM1_INPUT + 3 - i));
+			addOutput(createOutput<sp_Port>	 (Vec(x1, y1 + i*yh), module, Fuse::OUT1_OUTPUT + 3 - i));
+		}
+
+		addInput(Port::create<sp_Port>(Vec(x1, 330), Port::INPUT, module, Fuse::CLK_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x2, 330), Port::INPUT, module, Fuse::RESET_INPUT));
 	}
-
-	{
-		FuseDisplay *display = new FuseDisplay();
-		display->module = module;
-		display->box.pos = Vec( 32, 25.);
-		display->box.size = Vec( 24., box.size.y-85. );
-		addChild(display);
-	}
-
-	float y1 = 76;
-	float yh = 73;
-	float x1 = 5;	
-	float x2 = 35;
-	
-    for(int i = 0; i < 4; i++)
-    {
-        addParam(createParam<LEDButton>     (Vec(x1+1, y1 + i*yh-22), module, Fuse::SWITCH1_PARAM + 3 - i, 0.0, 1.0, 0.0));
-		addChild(createLight<MediumLight<YellowLight>>(Vec(x1+5, y1+ i*yh-18), module, Fuse::ARM1_LIGHT + 3 - i));
-        addInput(createInput<sp_Port>    (Vec(x1, y1 + i*yh-45), module, Fuse::ARM1_INPUT + 3 - i));
-        addOutput(createOutput<sp_Port>	 (Vec(x1, y1 + i*yh), module, Fuse::OUT1_OUTPUT + 3 - i));
-    }
-
-	addInput(createInput<sp_Port>(Vec(x1, 330), module, Fuse::CLK_INPUT));
-	addInput(createInput<sp_Port>(Vec(x2, 330), module, Fuse::RESET_INPUT));
-}
-
+};
 
 struct FuseGateModeItem : MenuItem {
 	Fuse *fuse;
@@ -242,3 +242,4 @@ Menu *FuseWidget::createContextMenu() {
 	return menu;
 }
 
+Model *modelFuse 	= Model::create<Fuse,FuseWidget>(	 "Southpole", "Fuse", 		"Fuse - next pattern", SEQUENCER_TAG);

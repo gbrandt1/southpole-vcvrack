@@ -144,7 +144,7 @@ void Sns::reset() {
 			std::fill(seq0.begin(), seq0.end(), 0);
 			unsigned int f = 0;
 			while ( f < par_k ) {
-				if ( randomf() < (float)par_k/(float)par_l ) {
+				if ( randomUniform() < (float)par_k/(float)par_l ) {
 					seq0.at(n % par_l) = 1;
 					f++;
 				}
@@ -157,7 +157,7 @@ void Sns::reset() {
 			std::fill(acc0.begin(), acc0.end(), 0);
 			unsigned int nacc = 0;
 			while ( nacc < par_a ) {
-				if ( randomf() < (float)par_a/(float)par_k ) {
+				if ( randomUniform() < (float)par_a/(float)par_k ) {
 					acc0.at(n % par_k) = 1;
 					nacc++;
 				}
@@ -303,17 +303,17 @@ void Sns::step() {
 	}
 	outputs[ACCENT_OUTPUT].value = accOn | apulse ? 10.0 : 0.0;
 
-	par_l = (unsigned int) ( 1. +   15.  * clampf( params[L_PARAM].value + inputs[L_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
-	par_p = (unsigned int) (32. - par_l) * clampf( params[P_PARAM].value + inputs[P_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+	par_l = (unsigned int) ( 1. +   15.  * clamp( params[L_PARAM].value + inputs[L_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
+	par_p = (unsigned int) (32. - par_l) * clamp( params[P_PARAM].value + inputs[P_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
 
-	par_r = (unsigned int) (par_l + par_p - 1.) * clampf( params[R_PARAM].value + inputs[R_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
-	par_k = (unsigned int) ( 1. + (par_l-1.) * clampf( params[K_PARAM].value + inputs[K_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
+	par_r = (unsigned int) (par_l + par_p - 1.) * clamp( params[R_PARAM].value + inputs[R_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+	par_k = (unsigned int) ( 1. + (par_l-1.) * clamp( params[K_PARAM].value + inputs[K_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
 
-	par_a = (unsigned int) ( par_k ) * clampf( params[A_PARAM].value + inputs[A_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+	par_a = (unsigned int) ( par_k ) * clamp( params[A_PARAM].value + inputs[A_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
 	if (par_a == 0) { 
 		par_s = 0; 
 	} else {
-		par_s = (unsigned int) ( par_k-1. ) * clampf( params[S_PARAM].value + inputs[S_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+		par_s = (unsigned int) ( par_k-1. ) * clamp( params[S_PARAM].value + inputs[S_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
 	}
 
 	// new sequence in case of change to parameters
@@ -484,63 +484,66 @@ struct SnsDisplay : TransparentWidget {
 	}
 };
 
+struct SnsWidget : ModuleWidget { 
+	SnsWidget();
+	Menu *createContextMenu() override;
+	
+	SnsWidget(Sns *module) : ModuleWidget(module) {
 
-SnsWidget::SnsWidget() {
-	Sns *module = new Sns();
-	setModule(module);
-	box.size = Vec(15*6, 380);
+		box.size = Vec(15*6, 380);
 
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->box.size = box.size;
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Sns.svg")));
-		addChild(panel);
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->box.size = box.size;
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Sns.svg")));
+			addChild(panel);
+		}
+
+		{
+			SnsDisplay *display = new SnsDisplay(180,30);
+			display->module = module;
+			display->box.pos = Vec( 3., 30);
+			display->box.size = Vec(box.size.x-6., 110. );
+			addChild(display);
+		}
+
+		const float y1 = 160;
+		const float yh = 30;
+
+		float x1 = 4.;
+		float x2 = 4.+30;
+		float x3 = 4.+60;
+
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1   ), module, Sns::K_PARAM, 0., 1., .25));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1   ), module, Sns::L_PARAM, 0., 1., 1.));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1   ), module, Sns::R_PARAM, 0., 1., 0.));
+		addInput(Port::create<sp_Port>(Vec(x1, y1+1*yh), Port::INPUT, module, Sns::K_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x2, y1+1*yh), Port::INPUT, module, Sns::L_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x3, y1+1*yh), Port::INPUT, module, Sns::R_INPUT));
+
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+2.5*yh), module, Sns::P_PARAM, 0., 1., 0.));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+2.5*yh), module, Sns::A_PARAM, 0., 1., 0.));
+		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+2.5*yh), module, Sns::S_PARAM, 0., 1., 0.));
+
+		addInput(Port::create<sp_Port>(Vec(x1, y1+3.5*yh), Port::INPUT, module, Sns::P_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x2, y1+3.5*yh), Port::INPUT, module, Sns::A_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x3, y1+3.5*yh), Port::INPUT, module, Sns::S_INPUT));
+
+		addInput(Port::create<sp_Port>(Vec(x1, y1+4.65*yh), Port::INPUT, module, Sns::CLK_INPUT));
+		addInput(Port::create<sp_Port>(Vec(x1, y1+5.4*yh), Port::INPUT, module, Sns::RESET_INPUT));
+		addOutput(Port::create<sp_Port>(Vec(x3, y1+4.65*yh), Port::OUTPUT, module, Sns::CLK_OUTPUT));
+		addOutput(Port::create<sp_Port>(Vec(x3, y1+5.4*yh), Port::OUTPUT, module, Sns::RESET_OUTPUT));
+
+		addOutput(Port::create<sp_Port>(Vec(x2, y1+4.65*yh), Port::OUTPUT, module, Sns::GATE_OUTPUT));
+		addOutput(Port::create<sp_Port>(Vec(x2, y1+5.4*yh), Port::OUTPUT, module, Sns::ACCENT_OUTPUT));
+
+
+		//addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(4, 281), module, Sns::CLK_LIGHT));
+		//addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(4+25, 281), module, Sns::GATE_LIGHT));
+		//addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(4+50, 281), module, Sns::ACCENT_LIGHT));
+
 	}
-
-	{
-		SnsDisplay *display = new SnsDisplay(180,30);
-		display->module = module;
-		display->box.pos = Vec( 3., 30);
-		display->box.size = Vec(box.size.x-6., 110. );
-		addChild(display);
-	}
-
-	const float y1 = 160;
-	const float yh = 30;
-
-	float x1 = 4.;
-	float x2 = 4.+30;
-	float x3 = 4.+60;
-
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1   ), module, Sns::K_PARAM, 0., 1., .25));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1   ), module, Sns::L_PARAM, 0., 1., 1.));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1   ), module, Sns::R_PARAM, 0., 1., 0.));
-	addInput(createInput<sp_Port>(Vec(x1, y1+1*yh), module, Sns::K_INPUT));
-	addInput(createInput<sp_Port>(Vec(x2, y1+1*yh), module, Sns::L_INPUT));
-	addInput(createInput<sp_Port>(Vec(x3, y1+1*yh), module, Sns::R_INPUT));
-
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2.5*yh), module, Sns::P_PARAM, 0., 1., 0.));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2.5*yh), module, Sns::A_PARAM, 0., 1., 0.));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2.5*yh), module, Sns::S_PARAM, 0., 1., 0.));
-
-	addInput(createInput<sp_Port>(Vec(x1, y1+3.5*yh), module, Sns::P_INPUT));
-	addInput(createInput<sp_Port>(Vec(x2, y1+3.5*yh), module, Sns::A_INPUT));
-	addInput(createInput<sp_Port>(Vec(x3, y1+3.5*yh), module, Sns::S_INPUT));
-
-	addInput(createInput<sp_Port>(Vec(x1, y1+4.65*yh), module, Sns::CLK_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y1+5.4*yh), module, Sns::RESET_INPUT));
-	addOutput(createOutput<sp_Port>(Vec(x3, y1+4.65*yh), module, Sns::CLK_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x3, y1+5.4*yh), module, Sns::RESET_OUTPUT));
-
-	addOutput(createOutput<sp_Port>(Vec(x2, y1+4.65*yh), module, Sns::GATE_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x2, y1+5.4*yh), module, Sns::ACCENT_OUTPUT));
-
-
-	//addChild(createLight<SmallLight<RedLight>>(Vec(4, 281), module, Sns::CLK_LIGHT));
-	//addChild(createLight<SmallLight<RedLight>>(Vec(4+25, 281), module, Sns::GATE_LIGHT));
-	//addChild(createLight<SmallLight<RedLight>>(Vec(4+50, 281), module, Sns::ACCENT_LIGHT));
-
-}
+};
 
 struct SnsGateModeItem : MenuItem {
 	Sns *sns;
@@ -575,20 +578,21 @@ Menu *SnsWidget::createContextMenu() {
 
 	menu->addChild(construct<MenuLabel>());;
 
-	menu->addChild(construct<MenuLabel>(&MenuEntry::text, "Gate Mode"));
-	menu->addChild(construct<SnsGateModeItem>(&MenuEntry::text, "Trigger", &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TRIGGER_MODE));
-    menu->addChild(construct<SnsGateModeItem>(&MenuEntry::text, "Gate",    &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::GATE_MODE));
-	menu->addChild(construct<SnsGateModeItem>(&MenuEntry::text, "Turing",  &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TURING_MODE));
+	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Gate Mode"));
+	menu->addChild(construct<SnsGateModeItem>(&MenuItem::text, "Trigger", &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TRIGGER_MODE));
+    menu->addChild(construct<SnsGateModeItem>(&MenuItem::text, "Gate",    &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::GATE_MODE));
+	menu->addChild(construct<SnsGateModeItem>(&MenuItem::text, "Turing",  &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TURING_MODE));
 
 	menu->addChild(construct<MenuLabel>());;
 
-	menu->addChild(construct<MenuLabel>(&MenuEntry::text, "Pattern Style"));
-	menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Euclid", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::EUCLIDEAN_PATTERN));
-	menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Fibonacci", &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::FIBONACCI_PATTERN));
-	menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Random", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::RANDOM_PATTERN));
-  //menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Cantor", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::CANTOR_PATTERN));
-	menu->addChild(construct<SnsPatternStyleItem>(&MenuEntry::text, "Linear", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::LINEAR_PATTERN));
+	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Pattern Style"));
+	menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Euclid", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::EUCLIDEAN_PATTERN));
+	menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Fibonacci", &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::FIBONACCI_PATTERN));
+	menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Random", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::RANDOM_PATTERN));
+  //menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Cantor", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::CANTOR_PATTERN));
+	menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Linear", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::LINEAR_PATTERN));
 
 	return menu;
 }
 
+Model *modelSns 	= Model::create<Sns,SnsWidget>(		 "Southpole", "SNS", 		"SNS - euclidean sequencer", SEQUENCER_TAG);

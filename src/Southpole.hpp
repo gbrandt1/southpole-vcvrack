@@ -1,127 +1,46 @@
 
 #include "rack.hpp"
+
 using namespace rack;
+
 extern Plugin *plugin;
 
-////////////////////
-// module widgets
-////////////////////
+extern Model *modelSmoke;
+extern Model *modelAnnuli;
+extern Model *modelCornrowsX;
+extern Model *modelSplash;
 
-struct SmokeWidget : ModuleWidget {
-	SVGPanel *panel1;
-	SVGPanel *panel2;
-	SVGPanel *panel3;
-	SVGPanel *panel4;
-	SVGPanel *panel5;
-	SVGPanel *panel6;	
-	SmokeWidget();
-	void step() override;
-	Menu *createContextMenu() override;
-};
-
-//#ifdef MUTATED
-//struct HornetsWidget : ModuleWidget {
-//	HornetsWidget();
-//	Menu *createContextMenu() override;
-//};
-//#else
-
-#ifdef PARASITES
-
-struct SplashParasiteWidget : ModuleWidget {
-	SVGPanel *panel0;
-	SVGPanel *panel1;
-	SVGPanel *panel2;
-	SplashParasiteWidget();
-	void step() override;
-	Menu *createContextMenu() override;
-};
-
-//struct CestodaWidget : ModuleWidget {
-//	CestodaWidget();
-	//void step() override;
-	//Menu *createContextMenu() override;
-//};
-
-
-#else
-
-struct AnnuliWidget : ModuleWidget {
-	SVGPanel *panel;
-	SVGPanel *panel2;
-	AnnuliWidget();
-	void step() override;
-	Menu *createContextMenu() override;
-};
-//struct CornrowsWidget : ModuleWidget {
-//	CornrowsWidget();
-//	Menu *createContextMenu() override;
-//};
-struct CornrowsXWidget : ModuleWidget {
-	CornrowsXWidget();
-	Menu *createContextMenu() override;
-};
-struct SplashWidget : ModuleWidget {
-	SVGPanel *tidesPanel;
-	SVGPanel *sheepPanel;
-	SplashWidget();
-	void step() override;
-	Menu *createContextMenu() override;
-};
-
-
-struct AbrWidget : ModuleWidget { AbrWidget(); };
-struct AuxWidget : ModuleWidget { AuxWidget(); };
-struct BalaclavaWidget : ModuleWidget {	BalaclavaWidget(); };
-struct BandanaWidget : ModuleWidget { BandanaWidget(); };
-struct Blank16HPWidget : ModuleWidget {	Blank16HPWidget(); };
-struct Blank1HPWidget : ModuleWidget {	Blank1HPWidget(); };
-struct Blank2HPWidget : ModuleWidget {	Blank2HPWidget(); };
-struct Blank42HPWidget : ModuleWidget {	Blank42HPWidget(); };
-struct Blank4HPWidget : ModuleWidget {	Blank4HPWidget(); };
-struct Blank8HPWidget : ModuleWidget {	Blank8HPWidget(); };
-struct BounceWidget : ModuleWidget { BounceWidget(); };
-struct ButWidget : ModuleWidget { ButWidget(); };
-struct BytesWidget : ModuleWidget { BytesWidget(); };
-struct DeuxEtageresWidget : ModuleWidget { DeuxEtageresWidget(); };
-struct EtagereWidget : ModuleWidget { 
-	SVGPanel *blancPanel;
-	SVGPanel *noirPanel;	
-	EtagereWidget(); 
-	void step() override;
-	Menu *createContextMenu() override;
-};
-struct FallsWidget : ModuleWidget { FallsWidget(); };
-struct FtagnWidget : ModuleWidget { FtagnWidget(); };
-struct FuseWidget : ModuleWidget {
-	FuseWidget();
-	Menu *createContextMenu() override;
-};
-struct GnomeWidget : ModuleWidget {	GnomeWidget(); };
-struct PisteWidget : ModuleWidget {	PisteWidget(); };
-struct PulseWidget : ModuleWidget {	PulseWidget(); }; 
-struct RakesWidget : ModuleWidget { RakesWidget(); };
-struct RiemannWidget : ModuleWidget { RiemannWidget(); };
-struct SnakeWidget : ModuleWidget {	
-	SnakeWidget(); 
-};
-struct SnsWidget : ModuleWidget { 
-	SnsWidget();
-	Menu *createContextMenu() override;
-};
-struct SsshWidget : ModuleWidget {	SsshWidget(); };
-struct WriggleWidget : ModuleWidget { WriggleWidget(); };
-
-#endif
-//#endif
+extern Model *modelAbr;
+extern Model *modelAux;
+extern Model *modelBalaclava;
+extern Model *modelBandana;
+extern Model *modelBlank16HP;
+extern Model *modelBlank1HP;
+extern Model *modelBlank2HP;
+extern Model *modelBlank42HP;
+extern Model *modelBlank4HP;
+extern Model *modelBlank8HP;
+extern Model *modelBut;
+extern Model *modelDeuxEtageres;
+extern Model *modelEtagere;
+extern Model *modelFalls;
+extern Model *modelFtagn;
+extern Model *modelFuse;
+extern Model *modelGnome;
+extern Model *modelPiste;
+extern Model *modelPulse;
+extern Model *modelRakes;
+extern Model *modelRiemann;
+extern Model *modelSnake;
+extern Model *modelSns;
+extern Model *modelSssh;
+extern Model *modelWriggle;
 
 // GUI COMPONENTS
 
 struct sp_Port : SVGPort {
 	sp_Port() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/sp-Port20.svg"));
-		background->wrap();
-		box.size = background->box.size; 
+		setSVG(SVG::load(assetPlugin(plugin, "res/sp-Port20.svg")));
 	}
 };
 
@@ -136,9 +55,10 @@ struct sp_Encoder : SVGKnob {
 	sp_Encoder() {
         minAngle = -0.83 * M_PI;
 		maxAngle = 0.83 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/sp-encoder.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
+		setSVG(SVG::load(assetPlugin(plugin, "res/sp-encoder.svg")));
+		//sw->svg = SVG::load(assetPlugin(plugin, "res/sp-encoder.svg"));
+		//sw->wrap();
+		//box.size = sw->box.size;
 	}
 };
 
@@ -146,9 +66,10 @@ struct sp_BlackKnob : SVGKnob {
 	sp_BlackKnob() {
         minAngle = -0.83 * M_PI;
 		maxAngle = 0.83 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/sp-knobBlack.svg"));
-		sw->wrap();
-		box.size = Vec(32,32);
+		setSVG(SVG::load(assetPlugin(plugin, "res/sp-knobBlack.svg")));
+		//sw->svg = SVG::load(assetPlugin(plugin, "res/sp-knobBlack.svg"));
+		//sw->wrap();
+		//box.size = Vec(32,32);
 	}
 };
 
@@ -156,9 +77,10 @@ struct sp_SmallBlackKnob : SVGKnob {
 	sp_SmallBlackKnob() {
         minAngle = -0.83 * M_PI;
 		maxAngle = 0.83 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/sp-knobBlack.svg"));
-		sw->wrap();
-		box.size = Vec(20,20);
+		setSVG(SVG::load(assetPlugin(plugin, "res/sp-knobBlack.svg")));
+		//sw->svg = SVG::load(assetPlugin(plugin, "res/sp-knobBlack.svg"));
+		//sw->wrap();
+		//box.size = Vec(20,20);
 	}
 };
 
@@ -166,9 +88,10 @@ struct sp_Trimpot : SVGKnob {
 	sp_Trimpot() {
         minAngle = -0.83 * M_PI;
 		maxAngle = 0.83 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/sp-trimpot.svg"));
-		sw->wrap();
-		box.size = Vec(18,18);
+		setSVG(SVG::load(assetPlugin(plugin, "res/sp-trimpotBlack.svg")));
+		//sw->svg = SVG::load(assetPlugin(plugin, "res/sp-knobBlack.svg"));
+		//sw->wrap();
+		//box.size = Vec(18,18);
 	}
 };
 

@@ -136,7 +136,7 @@ void SplashParasite::step() {
 		float pitch = params[FREQUENCY_PARAM].value;
 		pitch += 12.0 * inputs[PITCH_INPUT].value;
 		//pitch += params[FM_PARAM].value * inputs[FM_INPUT].normalize(0.1) / 5.0;
-		float fm = clampf(inputs[FM_INPUT].value /5.0 * params[FM_PARAM].value /12.0, -1.0, 1.0) * 0x600;
+		float fm = clamp(inputs[FM_INPUT].value /5.0 * params[FM_PARAM].value /12.0, -1.0, 1.0) * 0x600;
 		
 		pitch += 60.0;
 		if (generator.feature_mode_ == tides::Generator::FEAT_MODE_HARMONIC) {
@@ -144,22 +144,22 @@ void SplashParasite::step() {
 		    pitch -= 12;
 		    // Scale to the global sample rate
 		    pitch += log2f(48000.0 / engineGetSampleRate()) * 12.0;
-		    generator.set_pitch_high_range(clampf(pitch * 0x80, -0x8000, 0x7fff), fm);
+		    generator.set_pitch_high_range(clamp(pitch * 0x80, -0x8000, 0x7fff), fm);
 		}
 		else {
 		    pitch += log2f(48000.0 / engineGetSampleRate()) * 12.0;
-		    generator.set_pitch(clampf(pitch * 0x80, -0x8000, 0x7fff),fm);
+		    generator.set_pitch(clamp(pitch * 0x80, -0x8000, 0x7fff),fm);
 		}
 
 		if (generator.feature_mode_ == tides::Generator::FEAT_MODE_RANDOM) {
 		    //TODO: should this be inverted?
-		    generator.set_pulse_width(clampf(1.0 - params[FM_PARAM].value /12.0, 0.0, 2.0) * 0x7fff);
+		    generator.set_pulse_width(clamp(1.0 - params[FM_PARAM].value /12.0, 0.0, 2.0) * 0x7fff);
 		}
 		
 		// Slope, smoothness, pitch
-		int16_t shape = clampf(params[SHAPE_PARAM].value + inputs[SHAPE_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
-		int16_t slope = clampf(params[SLOPE_PARAM].value + inputs[SLOPE_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
-		int16_t smoothness = clampf(params[SMOOTHNESS_PARAM].value + inputs[SMOOTHNESS_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
+		int16_t shape = clamp(params[SHAPE_PARAM].value + inputs[SHAPE_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
+		int16_t slope = clamp(params[SLOPE_PARAM].value + inputs[SLOPE_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
+		int16_t smoothness = clamp(params[SMOOTHNESS_PARAM].value + inputs[SMOOTHNESS_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
 		generator.set_shape(shape);
 		generator.set_slope(slope);
 		generator.set_smoothness(smoothness);
@@ -175,7 +175,7 @@ void SplashParasite::step() {
 	}
 
 	// Level
-	uint16_t level = clampf(inputs[LEVEL_INPUT].normalize(8.0) / 8.0, 0.0, 1.0) * 0xffff;
+	uint16_t level = clamp(inputs[LEVEL_INPUT].normalize(8.0) / 8.0, 0.0, 1.0) * 0xffff;
 	if (level < 32)
 		level = 0;
 
@@ -215,10 +215,15 @@ void SplashParasite::step() {
 	lights[PHASE_RED_LIGHT].setBrightnessSmooth(fmaxf(0.0, -unif));
 }
 
+struct SplashParasiteWidget : ModuleWidget {
+	SVGPanel *panel0;
+	SVGPanel *panel1;
+	SVGPanel *panel2;
+	void step() override;
+	Menu *createContextMenu() override;
 
-SplashParasiteWidget::SplashParasiteWidget() {
-	SplashParasite *module = new SplashParasite();
-	setModule(module);
+	SplashParasiteWidget(SplashParasite *module) : ModuleWidget(module) {
+
 	box.size = Vec(15 * 8, 380);
 
   	{
@@ -248,40 +253,41 @@ SplashParasiteWidget::SplashParasiteWidget() {
   	const float yh = 38.0f;
 
 
-	addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, SplashParasite::MODE_PARAM, 0.0, 1.0, 0.0));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, SplashParasite::MODE_GREEN_LIGHT));
+	addParam(ParamWidget::create<CKD6>(Vec(x3-3,y1-3), module, SplashParasite::MODE_PARAM, 0.0, 1.0, 0.0));
+	addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, SplashParasite::MODE_GREEN_LIGHT));
 
-	addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, SplashParasite::RANGE_PARAM, 0.0, 1.0, 0.0));
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, SplashParasite::RANGE_GREEN_LIGHT));
+	addParam(ParamWidget::create<CKD6>(Vec(x3-3,y1+1.45*yh), module, SplashParasite::RANGE_PARAM, 0.0, 1.0, 0.0));
+	addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, SplashParasite::RANGE_GREEN_LIGHT));
 
-	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, SplashParasite::PHASE_GREEN_LIGHT));
-	addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, SplashParasite::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
+	addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, SplashParasite::PHASE_GREEN_LIGHT));
+	addParam(ParamWidget::create<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, SplashParasite::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, SplashParasite::SHAPE_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, SplashParasite::SLOPE_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, SplashParasite::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
+	addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, SplashParasite::SHAPE_PARAM, -1.0, 1.0, 0.0));
+	addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, SplashParasite::SLOPE_PARAM, -1.0, 1.0, 0.0));
+	addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, SplashParasite::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
 
 
-	addInput(createInput<sp_Port>(Vec(x1, y1), module, SplashParasite::TRIG_INPUT));
-	addInput(createInput<sp_Port>(Vec(x2, y1), module, SplashParasite::FREEZE_INPUT));
+	addInput(Port::create<sp_Port>(Vec(x1, y1), Port::INPUT, module, SplashParasite::TRIG_INPUT));
+	addInput(Port::create<sp_Port>(Vec(x2, y1), Port::INPUT, module, SplashParasite::FREEZE_INPUT));
 
-	addInput(createInput<sp_Port>(Vec(x1, y2+2*yh), module, SplashParasite::PITCH_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1,   y2+3.25*yh), module, SplashParasite::FM_INPUT));
-	addParam(createParam<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, SplashParasite::FM_PARAM, -12.0, 12.0, 0.0));
+	addInput(Port::create<sp_Port>(Vec(x1, y2+2*yh), Port::INPUT, module, SplashParasite::PITCH_INPUT));
+	addInput(Port::create<sp_Port>(Vec(x1,   y2+3.25*yh), Port::INPUT, module, SplashParasite::FM_INPUT));
+	addParam(ParamWidget::create<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, SplashParasite::FM_PARAM, -12.0, 12.0, 0.0));
 
-	addInput(createInput<sp_Port>(Vec(x1, y2+4*yh), module, SplashParasite::SHAPE_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y2+4.75*yh), module, SplashParasite::SLOPE_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y2+5.5*yh), module, SplashParasite::SMOOTHNESS_INPUT));
+	addInput(Port::create<sp_Port>(Vec(x1, y2+4*yh), Port::INPUT, module, SplashParasite::SHAPE_INPUT));
+	addInput(Port::create<sp_Port>(Vec(x1, y2+4.75*yh), Port::INPUT, module, SplashParasite::SLOPE_INPUT));
+	addInput(Port::create<sp_Port>(Vec(x1, y2+5.5*yh), Port::INPUT, module, SplashParasite::SMOOTHNESS_INPUT));
 
-	addInput(createInput<sp_Port>(Vec(x3, y1+5.9*yh), module, SplashParasite::LEVEL_INPUT));
-	addInput(createInput<sp_Port>(Vec(x1, y1+5.9*yh), module, SplashParasite::CLOCK_INPUT));
+	addInput(Port::create<sp_Port>(Vec(x3, y1+5.9*yh), Port::INPUT, module, SplashParasite::LEVEL_INPUT));
+	addInput(Port::create<sp_Port>(Vec(x1, y1+5.9*yh), Port::INPUT, module, SplashParasite::CLOCK_INPUT));
 
-	addOutput(createOutput<sp_Port>(Vec(x1, y1+7.125*yh), module, SplashParasite::HIGH_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x1+1*28., y1+7.125*yh), module, SplashParasite::LOW_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x1+2*28., y1+7.125*yh), module, SplashParasite::UNI_OUTPUT));
-	addOutput(createOutput<sp_Port>(Vec(x1+3*28., y1+7.125*yh), module, SplashParasite::BI_OUTPUT));
+	addOutput(Port::create<sp_Port>(Vec(x1, y1+7.125*yh), Port::OUTPUT, module, SplashParasite::HIGH_OUTPUT));
+	addOutput(Port::create<sp_Port>(Vec(x1+1*28., y1+7.125*yh), Port::OUTPUT, module, SplashParasite::LOW_OUTPUT));
+	addOutput(Port::create<sp_Port>(Vec(x1+2*28., y1+7.125*yh), Port::OUTPUT, module, SplashParasite::UNI_OUTPUT));
+	addOutput(Port::create<sp_Port>(Vec(x1+3*28., y1+7.125*yh), Port::OUTPUT, module, SplashParasite::BI_OUTPUT));
 	
 }
+};
 
 void SplashParasiteWidget::step() {
 	SplashParasite *tides = dynamic_cast<SplashParasite*>(module);
@@ -338,13 +344,13 @@ Menu *SplashParasiteWidget::createContextMenu() {
 	assert(tides);
 
 #ifdef WAVETABLE_HACK	
-	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<SplashParasiteSheepItem>(&MenuEntry::text, "Sheep", &SplashParasiteSheepItem::tides, tides));
+	menu->addChild(construct<MenuLabel>());
+	menu->addChild(construct<SplashParasiteSheepItem>(&MenuLabel::text, "Sheep", &SplashParasiteSheepItem::tides, tides));
 #endif
 	menu->addChild(construct<MenuLabel>());
-	menu->addChild(construct<MenuLabel>(&MenuEntry::text, "Mode"));
-	menu->addChild(construct<SplashParasiteModeItem>(&MenuEntry::text, "Original", &SplashParasiteModeItem::module, tides, &SplashParasiteModeItem::mode, tides::Generator::FEAT_MODE_FUNCTION));
-	menu->addChild(construct<SplashParasiteModeItem>(&MenuEntry::text, "Harmonic", &SplashParasiteModeItem::module, tides, &SplashParasiteModeItem::mode, tides::Generator::FEAT_MODE_HARMONIC));
-	menu->addChild(construct<SplashParasiteModeItem>(&MenuEntry::text, "Random", &SplashParasiteModeItem::module, tides, &SplashParasiteModeItem::mode, tides::Generator::FEAT_MODE_RANDOM));
+	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Mode"));
+	menu->addChild(construct<SplashParasiteModeItem>(&MenuLabel::text, "Original", &SplashParasiteModeItem::module, tides, &SplashParasiteModeItem::mode, tides::Generator::FEAT_MODE_FUNCTION));
+	menu->addChild(construct<SplashParasiteModeItem>(&MenuLabel::text, "Harmonic", &SplashParasiteModeItem::module, tides, &SplashParasiteModeItem::mode, tides::Generator::FEAT_MODE_HARMONIC));
+	menu->addChild(construct<SplashParasiteModeItem>(&MenuLabel::text, "Random", &SplashParasiteModeItem::module, tides, &SplashParasiteModeItem::mode, tides::Generator::FEAT_MODE_RANDOM));
 	return menu;
 }

@@ -63,7 +63,7 @@ void Falls::step() {
 
 	for (int i = 0; i < NUMP; i++) {
 		float g = params[GAIN1_PARAM + i].value*range;
-		g = clampf(g, -range, range);
+		g = clamp(g, -range, range);
 		//if (inputs[IN1_INPUT + i].active) {
     		out += g * inputs[IN1_INPUT + i].normalize(1.);
         //} else {
@@ -78,33 +78,36 @@ void Falls::step() {
 	}
 }
 
+struct FallsWidget : ModuleWidget { 
+	
+	FallsWidget(Falls *module)  : ModuleWidget(module) {	
 
-FallsWidget::FallsWidget() {
-	Falls *module = new Falls();
-	setModule(module);
-	box.size = Vec(15*4, 380);
+		box.size = Vec(15*4, 380);
 
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/Falls.svg")));
-		panel->box.size = box.size;
-		addChild(panel);	
+		{
+			SVGPanel *panel = new SVGPanel();
+			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Falls.svg")));
+			panel->box.size = box.size;
+			addChild(panel);	
+		}
+
+		const float y1 = 32;
+		const float yh = 49;
+
+		const float x1 = 4.;
+		const float x2 = 20.;
+		const float x3 = 36.;
+
+		for (int i=0; i < NUMP; i++) {
+			addInput(Port::create<sp_Port>(Vec(x1,  y1+i*yh), Port::INPUT, module, Falls::IN1_INPUT + i));
+			addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x2+6,  y1+i*yh), module, Falls::OUT1_POS_LIGHT + 2*i));	
+			addOutput(Port::create<sp_Port>(Vec(x3,  y1+i*yh), Port::OUTPUT, module, Falls::OUT1_OUTPUT + i));
+			addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+i*yh+18), module, Falls::GAIN1_PARAM + i, -1.0, 1.0, 0.0));
+		}
+
+		addParam(ParamWidget::create<sp_Switch>(Vec(x2, y1 + NUMP*yh ), module, Falls::RANGE_PARAM, 0.0, 1.0, 0.0));
+
 	}
+};
 
-    const float y1 = 32;
-    const float yh = 49;
-
-    const float x1 = 4.;
-    const float x2 = 20.;
-    const float x3 = 36.;
-
-    for (int i=0; i < NUMP; i++) {
-        addInput(createInput<sp_Port>(Vec(x1,  y1+i*yh), module, Falls::IN1_INPUT + i));
-        addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+6,  y1+i*yh), module, Falls::OUT1_POS_LIGHT + 2*i));	
-        addOutput(createOutput<sp_Port>(Vec(x3,  y1+i*yh), module, Falls::OUT1_OUTPUT + i));
-        addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+i*yh+18), module, Falls::GAIN1_PARAM + i, -1.0, 1.0, 0.0));
-    }
-
-    addParam(createParam<sp_Switch>(Vec(x2, y1 + NUMP*yh ), module, Falls::RANGE_PARAM, 0.0, 1.0, 0.0));
-
-}
+Model *modelFalls 	= Model::create<Falls,FallsWidget>(	 "Southpole", "Falls", 		"Falls - attenumixverter", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG);
