@@ -73,7 +73,7 @@ struct VoltageControlledOscillator {
 
 			// Advance phase
 			phase += deltaPhase / OVERSAMPLE;
-			phase = eucmodf(phase, 1.0);
+			phase = eucmod(phase, 1.0f);
 		}
 	}
 

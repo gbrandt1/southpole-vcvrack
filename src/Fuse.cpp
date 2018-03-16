@@ -192,10 +192,10 @@ struct FuseWidget : ModuleWidget {
 		
 		for(int i = 0; i < 4; i++)
 		{
-			addParam(ParamWidget::create<LEDButton>     (Vec(x1+1, y1 + i*yh-22), module, Fuse::SWITCH1_PARAM + 3 - i, 0.0, 1.0, 0.0));
+			addParam(ParamWidget::create<LEDButton>(Vec(x1+1, y1 + i*yh-22), module, Fuse::SWITCH1_PARAM + 3 - i, 0.0, 1.0, 0.0));
 			addChild(ModuleLightWidget::create<MediumLight<YellowLight>>(Vec(x1+5, y1+ i*yh-18), module, Fuse::ARM1_LIGHT + 3 - i));
-			addInput(createInput<sp_Port>    (Vec(x1, y1 + i*yh-45), module, Fuse::ARM1_INPUT + 3 - i));
-			addOutput(createOutput<sp_Port>	 (Vec(x1, y1 + i*yh), module, Fuse::OUT1_OUTPUT + 3 - i));
+			addInput(Port::create<sp_Port>(Vec(x1, y1 + i*yh-45), Port::INPUT, module, Fuse::ARM1_INPUT + 3 - i));
+			addOutput(Port::create<sp_Port>(Vec(x1, y1 + i*yh), Port::OUTPUT, module, Fuse::OUT1_OUTPUT + 3 - i));
 		}
 
 		addInput(Port::create<sp_Port>(Vec(x1, 330), Port::INPUT, module, Fuse::CLK_INPUT));
