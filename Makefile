@@ -56,7 +56,7 @@ SOURCES += eurorack/stmlib/utils/random.cc
 SOURCES += eurorack/braids/analog_oscillator.cc
 SOURCES += eurorack/braids/digital_oscillator.cc
 SOURCES += eurorack/braids/resources.cc
-
+SOURCES += eurorack/braids/quantizer.cc
 
 SOURCES += src/Annuli.cpp
 SOURCES += eurorack/rings/dsp/fm_voice.cc

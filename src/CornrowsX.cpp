@@ -140,6 +140,7 @@ CornrowsX::CornrowsX() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {
 	osc.Init();
 	quantizer.Init();
 	envelope.Init();
+	envelope.Trigger(braids::ENV_SEGMENT_DEAD);
 
 	memset(&jitter_source, 0, sizeof(jitter_source));
 	jitter_source.Init();
@@ -510,8 +511,6 @@ CornrowsXWidget::CornrowsXWidget() {
     const float x2 = x1+xh;
     const float x3 = x1+2*xh;
     const float x4 = x1+3*xh;
-    const float x5 = x1+4*xh;
-    const float x6 = x1+5*xh;
 
     const float y1 = 115;	
     const float yh = 36.;
