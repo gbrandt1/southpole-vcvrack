@@ -76,7 +76,7 @@ struct Snake : Module {
 	void fromJson(json_t *rootJ) override {
 		json_t *bussJ = json_object_get(rootJ, "buss");
 		if (bussJ) { buss = json_integer_value(bussJ); }
-		dump("fromJson");
+		//dump("fromJson");
 	}
 
 	void dump( const char * where="" ) {

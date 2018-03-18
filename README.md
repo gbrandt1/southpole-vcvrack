@@ -2,11 +2,11 @@
 
 ![All](./doc/sp-all-2018-03-15.png)
 
-Southpole VCV Rack Modules 0.5.4
+Southpole VCV Rack Modules 0.6.0
 
 A personal collection of modules I've always wanted for my workflow.
 
-- Some of the modules are simply reskins of the existing Audible Instruments / Arable Instruments VCV Rack versions of Mutable Instruments eurorack modules.
+- Some of the modules are simply reskins of the existing Audible Instruments VCV Rack versions of Mutable Instruments eurorack modules.
   - The skins are inspired by hardware micro versions of various MI modules.
   - Some skins are additonal modes of firmware with appropriate labels for knobs and ports to make usage easier.
   - Some skins do not exist yet in hardware.
@@ -17,7 +17,7 @@ A personal collection of modules I've always wanted for my workflow.
 - [Audible Instruments](https://github.com/VCVRack/AudibleInstruments/)
 - [ArableInstruments](https://github.com/adbrant/ArableInstruments/)
 
-- Extra slug "Southpole Parasites" for parasites firmware based modules
+- Extra "Southpole Parasites" for parasites firmware based modules are on a separate branch
 
 
 ## Building
@@ -32,9 +32,9 @@ There is a build script
 
 	./scripts/make_all.sh
 
-WARNING: Overwrites existing Southpole / SouthpoleParasites directories from eg. a regular download, inspect script before use		
+WARNING: Overwrites existing Southpole directories from eg. a regular download, inspect script before use		
 
-## Modules copied from Audible Instruments / Arable Instruments
+## Modules copied from Audible Instruments
 
 ### Cornrows X - Macro Oscillator
 
@@ -51,13 +51,10 @@ WARNING: Overwrites existing Southpole / SouthpoleParasites directories from eg.
 
 - Based on [Sheep](https://mutable-instruments.net/modules/tides/firmware/) (Tides alternative firmware)
 
-- [Tides Parasites](https://mqtthiqs.github.io/parasites/tides.html) Two Bumps, Two Drunks
-
 ### Smoke - Texture Synthesizer
 Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](https://mutable-instruments.net/modules/clouds/manual/)
 
 - Smoke, extra skins for additional modes: Espectro, Ritardo, Camilla
-- [Clouds Parasites](https://mqtthiqs.github.io/parasites/clouds.html) Oliver, Resonestor
 
 ### Annuli - Resonator
 - Based on [Rings](https://mutable-instruments.net/modules/rings), [Manual](https://mutable-instruments.net/modules/rings/manual/)

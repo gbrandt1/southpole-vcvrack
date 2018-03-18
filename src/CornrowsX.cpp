@@ -148,25 +148,7 @@ CornrowsX::CornrowsX() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {
 	memset(&ws, 0, sizeof(ws));
 	ws.Init(0x0000);
 	memset(&settings, 0, sizeof(settings));
-/*
-	// List of supported settings
-	settings.meta_modulation = 0;
-	settings.vco_drift = 0;
-	settings.signature = 0;
 
-    settings.ad_attack = 0;
-    settings.ad_decay = 5;
-  	settings.ad_fm = 0;
-  	settings.ad_color = 0;
-  	settings.ad_vca = 0;
-
-  	settings.sample_rate = 0;
-  	settings.resolution = 0;
-
-	settings.quantizer_root = 0;
-    settings.quantizer_scale = 0;
-
-	gain_lp = 65535;*/
 }
 
 void CornrowsX::step() {

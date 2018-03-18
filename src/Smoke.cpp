@@ -26,9 +26,6 @@ struct Smoke : Module {
     FEEDBACK_PARAM,
     REVERB_PARAM,
     FREEZE_PARAM,
-#ifdef PARASITES
-    REVERSE_PARAM,
-#endif     
     NUM_PARAMS
   };
   enum InputIds {
@@ -54,10 +51,7 @@ struct Smoke : Module {
   };
 	enum LightIds {
 		FREEZE_LIGHT,
-#ifdef PARASITES
-    REVERSE_LIGHT,
-#endif   
-MIX_GREEN_LIGHT, MIX_RED_LIGHT,
+    MIX_GREEN_LIGHT, MIX_RED_LIGHT,
 		PAN_GREEN_LIGHT, PAN_RED_LIGHT,
 		FEEDBACK_GREEN_LIGHT, FEEDBACK_RED_LIGHT,
 		REVERB_GREEN_LIGHT, REVERB_RED_LIGHT,
@@ -130,12 +124,6 @@ MIX_GREEN_LIGHT, MIX_RED_LIGHT,
 		if (buffersizeJ) {
 			buffersize = json_integer_value(buffersizeJ);
 		}      
-#ifdef PARASITES
-    json_t *reverseJ = json_object_get(rootJ, "reverse");
-		if (reverseJ) {
-			reverse = json_integer_value(reverseJ);
-		}    
-#endif    
 	}
   
 };
@@ -237,14 +225,6 @@ void Smoke::step() {
     p->stereo_spread =  clamp(params[SPREAD_PARAM].value + inputs[SPREAD_INPUT].value / 5.0, 0.0f, 1.0f);;
     p->feedback =  clamp(params[FEEDBACK_PARAM].value + inputs[FEEDBACK_INPUT].value / 5.0, 0.0f, 1.0f);;
     p->reverb =  clamp(params[REVERB_PARAM].value + inputs[REVERB_INPUT].value / 5.0, 0.0f, 1.0f);;
-
-#ifdef PARASITES
-    if (reverseTrigger.process(params[REVERSE_PARAM].value)) {
-       reverse = !reverse;
-    } 
-    p->granular.reverse = reverse;
-    lights[REVERSE_LIGHT].setBrightness(p->granular.reverse ? 1.0 : 0.0);
-#endif
 
     clouds::ShortFrame output[32];
     processor->Process(input, output, 32);
@@ -566,6 +546,5 @@ Menu *SmokeWidget::createContextMenu() {
 }
 
 Model *modelSmoke 	= Model::create<Smoke,SmokeWidget>( 	 "Southpole", "Smoke", 		"Smoke - texture synth", GRANULAR_TAG, REVERB_TAG);
-
 
 
