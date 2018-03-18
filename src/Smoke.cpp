@@ -83,11 +83,11 @@ MIX_GREEN_LIGHT, MIX_RED_LIGHT,
   bool triggered = false;
   float freezeLight = 0.0;
   bool freeze = false;
-#ifdef PARASITES
+//#ifdef PARASITES
   bool reverse = false;
   float reverseLight = 0.0;
   SchmittTrigger reverseTrigger;
-#endif
+//#endif
   SchmittTrigger freezeTrigger;
 
   Smoke();
@@ -103,9 +103,9 @@ MIX_GREEN_LIGHT, MIX_RED_LIGHT,
     json_object_set_new(rootJ, "mono", json_integer(mono));
     json_object_set_new(rootJ, "freeze", json_integer(freeze));
     json_object_set_new(rootJ, "buffersize", json_integer(buffersize));
-#ifdef PARASITES
+//#ifdef PARASITES
     json_object_set_new(rootJ, "reverse", json_integer(reverse));
-#endif
+//#endif
 		return rootJ;
 	}
 
@@ -130,12 +130,12 @@ MIX_GREEN_LIGHT, MIX_RED_LIGHT,
 		if (buffersizeJ) {
 			buffersize = json_integer_value(buffersizeJ);
 		}      
-#ifdef PARASITES
+//#ifdef PARASITES
     json_t *reverseJ = json_object_get(rootJ, "reverse");
 		if (reverseJ) {
 			reverse = json_integer_value(reverseJ);
 		}    
-#endif    
+//#endif    
 	}
   
 };
@@ -150,9 +150,9 @@ Smoke::Smoke() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
   memset(processor, 0, sizeof(*processor));
 
   //freezeTrigger.setThresholds(0.0, 1.0);
-#ifdef PARASITES
-  reverseTrigger.setThresholds(0.0, 1.0);   
-#endif  
+//#ifdef PARASITES
+//  reverseTrigger.setThresholds(0.0, 1.0);   
+//#endif  
   processor->Init(block_mem, memLen, block_ccm, ccmLen);
 }
 
