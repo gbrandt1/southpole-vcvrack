@@ -138,7 +138,9 @@ struct CornrowsX : Module {
 CornrowsX::CornrowsX() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {
 	memset(&osc, 0, sizeof(osc));
 	osc.Init();
+	memset(&quantizer, 0, sizeof(quantizer));
 	quantizer.Init();
+	memset(&envelope, 0, sizeof(envelope));
 	envelope.Init();
 
 	memset(&jitter_source, 0, sizeof(jitter_source));
