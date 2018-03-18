@@ -565,7 +565,7 @@ Menu *SmokeWidget::createContextMenu() {
   return menu;
 }
 
-Model *modelSmoke 	= Model::create<Smoke,SmokeWidget>( 	 "Southpole", "Smoke", 		"Smoke - texture synth", GRANULAR_TAG, REVERB_TAG);
+Model *modelSmoke 	= Model::create<Smoke,SmokeWidget>( 	 "Southpole Parasites", "Smoke", 		"Smoke - texture synth", GRANULAR_TAG, REVERB_TAG);
 
 
 

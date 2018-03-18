@@ -15,7 +15,6 @@ void init(rack::Plugin *p) {
 	p->website = "https://github.com/gbrandt1/southpole-vcvrack";
 	p->manual = "https://github.com/gbrandt1/southpole-vcvrack/blob/master/README.md";
 
-		p->addModel(modelAnnuli );	
-		p->addModel(modelSmoke); 	
-		p->addModel(modelSplash); 	
+	p->addModel(modelSmoke); 	
+	p->addModel(modelSplash); 	
 }
