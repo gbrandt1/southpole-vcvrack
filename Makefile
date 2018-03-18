@@ -1,6 +1,6 @@
 
 SLUG = Southpole-parasites
-VERSION = 0.6
+VERSION = 0.6.0
 
 FLAGS += \
 	-DTEST -DPARASITES \
