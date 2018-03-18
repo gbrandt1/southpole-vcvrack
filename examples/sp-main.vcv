@@ -1,0 +1,1503 @@
+{
+  "version": "master",
+  "modules": [
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Smoke",
+      "pos": [
+        0,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 10,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.5
+        },
+        {
+          "paramId": 1,
+          "value": 0.5
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.5
+        },
+        {
+          "paramId": 5,
+          "value": 0.5
+        },
+        {
+          "paramId": 6,
+          "value": 0.5
+        },
+        {
+          "paramId": 7,
+          "value": 0.5
+        },
+        {
+          "paramId": 8,
+          "value": 0.5
+        },
+        {
+          "paramId": 9,
+          "value": 0.5
+        },
+        {
+          "paramId": 3,
+          "value": 0.5
+        }
+      ],
+      "data": {
+        "playbackmode": 0,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Smoke",
+      "pos": [
+        6,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 10,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.5
+        },
+        {
+          "paramId": 1,
+          "value": 0.5
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.5
+        },
+        {
+          "paramId": 5,
+          "value": 0.5
+        },
+        {
+          "paramId": 6,
+          "value": 0.5
+        },
+        {
+          "paramId": 7,
+          "value": 0.5
+        },
+        {
+          "paramId": 8,
+          "value": 0.5
+        },
+        {
+          "paramId": 9,
+          "value": 0.5
+        },
+        {
+          "paramId": 3,
+          "value": 0.5
+        }
+      ],
+      "data": {
+        "playbackmode": 3,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Smoke",
+      "pos": [
+        12,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 10,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.5
+        },
+        {
+          "paramId": 1,
+          "value": 0.5
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.5
+        },
+        {
+          "paramId": 5,
+          "value": 0.5
+        },
+        {
+          "paramId": 6,
+          "value": 0.5
+        },
+        {
+          "paramId": 7,
+          "value": 0.5
+        },
+        {
+          "paramId": 8,
+          "value": 0.5
+        },
+        {
+          "paramId": 9,
+          "value": 0.5
+        },
+        {
+          "paramId": 3,
+          "value": 0.5
+        }
+      ],
+      "data": {
+        "playbackmode": 2,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Smoke",
+      "pos": [
+        18,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 10,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.5
+        },
+        {
+          "paramId": 1,
+          "value": 0.5
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.5
+        },
+        {
+          "paramId": 5,
+          "value": 0.5
+        },
+        {
+          "paramId": 6,
+          "value": 0.5
+        },
+        {
+          "paramId": 7,
+          "value": 0.5
+        },
+        {
+          "paramId": 8,
+          "value": 0.5
+        },
+        {
+          "paramId": 9,
+          "value": 0.5
+        },
+        {
+          "paramId": 3,
+          "value": 0.5
+        }
+      ],
+      "data": {
+        "playbackmode": 1,
+        "lofi": 0,
+        "mono": 0,
+        "freeze": 0,
+        "buffersize": 1
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Splash",
+      "pos": [
+        36,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": false
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Splash",
+      "pos": [
+        44,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "mode": 1,
+        "range": 1,
+        "sheep": true
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Annuli",
+      "pos": [
+        24,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 30.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.5
+        },
+        {
+          "paramId": 4,
+          "value": 0.5
+        },
+        {
+          "paramId": 5,
+          "value": 0.5
+        },
+        {
+          "paramId": 6,
+          "value": 0.5
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        },
+        {
+          "paramId": 8,
+          "value": 0.0
+        },
+        {
+          "paramId": 9,
+          "value": 0.0
+        },
+        {
+          "paramId": 10,
+          "value": 0.0
+        },
+        {
+          "paramId": 11,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "polyphony": 0,
+        "model": 0,
+        "easterEgg": false
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Annuli",
+      "pos": [
+        30,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 30.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.5
+        },
+        {
+          "paramId": 4,
+          "value": 0.5
+        },
+        {
+          "paramId": 5,
+          "value": 0.5
+        },
+        {
+          "paramId": 6,
+          "value": 0.5
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        },
+        {
+          "paramId": 8,
+          "value": 0.0
+        },
+        {
+          "paramId": 9,
+          "value": 0.0
+        },
+        {
+          "paramId": 10,
+          "value": 0.0
+        },
+        {
+          "paramId": 11,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "polyphony": 0,
+        "model": 0,
+        "easterEgg": true
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Balaclava",
+      "pos": [
+        52,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 1.0
+        },
+        {
+          "paramId": 5,
+          "value": 1.0
+        },
+        {
+          "paramId": 6,
+          "value": 1.0
+        },
+        {
+          "paramId": 7,
+          "value": 1.0
+        }
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Bandana",
+      "pos": [
+        56,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Falls",
+      "pos": [
+        60,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Aux",
+      "pos": [
+        64,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.5
+        },
+        {
+          "paramId": 2,
+          "value": 0.5
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.5
+        },
+        {
+          "paramId": 3,
+          "value": 0.5
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "states": [
+          false,
+          false
+        ]
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "But",
+      "pos": [
+        68,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "swStates": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Abr",
+      "pos": [
+        74,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "swStates": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Etagere",
+      "pos": [
+        30,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 8,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 9,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "blanc": true
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "DeuxEtageres",
+      "pos": [
+        42,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 8,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 9,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        }
+      ],
+      "data": {}
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Riemann",
+      "pos": [
+        52,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "SNS",
+      "pos": [
+        24,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.611500084
+        },
+        {
+          "paramId": 1,
+          "value": 0.5
+        },
+        {
+          "paramId": 2,
+          "value": 0.465000063
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "mode": 2,
+        "style": 1
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Piste",
+      "pos": [
+        68,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.5
+        },
+        {
+          "paramId": 5,
+          "value": 1.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.5
+        },
+        {
+          "paramId": 3,
+          "value": 1.0
+        }
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Wriggle",
+      "pos": [
+        76,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 1,
+          "value": 0.5
+        },
+        {
+          "paramId": 0,
+          "value": 0.5
+        },
+        {
+          "paramId": 2,
+          "value": 0.5
+        },
+        {
+          "paramId": 3,
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Fuse",
+      "pos": [
+        72,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "gateMode": true
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Sssh",
+      "pos": [
+        78,
+        1
+      ],
+      "params": []
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Snake",
+      "pos": [
+        48,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "buss": 0
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Gnome",
+      "pos": [
+        80,
+        0
+      ],
+      "params": [
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 1.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.25
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        },
+        {
+          "paramId": 8,
+          "value": 0.0
+        },
+        {
+          "paramId": 9,
+          "value": -1.0
+        },
+        {
+          "paramId": 10,
+          "value": 1.0
+        },
+        {
+          "paramId": 11,
+          "value": 0.0
+        },
+        {
+          "paramId": 12,
+          "value": 0.5
+        },
+        {
+          "paramId": 13,
+          "value": 0.5
+        },
+        {
+          "paramId": 14,
+          "value": 0.5
+        },
+        {
+          "paramId": 15,
+          "value": 0.5
+        },
+        {
+          "paramId": 16,
+          "value": 0.0
+        },
+        {
+          "paramId": 17,
+          "value": 0.0
+        },
+        {
+          "paramId": 18,
+          "value": 0.0
+        },
+        {
+          "paramId": 19,
+          "value": 0.0
+        },
+        {
+          "paramId": 20,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "CornrowsX",
+      "pos": [
+        0,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 9,
+          "value": 0.0
+        },
+        {
+          "paramId": 10,
+          "value": 0.0
+        },
+        {
+          "paramId": 11,
+          "value": 0.5
+        },
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 8,
+          "value": 0.5
+        },
+        {
+          "paramId": 18,
+          "value": 0.0
+        },
+        {
+          "paramId": 17,
+          "value": 0.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 13,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.5
+        },
+        {
+          "paramId": 12,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.5
+        },
+        {
+          "paramId": 14,
+          "value": 0.0
+        },
+        {
+          "paramId": 16,
+          "value": 1.0
+        },
+        {
+          "paramId": 15,
+          "value": 1.0
+        }
+      ],
+      "data": {
+        "settings": [
+          0,
+          6,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lowCpu": false
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Ftagn",
+      "pos": [
+        8,
+        1
+      ],
+      "params": []
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Rakes",
+      "pos": [
+        12,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 9,
+          "value": 0.0
+        },
+        {
+          "paramId": 15,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 10,
+          "value": 0.0
+        },
+        {
+          "paramId": 16,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 11,
+          "value": 0.0
+        },
+        {
+          "paramId": 17,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 12,
+          "value": 0.0
+        },
+        {
+          "paramId": 18,
+          "value": 0.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        },
+        {
+          "paramId": 13,
+          "value": 0.0
+        },
+        {
+          "paramId": 19,
+          "value": 0.0
+        },
+        {
+          "paramId": 8,
+          "value": 0.0
+        },
+        {
+          "paramId": 14,
+          "value": 0.0
+        },
+        {
+          "paramId": 20,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Pulse",
+      "pos": [
+        20,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 1.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Etagere",
+      "pos": [
+        36,
+        1
+      ],
+      "params": [
+        {
+          "paramId": 3,
+          "value": 0.0
+        },
+        {
+          "paramId": 7,
+          "value": 0.0
+        },
+        {
+          "paramId": 1,
+          "value": 0.0
+        },
+        {
+          "paramId": 5,
+          "value": 0.0
+        },
+        {
+          "paramId": 8,
+          "value": 0.0
+        },
+        {
+          "paramId": 2,
+          "value": 0.0
+        },
+        {
+          "paramId": 6,
+          "value": 0.0
+        },
+        {
+          "paramId": 9,
+          "value": 0.0
+        },
+        {
+          "paramId": 0,
+          "value": 0.0
+        },
+        {
+          "paramId": 4,
+          "value": 0.0
+        }
+      ],
+      "data": {
+        "blanc": false
+      }
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Blank2HP",
+      "pos": [
+        86,
+        1
+      ],
+      "params": []
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Blank4HP",
+      "pos": [
+        82,
+        1
+      ],
+      "params": []
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Blank1HP",
+      "pos": [
+        88,
+        1
+      ],
+      "params": []
+    },
+    {
+      "plugin": "Southpole",
+      "version": "0.6.0",
+      "model": "Blank1HP",
+      "pos": [
+        89,
+        1
+      ],
+      "params": []
+    }
+  ],
+  "wires": []
+}
