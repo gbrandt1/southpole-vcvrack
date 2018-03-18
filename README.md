@@ -15,7 +15,6 @@ A personal collection of modules I've always wanted for my workflow.
 
 - [Mutable Instruments](https://mutable-instruments.net/)
 - [Audible Instruments](https://github.com/VCVRack/AudibleInstruments/)
-- [ArableInstruments](https://github.com/adbrant/ArableInstruments/)
 
 - Extra "Southpole Parasites" for parasites firmware based modules are on a separate branch
 
@@ -68,18 +67,78 @@ Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](http
 
 ## New modules
 
+### Aux - 2 stereo effect send/return loops 
+
+  - with cross feedback (same or swapped stereo channels)
+  - mute button for input (to listen to those sweet reverb tails)
+  - bypass button for fx (in case you went wild with the feedback pots)  
+
+### Abr - Manual A/B Switch 
+
+- Inverse of But, either input A or B goes to output
+- Sums of inputs set to A or B provided
+
+### Blanks
+
+- Nothing special right now, but watch this space
+- 42HP useful if you want to recreate a 84HP row common in hardware
+
+### But - Manual A/B Buss 
+
+- Inspired by [DJ Steevio's modular method](https://www.youtube.com/watch?v=x6hJa2lRRgM)
+- Either input A or B go to the output and the A/B busses
+- Two summed identical outputs for A and B buss are provided.
+
+### Deux Etagères
+
+- convenience stereo version of Etagère
+
+### Etagère - EQ Filter
+
+- Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual](https://mutable-instruments.net/modules/shelves/manual/)
+
+- Does not fully reproduce all characteristics of Shelves!
+- Biquad filters copied from RJModules Filters
+
+### Falls - Attenumixer
+
+- Attenumixverter, inspired by Fonitronik Cascade
+- empty inputs provide offset voltages
+- empty outputs mix into output below
+- Range switch +/-1 or +/-10
 
 ### Ftagn: No Filter
+
   - transgressive module for your nihilistic no-input patches at the noise show
   - stereo - neither left nor right channel do anything at all
 
+### Fuse - Synchronized one-shot triggers
+
+- Intended to build a "queue next pattern" system like on groove boxes / drum machines
+- Helps fire synchronized events in 4/4 based music if you can't count like me
+- Can be used to launch triggers (or beat-long gates) ONCE at a given beat on a 16 step counter
+- Arm triggers/gates manually or via inputs
+- For example, clock with bars, trigger to mute the kick for exactly 4 bars, trigger 4 bar later to drop
+
+### Piste - Drum Processor
+
+- One-stop module to turn oscillators into drums / percussion, or process existing drums to taste
+- Inspired by [Bastl Skis](http://www.bastl-instruments.com/modular/skis/)
+- Input gain + eq + overdrive because sometimes basic processing is all that's needed
+- 2 independent decay envelopes (eg. body and accent) the sum of which is applied to input signal via internal VCA
+- 2nd envelope is scaled to 1st
+- Triggers are scalable
+- Mute input / trigger veto intended for choke groups (eg. open hihat mutes closed hihat)
+
 ### Pulse: Pulse Generator
+
   - main purpose is to convert triggers to gates
   - clock through sends 1ms triggers - clean your clock
   - range selectable (1s / 10s)
   - when clocked, duration/delay are quantized to "musically relevant" intervals
 
 ### Rakes: Stereo Resonator
+
   - inspired by the Ableton Resonator effect
   - 6 stereo comb filters
   - V/OCT inputs quantized to SEMI tones or FREE
@@ -89,6 +148,7 @@ Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](http
   - best used together with a chord generator patched into the V/OCT inputs
 
 ### Riemann
+
 - chord generator based on Neo-Riemannian Tonnetz analysis
 - inspired by NE Tonnetz Sequent, Navichord app, o_C Automatonnetz (and my incapability to compose / improvise diatonic music)
 - Traversal via perfect fifth (P5/V) per volt and major triad per volt (M3/V) inputs  
@@ -101,38 +161,6 @@ Based on [Clouds](https://mutable-instruments.net/modules/clouds), [Manual](http
 - Tonic output (T) for tonic drone
 - Voicing inc/decreases octaves to the right/left sequentially by part (small settings to the right give chord inversions)
 
-### Falls - Attenumixer
-- Attenumixverter, inspired by Fonitronik Cascade
-- empty inputs provide offset voltages
-- empty outputs mix into output below
-- Range switch +/-1 or +/-10
-
-### Aux - 2 stereo effect send/return loops 
-  - with cross feedback (same or swapped stereo channels)
-  - mute button for input (to listen to those sweet reverb tails)
-  - bypass button for fx (in case you went wild with the feedback pots)  
-
-
-### Etagère - EQ Filter
-Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual](https://mutable-instruments.net/modules/shelves/manual/)
-
-- Does not fully reproduce all characteristics of Shelves!
-- Biquad filters copied from RJModules Filters
-
-### Deux Etagères
-- convenience stereo version of Etagère
-
-### But - Manual A/B Buss 
-
-- Inspired by [DJ Steevio's modular method](https://www.youtube.com/watch?v=x6hJa2lRRgM)
-- Either input A or B go to the output and the A/B busses
-- Two summed identical outputs for A and B buss are provided.
-
-### Abr - Manual A/B Switch 
-
-- Inverse of But, either input A or B goes to output
-- Sums of inputs set to A or B provided
-
 ### SNS - Euclidean Sequencer
 
 - I know. but this one looks cool and has a few additional features:
@@ -144,30 +172,11 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual]
 - CLK/RST thru for easy chaining
 - Turing mode to translate pattern into CV a la Turing Machine
 
-### Piste - Drum Processor
+### Snake
 
-- One-stop module to turn oscillators into drums / percussion, or process existing drums to taste
-- Inspired by [Bastl Skis](http://www.bastl-instruments.com/modular/skis/)
-- Input gain + eq + overdrive because sometimes basic processing is all that's needed
-- 2 independent decay envelopes (eg. body and accent) the sum of which is applied to input signal via internal VCA
-- 2nd envelope is scaled to 1st
-- Triggers are scalable
-- Mute input / trigger veto intended for choke groups (eg. open hihat mutes closed hihat)
-
-### Fuse - Synchronized one-shot triggers
-
-- Intended to build a "queue next pattern" system like on groove boxes / drum machines
-- Helps fire synchronized events in 4/4 based music if you can't count like me
-- Can be used to launch triggers (or beat-long gates) ONCE at a given beat on a 16 step counter
-- Arm triggers/gates manually or via inputs
-- For example, clock with bars, trigger to mute the kick for exactly 4 bars, trigger 4 bar later to drop
-
-### Wriggle - Spring Model
-
-- Follows input with a given stiffness and damping of the spring
-- Mass normalized to one
-- Output can be scaled/offset
-- Designed to implement "Woggle CV" (works best at LFO rates)
+ - 16 internal busses 0-F with 10 lines per buss to bridge large distances or generally tidy up the patch
+- First connection to input locks input (green led - red on all other instances)
+- Works best with slow signal. In case of parallel processin check difference between original and bussed signal by means of inverting summer and scope
 
 ### Sssh - Noise / S+H
 
@@ -176,11 +185,13 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual]
 - Inputs are normalled to noise
 - Noises are four calls to generator (not a copy)
 
-### Snake
+### Wriggle - Spring Model
 
- - 16 internal busses 0-F with 10 lines per buss to bridge large distances or generally tidy up the patch
-- First connection to input locks input (green led - red on all other instances)
-- Works best with slow signal. In case of parallel processin check difference between original and bussed signal by means of inverting summer and scope
+- Follows input with a given stiffness and damping of the spring
+- Mass normalized to one
+- Output can be scaled/offset
+- Designed to implement "Woggle CV" (works best at LFO rates)
+
   
 ### Gnome - Synth Voice
 
@@ -193,7 +204,3 @@ Inspired by [Shelves](https://mutable-instruments.net/modules/shelves), [Manual]
 - ADSR from Fundamental ADSR
 - Biquad VCF with resonance gain-compensation
 
-### Blanks
-
-- Nothing special right, but watch this space
-- 42HP useful if you want to recreate a 84HP row common in hardware
