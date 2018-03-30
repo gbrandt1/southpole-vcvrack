@@ -1,8 +1,7 @@
-# southpole-vcvrack
+# Southpole VCV Rack Modules 0.6.0
 
 ![All](./doc/sp-main-0_6_0.png)
 
-Southpole VCV Rack Modules 0.6.0
 
 A personal collection of modules I've always wanted for my workflow.
 
