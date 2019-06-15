@@ -1,6 +1,3 @@
-SLUG = Southpole
-VERSION = 0.6.0
-
 FLAGS += \
         -DTEST \
         -I./eurorack \
