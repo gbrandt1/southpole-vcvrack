@@ -71,7 +71,7 @@ struct Annuli : Module {
 	Annuli();
 	void step() override;
 
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
 
 		json_object_set_new(rootJ, "polyphony", json_integer(polyphonyMode));
@@ -81,7 +81,7 @@ struct Annuli : Module {
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *polyphonyJ = json_object_get(rootJ, "polyphony");
 		if (polyphonyJ) {
 			polyphonyMode = json_integer_value(polyphonyJ);

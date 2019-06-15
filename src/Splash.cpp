@@ -70,7 +70,7 @@ struct Splash : Module {
 		generator.set_mode((tides::GeneratorMode) (randomu32() % 3));
 	}
 
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
 
 		json_object_set_new(rootJ, "mode", json_integer((int) generator.mode()));
@@ -80,7 +80,7 @@ struct Splash : Module {
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *modeJ = json_object_get(rootJ, "mode");
 		if (modeJ) {
 			generator.set_mode((tides::GeneratorMode) json_integer_value(modeJ));

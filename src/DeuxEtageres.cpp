@@ -73,7 +73,7 @@ struct DeuxEtageres : Module {
 //    void randomize() override {
 //    }
 
-    json_t *toJson() override {
+    json_t *dataToJson() override {
         json_t *rootJ = json_object();
         // states
         //json_t *statesJ = json_array();
@@ -84,7 +84,7 @@ struct DeuxEtageres : Module {
         //json_object_set_new(rootJ, "states", statesJ);
         return rootJ;
     }
-    void fromJson(json_t *rootJ) override {
+    void dataFromJson(json_t *rootJ) override {
         // states
         //json_t *statesJ = json_object_get(rootJ, "states");
         //if (statesJ) {

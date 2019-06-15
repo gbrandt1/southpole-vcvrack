@@ -105,14 +105,14 @@ struct Sns : Module {
    		return (n < 2) ? n : fib(n - 1) + fib(n - 2);
 	}
 
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
 		json_object_set_new(rootJ, "mode", json_integer((int) gateMode));
 		json_object_set_new(rootJ, "style", json_integer((int) style));
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *modeJ = json_object_get(rootJ, "mode");
 		if (modeJ) {
 			gateMode = (gateModes) json_integer_value(modeJ);

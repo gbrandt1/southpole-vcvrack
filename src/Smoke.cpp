@@ -89,7 +89,7 @@ struct Smoke : Module {
   void step() override;
   
   
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
     //playbackmode, lofi, mono
 		json_object_set_new(rootJ, "playbackmode", json_integer(playbackmode));
@@ -103,7 +103,7 @@ struct Smoke : Module {
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *playbackmodeJ = json_object_get(rootJ, "playbackmode");
 		if (playbackmodeJ) {
 			playbackmode = (clouds::PlaybackMode)json_integer_value(playbackmodeJ);

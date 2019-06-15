@@ -100,7 +100,7 @@ struct CornrowsX : Module {
 	void step() override;
 	void setShape(int shape);
 
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
 		json_t *settingsJ = json_array();
 		uint8_t *settingsArray = &settings.shape;
@@ -116,7 +116,7 @@ struct CornrowsX : Module {
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *settingsJ = json_object_get(rootJ, "settings");
 		if (settingsJ) {
 			uint8_t *settingsArray = &settings.shape;

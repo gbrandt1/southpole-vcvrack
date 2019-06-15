@@ -67,16 +67,16 @@ struct Snake : Module {
 
 	void step() override;
 
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
 		json_object_set_new(rootJ, "buss", json_integer(buss));
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *bussJ = json_object_get(rootJ, "buss");
 		if (bussJ) { buss = json_integer_value(bussJ); }
-		//dump("fromJson");
+		//dump("dataFromJson");
 	}
 
 	void dump( const char * where="" ) {

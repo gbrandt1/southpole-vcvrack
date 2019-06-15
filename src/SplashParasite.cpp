@@ -67,7 +67,7 @@ struct SplashParasite : Module {
 		generator.set_mode((tides::GeneratorMode) (randomu32() % 3));
 	}
 
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
 
 		json_object_set_new(rootJ, "mode", json_integer((int) generator.mode()));
@@ -78,7 +78,7 @@ struct SplashParasite : Module {
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *featModeJ = json_object_get(rootJ, "featureMode");
 		if(featModeJ)
 		    generator.feature_mode_ = (tides::Generator::FeatureMode) json_integer_value(featModeJ);

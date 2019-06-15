@@ -83,7 +83,7 @@ struct Abr : Module
 		}
     }
     
-    json_t *toJson() override 
+    json_t *dataToJson() override 
     {
 		json_t *rootJ = json_object();
         json_t *swStatesJ = json_array();
@@ -96,7 +96,7 @@ struct Abr : Module
 		return rootJ;
 	}
 
-    void fromJson(json_t *rootJ) override 
+    void dataFromJson(json_t *rootJ) override 
     {
         json_t *swStatesJ = json_object_get(rootJ, "swStates");
         if (swStatesJ) 

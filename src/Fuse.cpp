@@ -62,13 +62,13 @@ struct Fuse : Module {
 	unsigned curstep = 0;
 
 
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
 		json_object_set_new(rootJ, "gateMode", json_boolean( gateMode ));
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *gateModeJ = json_object_get(rootJ, "gateMode");
 		if (gateModeJ) {
 			gateMode = json_boolean_value(gateModeJ);

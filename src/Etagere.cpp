@@ -77,13 +77,13 @@ struct Etagere : Module {
 
     void step() override;
 
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
 		json_object_set_new(rootJ, "blanc", json_boolean(blanc));
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *blancJ = json_object_get(rootJ, "blanc");
 		if (blancJ) {
 			blanc = json_boolean_value(blancJ);

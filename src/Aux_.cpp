@@ -52,7 +52,7 @@ struct Aux : Module {
 	}
 	void step() override;
 
-	json_t *toJson()override {
+	json_t *dataToJson()override {
 		json_t *rootJm = json_object();
 		json_t *statesJ = json_array();
 		
@@ -67,7 +67,7 @@ struct Aux : Module {
 		return rootJm;
 	}
 
-	void fromJson(json_t *rootJm)override {
+	void dataFromJson(json_t *rootJm)override {
 		json_t *statesJ = json_object_get(rootJm, "states");
 		
 			json_t *muteJ   = json_array_get(statesJ, 0);
