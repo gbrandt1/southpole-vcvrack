@@ -472,7 +472,7 @@ struct GnomeWidget : ModuleWidget {
 	}
 };
 
-Model *modelGnome 	= Model::create<Gnome,GnomeWidget>(	 "Southpole", "Gnome", 		"Gnome - synth voice", SYNTH_VOICE_TAG, OSCILLATOR_TAG, LFO_TAG, ENVELOPE_GENERATOR_TAG, FILTER_TAG, AMPLIFIER_TAG, MIXER_TAG);
+Model *modelGnome 	= Model::create<Gnome,GnomeWidget>("Gnome");
 
 
 

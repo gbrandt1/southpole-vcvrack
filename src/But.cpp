@@ -190,7 +190,7 @@ struct ButWidget : ModuleWidget {
 
 };
 
-Model *modelBut 	= Model::create<But,ButWidget>(		 "Southpole", "But", 		"But - A/B buss", SWITCH_TAG, MIXER_TAG);
+Model *modelBut 	= Model::create<But,ButWidget>("But");
 
 
 

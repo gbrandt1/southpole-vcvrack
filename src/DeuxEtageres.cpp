@@ -227,4 +227,4 @@ struct DeuxEtageresWidget : ModuleWidget {
     }
 };
 
-Model *modelDeuxEtageres = Model::create<DeuxEtageres,DeuxEtageresWidget>("Southpole", "DeuxEtageres", "Deux Etageres - Stereo EQ", FILTER_TAG);
+Model *modelDeuxEtageres = Model::create<DeuxEtageres,DeuxEtageresWidget>("DeuxEtageres");

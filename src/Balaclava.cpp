@@ -118,4 +118,4 @@ struct BalaclavaWidget : ModuleWidget {
 	}
 };
 
-Model *modelBalaclava = Model::create<Balaclava,BalaclavaWidget>("Southpole", "Balaclava", 	"Balaclava - quad VCA", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG);
+Model *modelBalaclava = Model::create<Balaclava,BalaclavaWidget>("Balaclava");

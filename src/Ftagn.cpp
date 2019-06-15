@@ -52,4 +52,4 @@ struct FtagnWidget : ModuleWidget {
 	}
 };
 
-Model *modelFtagn 	= Model::create<Ftagn,FtagnWidget>(	 "Southpole", "Ftagn", 		"Ftagn - no filter", FILTER_TAG);
+Model *modelFtagn 	= Model::create<Ftagn,FtagnWidget>("Ftagn");

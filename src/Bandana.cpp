@@ -121,5 +121,5 @@ struct BandanaWidget : ModuleWidget {
 	}
 };
 
-Model *modelBandana = Model::create<Bandana,BandanaWidget>(	 "Southpole", "Bandana", 	"Bandana - quad polarizer", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG);
+Model *modelBandana = Model::create<Bandana,BandanaWidget>("Bandana");
 

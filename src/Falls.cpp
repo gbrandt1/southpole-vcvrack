@@ -110,4 +110,4 @@ struct FallsWidget : ModuleWidget {
 	}
 };
 
-Model *modelFalls 	= Model::create<Falls,FallsWidget>(	 "Southpole", "Falls", 		"Falls - attenumixverter", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG);
+Model *modelFalls 	= Model::create<Falls,FallsWidget>("Falls");

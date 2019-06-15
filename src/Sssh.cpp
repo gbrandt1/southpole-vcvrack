@@ -112,4 +112,4 @@ struct SsshWidget : ModuleWidget {
 	}
 };
 
-Model *modelSssh 	= Model::create<Sssh,SsshWidget>(	 "Southpole", "Sssh", 		"Sssh - noise and S+H", NOISE_TAG, SAMPLE_AND_HOLD_TAG);
+Model *modelSssh 	= Model::create<Sssh,SsshWidget>("Sssh");

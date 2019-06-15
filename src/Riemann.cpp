@@ -557,4 +557,4 @@ struct RiemannWidget : ModuleWidget {
 	}
 };
 
-Model *modelRiemann = Model::create<Riemann,RiemannWidget>(	 "Southpole", "Riemann", 	"Riemann - chord generator", SEQUENCER_TAG);
+Model *modelRiemann = Model::create<Riemann,RiemannWidget>("Riemann");

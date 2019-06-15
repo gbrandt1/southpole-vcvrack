@@ -235,4 +235,4 @@ struct SnakeWidget : ModuleWidget {
 
 };
 
-Model *modelSnake 	= Model::create<Snake,SnakeWidget>(	 "Southpole", "Snake", 		"Snake - multicore", UTILITY_TAG);
+Model *modelSnake 	= Model::create<Snake,SnakeWidget>("Snake");

@@ -595,4 +595,4 @@ Menu *CornrowsXWidget::createContextMenu() {
 	return menu;
 }
 
-Model *modelCornrowsX = Model::create<CornrowsX,CornrowsXWidget>("Southpole", "CornrowsX", 	"CornrowsX - macro osc", OSCILLATOR_TAG, WAVESHAPER_TAG);
+Model *modelCornrowsX = Model::create<CornrowsX,CornrowsXWidget>("CornrowsX");

@@ -99,4 +99,4 @@ struct WriggleWidget : ModuleWidget {
 	}
 };
 
-Model *modelWriggle = Model::create<Wriggle,WriggleWidget>(	 "Southpole", "Wriggle", 	"Wriggle - spring model", LFO_TAG, FUNCTION_GENERATOR_TAG);
+Model *modelWriggle = Model::create<Wriggle,WriggleWidget>("Wriggle");

@@ -595,4 +595,4 @@ Menu *SnsWidget::createContextMenu() {
 	return menu;
 }
 
-Model *modelSns 	= Model::create<Sns,SnsWidget>(		 "Southpole", "SNS", 		"SNS - euclidean sequencer", SEQUENCER_TAG);
+Model *modelSns 	= Model::create<Sns,SnsWidget>("SNS");

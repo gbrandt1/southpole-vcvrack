@@ -362,4 +362,4 @@ Menu *AnnuliWidget::createContextMenu() {
 	return menu;
 }
 
-Model *modelAnnuli 	= Model::create<Annuli,AnnuliWidget>( 	 "Southpole", "Annuli", "Annuli - resonator", SYNTH_VOICE_TAG, OSCILLATOR_TAG);
+Model *modelAnnuli 	= Model::create<Annuli,AnnuliWidget>("Annuli");

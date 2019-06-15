@@ -73,10 +73,10 @@ struct Blank42HPWidget : ModuleWidget {
 	}
 };
 
-Model *modelBlank16HP 	= Model::create<Module,Blank16HPWidget>("Southpole", "Blank16HP",	"Blank 16 HP", BLANK_TAG);
-Model *modelBlank1HP 	= Model::create<Module,Blank1HPWidget >("Southpole", "Blank1HP", 	"Blank 1 HP", BLANK_TAG);
-Model *modelBlank2HP 	= Model::create<Module,Blank2HPWidget >("Southpole", "Blank2HP", 	"Blank 2 HP", BLANK_TAG);
-Model *modelBlank42HP 	= Model::create<Module,Blank42HPWidget>("Southpole", "Blank42HP", 	"Blank 42 HP", BLANK_TAG);
-Model *modelBlank4HP 	= Model::create<Module,Blank4HPWidget >("Southpole", "Blank4HP", 	"Blank 4 HP", BLANK_TAG);
-Model *modelBlank8HP 	= Model::create<Module,Blank8HPWidget >("Southpole", "Blank8HP", 	"Blank 8 HP", BLANK_TAG);
+Model *modelBlank16HP 	= Model::create<Module,Blank16HPWidget>("Blank16HP");
+Model *modelBlank1HP 	= Model::create<Module,Blank1HPWidget >("Blank1HP");
+Model *modelBlank2HP 	= Model::create<Module,Blank2HPWidget >("Blank2HP");
+Model *modelBlank42HP 	= Model::create<Module,Blank42HPWidget>("Blank42HP");
+Model *modelBlank4HP 	= Model::create<Module,Blank4HPWidget >("Blank4HP");
+Model *modelBlank8HP 	= Model::create<Module,Blank8HPWidget >("Blank8HP");
 

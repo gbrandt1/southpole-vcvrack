@@ -193,4 +193,4 @@ struct PisteWidget : ModuleWidget {
 	}
 };
 
-Model *modelPiste 	= Model::create<Piste,PisteWidget>(	 "Southpole", "Piste", 		"Piste - drum processor", ENVELOPE_GENERATOR_TAG, EFFECT_TAG);
+Model *modelPiste 	= Model::create<Piste,PisteWidget>("Piste");

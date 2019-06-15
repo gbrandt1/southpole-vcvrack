@@ -267,7 +267,7 @@ struct SplashWidget : ModuleWidget {
 	}
 };
 
-Model *modelSplash 	= Model::create<Splash,SplashWidget>(	 "Southpole", "Splash", 	"Splash / Lambs - tidal modulator", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG);
+Model *modelSplash 	= Model::create<Splash,SplashWidget>("Splash");
 
 
 void SplashWidget::step() {

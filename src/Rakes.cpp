@@ -217,5 +217,5 @@ struct RakesWidget : ModuleWidget {
 	}
 };
 
-Model *modelRakes 	= Model::create<Rakes,RakesWidget>(	 "Southpole", "Rakes", 	    "Rakes - resonator bank", FILTER_TAG);
+Model *modelRakes 	= Model::create<Rakes,RakesWidget>("Rakes");
 

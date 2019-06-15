@@ -181,7 +181,7 @@ struct AbrWidget : ModuleWidget {
 
 };
 
-Model *modelAbr = Model::create<Abr,AbrWidget>("Southpole", "Abr", "Abr - A/B switch", SWITCH_TAG, MIXER_TAG);
+Model *modelAbr = Model::create<Abr,AbrWidget>("Abr");
 
 
 

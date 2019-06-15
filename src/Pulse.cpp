@@ -222,4 +222,4 @@ struct PulseWidget : ModuleWidget {
 	}
 };
 
-Model *modelPulse	= Model::create<Pulse,PulseWidget>(	 "Southpole", "Pulse", 		"Pulse - pulse generator", ENVELOPE_GENERATOR_TAG);
+Model *modelPulse	= Model::create<Pulse,PulseWidget>("Pulse");

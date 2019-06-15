@@ -242,4 +242,4 @@ Menu *FuseWidget::createContextMenu() {
 	return menu;
 }
 
-Model *modelFuse 	= Model::create<Fuse,FuseWidget>(	 "Southpole", "Fuse", 		"Fuse - next pattern", SEQUENCER_TAG);
+Model *modelFuse 	= Model::create<Fuse,FuseWidget>("Fuse");

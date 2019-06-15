@@ -288,4 +288,4 @@ Menu *EtagereWidget::createContextMenu() {
 	return menu;
 }
 
-Model *modelEtagere = Model::create<Etagere,EtagereWidget>(	 "Southpole", "Etagere", 	"Etagere - EQ", FILTER_TAG);
+Model *modelEtagere = Model::create<Etagere,EtagereWidget>("Etagere");

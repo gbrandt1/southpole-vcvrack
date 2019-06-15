@@ -205,4 +205,4 @@ struct AuxWidget : ModuleWidget {
 	}
 };
 
-Model *modelAux 	= Model::create<Aux,AuxWidget>(		 "Southpole", "Aux", 	"Aux - effect loop", AMPLIFIER_TAG, MIXER_TAG);
+Model *modelAux 	= Model::create<Aux,AuxWidget>("Aux");
