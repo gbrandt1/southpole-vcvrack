@@ -226,7 +226,8 @@ struct Gnome : Module {
 	float env = 0.0;
 	//SchmittTrigger envtrigger;
 
-	Gnome() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Gnome() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		params.resize(NUM_PARAMS);
 		inputs.resize(NUM_INPUTS);
 		outputs.resize(NUM_OUTPUTS);
@@ -402,7 +403,8 @@ void Gnome::step() {
 
 struct GnomeWidget : ModuleWidget {	
 	
-	GnomeWidget(Module *module)  : ModuleWidget(module) {	
+	GnomeWidget(Module *module)  {
+		setModule(module);	
 
 		box.size = Vec(15*10, 380);
 

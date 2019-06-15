@@ -100,7 +100,8 @@ struct SplashParasite : Module {
 };
 
 
-SplashParasite::SplashParasite() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+SplashParasite::SplashParasite() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	memset(&generator, 0, sizeof(generator));
 	generator.Init();
 	generator.set_sync(false);
@@ -222,7 +223,8 @@ struct SplashParasiteWidget : ModuleWidget {
 	void step() override;
 	Menu *createContextMenu() override;
 
-	SplashParasiteWidget(SplashParasite *module) : ModuleWidget(module) {
+	SplashParasiteWidget(SplashParasite *module) {
+		setModule(module);
 
 	box.size = Vec(15 * 8, 380);
 

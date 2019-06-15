@@ -40,7 +40,8 @@ struct Fuse : Module {
 
 	bool gateMode;
 
-	Fuse() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Fuse() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
         params.resize(NUM_PARAMS);
         inputs.resize(NUM_INPUTS);
@@ -167,7 +168,8 @@ struct FuseDisplay : TransparentWidget {
 struct FuseWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 
-   	FuseWidget(Fuse *module)  : ModuleWidget(module) {
+   	FuseWidget(Fuse *module)  {
+		setModule(module);
 
 		box.size = Vec(4 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 		{

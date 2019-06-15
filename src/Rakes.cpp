@@ -68,7 +68,8 @@ struct Rakes : Module {
 	int lastsizel[NBUF];
 	int lastsizer[NBUF];
 
-	Rakes() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {	
+	Rakes() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);	
 
 		maxsize = engineGetSampleRate();
 
@@ -176,7 +177,8 @@ void Rakes::step() {
 
 struct RakesWidget : ModuleWidget { 
 	
-	RakesWidget(Rakes *module) : ModuleWidget(module) {
+	RakesWidget(Rakes *module) {
+		setModule(module);
 	
 		box.size = Vec(15*8, 380);
 

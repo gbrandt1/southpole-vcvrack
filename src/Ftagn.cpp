@@ -19,7 +19,8 @@ struct Ftagn : Module {
 		NUM_LIGHTS
 	};
 
-	Ftagn() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	Ftagn() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
 
 	void step() override;
 };
@@ -33,7 +34,8 @@ void Ftagn::step() {
 
 struct FtagnWidget : ModuleWidget { 
 	
-	FtagnWidget(Ftagn *module)  : ModuleWidget(module) {
+	FtagnWidget(Ftagn *module)  {
+		setModule(module);
  
 		box.size = Vec(15*4, 380);
 

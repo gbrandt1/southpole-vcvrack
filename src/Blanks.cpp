@@ -1,7 +1,8 @@
 #include "Southpole.hpp"
 
 struct Blank1HPWidget : ModuleWidget {
-	Blank1HPWidget(Module *module)  : ModuleWidget(module) {
+	Blank1HPWidget(Module *module)  {
+		setModule(module);
 	
 		box.size = Vec(1 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 		{
@@ -13,7 +14,8 @@ struct Blank1HPWidget : ModuleWidget {
 	}
 };
 struct Blank2HPWidget : ModuleWidget {
-	Blank2HPWidget(Module *module)  : ModuleWidget(module) {
+	Blank2HPWidget(Module *module)  {
+		setModule(module);
 	
 		box.size = Vec(2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 		{
@@ -25,7 +27,8 @@ struct Blank2HPWidget : ModuleWidget {
 	}
 };
 struct Blank4HPWidget : ModuleWidget {
-	Blank4HPWidget(Module *module)  : ModuleWidget(module) {
+	Blank4HPWidget(Module *module)  {
+		setModule(module);
 	
 		box.size = Vec(4 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 		{
@@ -37,7 +40,8 @@ struct Blank4HPWidget : ModuleWidget {
 	}
 };
 struct Blank8HPWidget : ModuleWidget {
-	Blank8HPWidget(Module *module)  : ModuleWidget(module) {
+	Blank8HPWidget(Module *module)  {
+		setModule(module);
 	
 		box.size = Vec(8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 		{
@@ -49,7 +53,8 @@ struct Blank8HPWidget : ModuleWidget {
 	}
 };
 struct Blank16HPWidget : ModuleWidget {
-	Blank16HPWidget(Module *module)  : ModuleWidget(module) {
+	Blank16HPWidget(Module *module)  {
+		setModule(module);
 	
 		box.size = Vec(16 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 		{
@@ -61,7 +66,8 @@ struct Blank16HPWidget : ModuleWidget {
 	}
 };
 struct Blank42HPWidget : ModuleWidget {	
-	Blank42HPWidget(Module *module)  : ModuleWidget(module) {
+	Blank42HPWidget(Module *module)  {
+		setModule(module);
 	
 		box.size = Vec(42 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 		{

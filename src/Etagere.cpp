@@ -60,7 +60,8 @@ struct Etagere : Module {
     VAStateVariableFilter bp3Filter;
     VAStateVariableFilter hpFilter;
 
-    Etagere() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {
+    Etagere() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
 
         params.resize(NUM_PARAMS);
         inputs.resize(NUM_INPUTS);
@@ -189,7 +190,8 @@ struct EtagereWidget : ModuleWidget {
 	void step() override;
 	Menu *createContextMenu() override;
 
-    EtagereWidget(Etagere *module)  : ModuleWidget(module) {
+    EtagereWidget(Etagere *module)  {
+		setModule(module);
 
         box.size = Vec(15*6, 380);
 

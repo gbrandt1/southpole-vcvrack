@@ -91,7 +91,8 @@ struct Sns : Module {
 	unsigned int  currentStep = 0;
 	unsigned int  turing = 0;
 
-	Sns() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Sns() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	
 		sequence.fill(0);
 		accents.fill(0);
@@ -488,7 +489,8 @@ struct SnsWidget : ModuleWidget {
 	SnsWidget();
 	Menu *createContextMenu() override;
 	
-	SnsWidget(Sns *module) : ModuleWidget(module) {
+	SnsWidget(Sns *module) {
+		setModule(module);
 
 		box.size = Vec(15*6, 380);
 

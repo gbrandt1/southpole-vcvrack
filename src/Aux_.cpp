@@ -45,7 +45,8 @@ struct Aux : Module {
 	bool mute;
 	bool bypass;
 
-	Aux() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Aux() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		mute = 0;
 		bypass = 0;
@@ -153,7 +154,8 @@ void Aux::step() {
 }
 
 struct AuxWidget : ModuleWidget { 
-	AuxWidget(Aux *module) : ModuleWidget(module) {
+	AuxWidget(Aux *module) {
+		setModule(module);
 
 		box.size = Vec(15*4, 380);
 

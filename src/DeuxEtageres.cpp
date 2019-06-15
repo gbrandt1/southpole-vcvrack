@@ -51,7 +51,8 @@ struct DeuxEtageres : Module {
     VAStateVariableFilter bp3Filter[2];
     VAStateVariableFilter hpFilter[2];
 
-    DeuxEtageres() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {
+    DeuxEtageres() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
 
         params.resize(NUM_PARAMS);
         inputs.resize(NUM_INPUTS);
@@ -168,7 +169,8 @@ void DeuxEtageres::step() {
 }
 struct DeuxEtageresWidget : ModuleWidget { 
     
-    DeuxEtageresWidget(DeuxEtageres *module)  : ModuleWidget(module) {
+    DeuxEtageresWidget(DeuxEtageres *module)  {
+		setModule(module);
 
         box.size = Vec(15*6, 380);
 

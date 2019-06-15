@@ -39,7 +39,8 @@ struct Sssh : Module {
 	SchmittTrigger trigger[4];
 	float sample[4] = { 0.0,0.,0.,0. };
 
-	Sssh() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Sssh() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		//trigger.setThresholds(0.0, 0.7);
 	}
 	void reset() override {
@@ -86,7 +87,8 @@ void Sssh::step() {
 
 struct SsshWidget : ModuleWidget {	
 	
-	SsshWidget(Sssh *module) : ModuleWidget(module) {
+	SsshWidget(Sssh *module) {
+		setModule(module);
 
 		box.size = Vec(15*4, 380);
 

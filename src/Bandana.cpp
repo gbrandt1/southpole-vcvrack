@@ -44,7 +44,8 @@ struct Bandana : Module {
 		NUM_LIGHTS
 	};
 
-	Bandana() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	Bandana() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
 	void step() override;
 };
 
@@ -69,7 +70,8 @@ void Bandana::step() {
 }
 
 struct BandanaWidget : ModuleWidget { 
-	BandanaWidget(Bandana *module) : ModuleWidget(module) {
+	BandanaWidget(Bandana *module) {
+		setModule(module);
 
 		box.size = Vec(15*4, 380);
 

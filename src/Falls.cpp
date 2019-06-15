@@ -50,7 +50,8 @@ struct Falls : Module {
 		NUM_LIGHTS
 	};
 
-	Falls() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	Falls() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
 	void step() override;
 };
 
@@ -80,7 +81,8 @@ void Falls::step() {
 
 struct FallsWidget : ModuleWidget { 
 	
-	FallsWidget(Falls *module)  : ModuleWidget(module) {	
+	FallsWidget(Falls *module)  {
+		setModule(module);	
 
 		box.size = Vec(15*4, 380);
 

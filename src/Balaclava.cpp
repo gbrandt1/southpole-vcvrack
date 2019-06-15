@@ -43,7 +43,8 @@ struct Balaclava : Module {
 		NUM_LIGHTS
 	};
 
-	Balaclava() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	Balaclava() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
 	void step() override;
 };
 
@@ -71,7 +72,8 @@ void Balaclava::step() {
 }
 
 struct BalaclavaWidget : ModuleWidget {	
-	BalaclavaWidget(Balaclava *module)  : ModuleWidget(module) {
+	BalaclavaWidget(Balaclava *module)  {
+		setModule(module);
 
 		box.size = Vec(15*4, 380);
 

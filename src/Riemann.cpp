@@ -51,7 +51,8 @@ struct Riemann : Module {
 		NUM_LIGHTS
 	};
 
-	Riemann() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Riemann() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		reset();
 
 	}
@@ -512,7 +513,8 @@ struct RiemannDisplay : TransparentWidget {
 
 struct RiemannWidget : ModuleWidget { 
 	
-	RiemannWidget(Riemann *module) : ModuleWidget(module) {
+	RiemannWidget(Riemann *module) {
+		setModule(module);
 
 		box.size = Vec(15*16, 380);
 

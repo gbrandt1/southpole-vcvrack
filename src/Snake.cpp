@@ -34,7 +34,8 @@ struct Snake : Module {
   	SchmittTrigger plusTrigger;
   	SchmittTrigger minusTrigger;
 
-	Snake() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Snake() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
 		// first Snake module instantiation
 		if (nsnakes == 0) {
@@ -198,7 +199,8 @@ struct SnakeDisplay : TransparentWidget {
 
 struct SnakeWidget : ModuleWidget {
 	
-	SnakeWidget(Snake *module) : ModuleWidget(module) {
+	SnakeWidget(Snake *module) {
+		setModule(module);
 
 		box.size = Vec(15*4, 380);
 

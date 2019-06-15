@@ -129,7 +129,8 @@ struct Smoke : Module {
 };
 
 
-Smoke::Smoke() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+Smoke::Smoke() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
   const int memLen = 118784;
   const int ccmLen = 65536 - 128;
   block_mem = new uint8_t[memLen]();
@@ -288,7 +289,8 @@ struct SmokeWidget : ModuleWidget {
 	Menu *createContextMenu() override;
 
 
-  SmokeWidget(Smoke *module) : ModuleWidget(module) {
+  SmokeWidget(Smoke *module) {
+		setModule(module);
  
     box.size = Vec(6* RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 

@@ -110,7 +110,8 @@ struct Annuli : Module {
 };
 
 
-Annuli::Annuli() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+Annuli::Annuli() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	memset(&strummer, 0, sizeof(strummer));
 	memset(&part, 0, sizeof(part));
 	memset(&string_synth, 0, sizeof(string_synth));
@@ -254,7 +255,8 @@ struct AnnuliWidget : ModuleWidget {
 	void step() override;
 	Menu *createContextMenu() override;
 
-	AnnuliWidget(Annuli *module) : ModuleWidget(module) {
+	AnnuliWidget(Annuli *module) {
+		setModule(module);
 
 		box.size = Vec(15*6, 380);
 		{

@@ -47,7 +47,8 @@ struct Piste : Module {
 	SchmittTrigger trigger2;
 	SchmittTrigger mute;
 
-	Piste() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Piste() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
         params.resize(NUM_PARAMS);
         inputs.resize(NUM_INPUTS);
@@ -147,7 +148,8 @@ void Piste::step() {
 
 struct PisteWidget : ModuleWidget {	
 	
-	PisteWidget(Module *module)  : ModuleWidget(module) {
+	PisteWidget(Module *module)  {
+		setModule(module);
 
 		box.size = Vec(15*4, 380);
 

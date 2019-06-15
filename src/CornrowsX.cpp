@@ -135,7 +135,8 @@ struct CornrowsX : Module {
 };
 
 
-CornrowsX::CornrowsX() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {
+CornrowsX::CornrowsX() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
 	memset(&osc, 0, sizeof(osc));
 	osc.Init();
 	memset(&quantizer, 0, sizeof(quantizer));
@@ -472,7 +473,8 @@ struct CornrowsXWidget : ModuleWidget {
 
 	Menu *createContextMenu() override;
 
-	CornrowsXWidget(CornrowsX *module)  : ModuleWidget(module) {
+	CornrowsXWidget(CornrowsX *module)  {
+		setModule(module);
 
 		box.size = Vec( 8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT );
 

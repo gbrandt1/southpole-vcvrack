@@ -36,7 +36,8 @@ struct Wriggle : Module {
 	float v0 = 0.0;
 	float x0 = 0.0;
 
-	Wriggle() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Wriggle() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	}
 
 	void step() override;
@@ -69,7 +70,8 @@ void Wriggle::step() {
 
 struct WriggleWidget : ModuleWidget { 
 	
-	WriggleWidget(Wriggle *module) : ModuleWidget(module) {
+	WriggleWidget(Wriggle *module) {
+		setModule(module);
 
 		box.size = Vec(15*2, 380);
 

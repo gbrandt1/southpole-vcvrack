@@ -99,7 +99,8 @@ struct Splash : Module {
 };
 
 
-Splash::Splash() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+Splash::Splash() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	memset(&generator, 0, sizeof(generator));
 	generator.Init();
 	generator.set_sync(false);
@@ -207,7 +208,8 @@ struct SplashWidget : ModuleWidget {
 	void step() override;
 	Menu *createContextMenu() override;
 
-	SplashWidget(Splash *module) : ModuleWidget(module) {
+	SplashWidget(Splash *module) {
+		setModule(module);
 
 		box.size = Vec(15 * 8, 380);
 

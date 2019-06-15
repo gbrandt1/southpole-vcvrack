@@ -69,7 +69,8 @@ struct Pulse : Module {
 	 	//,2.,3.,4. //,5.,6.,7.,8.,12.,16.
 	};
 
-	Pulse() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {	}
+	Pulse() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);	}
 
 	void step() override;
 };
@@ -173,7 +174,8 @@ void Pulse::step() {
 
 struct PulseWidget : ModuleWidget {	
 	
-	PulseWidget(Module *module)  : ModuleWidget(module) {
+	PulseWidget(Module *module)  {
+		setModule(module);
 	
 		box.size = Vec(15*4, 380);
 
