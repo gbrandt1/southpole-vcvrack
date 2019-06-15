@@ -165,7 +165,7 @@ struct SnakeDisplay : TransparentWidget {
 	std::shared_ptr<Font> font;
 
 	SnakeDisplay() {
-		font = Font::load(assetPlugin(plugin, "res/hdad-segment14-1.002/Segment14.ttf"));
+		font = Font::load(assetPlugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
 	}
 
 	void draw(NVGcontext *vg) override {
@@ -205,7 +205,7 @@ struct SnakeWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Snake.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Snake.svg")));
 			addChild(panel);
 		}
 

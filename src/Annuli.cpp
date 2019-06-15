@@ -259,13 +259,13 @@ struct AnnuliWidget : ModuleWidget {
 		box.size = Vec(15*6, 380);
 		{
 			panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Annuli.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Annuli.svg")));
 			panel->box.size = box.size;
 			addChild(panel);
 		}
 		{
 			panel2 = new SVGPanel();
-			panel2->setBackground(SVG::load(assetPlugin(plugin, "res/DisastrousPeace.svg")));
+			panel2->setBackground(SVG::load(assetPlugin(pluginInstance, "res/DisastrousPeace.svg")));
 			panel2->box.size = box.size;
 			addChild(panel2);		
 		}

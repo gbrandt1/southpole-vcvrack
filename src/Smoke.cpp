@@ -295,37 +295,37 @@ struct SmokeWidget : ModuleWidget {
   #ifdef PARASITES
     {
       panel1 = new SVGPanel();
-      panel1->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke-parasite.svg")));
+      panel1->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Smoke-parasite.svg")));
       panel1->box.size = box.size;
       addChild(panel1);
     }
     {
       panel2 = new SVGPanel();
-      panel2->setBackground(SVG::load(assetPlugin(plugin, "res/Espectro-parasite.svg")));
+      panel2->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Espectro-parasite.svg")));
       panel2->box.size = box.size;
       addChild(panel2);
     }
     {
       panel3 = new SVGPanel();
-      panel3->setBackground(SVG::load(assetPlugin(plugin, "res/Ritardo-parasite.svg")));
+      panel3->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Ritardo-parasite.svg")));
       panel3->box.size = box.size;
       addChild(panel3);
     }
     {
       panel4 = new SVGPanel();
-      panel4->setBackground(SVG::load(assetPlugin(plugin, "res/Camilla-parasite.svg")));
+      panel4->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Camilla-parasite.svg")));
       panel4->box.size = box.size;
       addChild(panel4);
     }
     {
       panel5 = new SVGPanel();
-      panel5->setBackground(SVG::load(assetPlugin(plugin, "res/Oliverb.svg")));
+      panel5->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Oliverb.svg")));
       panel5->box.size = box.size;
       addChild(panel5);
     }
     {
       panel6 = new SVGPanel();
-      panel6->setBackground(SVG::load(assetPlugin(plugin, "res/Resonestor.svg")));
+      panel6->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Resonestor.svg")));
       panel6->box.size = box.size;
       addChild(panel6);
     }
@@ -333,25 +333,25 @@ struct SmokeWidget : ModuleWidget {
   #else
     {
       panel1 = new SVGPanel();
-      panel1->setBackground(SVG::load(assetPlugin(plugin, "res/Smoke.svg")));
+      panel1->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Smoke.svg")));
       panel1->box.size = box.size;
       addChild(panel1);
     }
     {
       panel2 = new SVGPanel();
-      panel2->setBackground(SVG::load(assetPlugin(plugin, "res/Espectro.svg")));
+      panel2->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Espectro.svg")));
       panel2->box.size = box.size;
       addChild(panel2);
     }
     {
       panel3 = new SVGPanel();
-      panel3->setBackground(SVG::load(assetPlugin(plugin, "res/Ritardo.svg")));
+      panel3->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Ritardo.svg")));
       panel3->box.size = box.size;
       addChild(panel3);
     }
     {
       panel4 = new SVGPanel();
-      panel4->setBackground(SVG::load(assetPlugin(plugin, "res/Camilla.svg")));
+      panel4->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Camilla.svg")));
       panel4->box.size = box.size;
       addChild(panel4);
     }

@@ -159,7 +159,7 @@ struct AuxWidget : ModuleWidget {
 
 		{
 			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Aux_.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Aux_.svg")));
 			panel->box.size = box.size;
 			addChild(panel);	
 		}

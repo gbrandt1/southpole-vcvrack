@@ -228,19 +228,19 @@ struct SplashParasiteWidget : ModuleWidget {
 
   	{
 	  	panel0 = new SVGPanel();
-	  	panel0->setBackground(SVG::load(assetPlugin(plugin, "res/SplashParasite.svg")));
+	  	panel0->setBackground(SVG::load(assetPlugin(pluginInstance, "res/SplashParasite.svg")));
 	  	panel0->box.size = box.size;
 	  	addChild(panel0);
   	}
   	{
 	  	panel1 = new SVGPanel();
-	  	panel1->setBackground(SVG::load(assetPlugin(plugin, "res/TwoBumps.svg")));
+	  	panel1->setBackground(SVG::load(assetPlugin(pluginInstance, "res/TwoBumps.svg")));
 	  	panel1->box.size = box.size;
 	  	addChild(panel1);
   	}
   	{
 	  	panel2 = new SVGPanel();
-	  	panel2->setBackground(SVG::load(assetPlugin(plugin, "res/TwoDrunks.svg")));
+	  	panel2->setBackground(SVG::load(assetPlugin(pluginInstance, "res/TwoDrunks.svg")));
 	  	panel2->box.size = box.size;
 	  	addChild(panel2);
   	}

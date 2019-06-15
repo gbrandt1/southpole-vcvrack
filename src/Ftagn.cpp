@@ -39,7 +39,7 @@ struct FtagnWidget : ModuleWidget {
 
 		{
 			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Ftagn.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Ftagn.svg")));
 			panel->box.size = box.size;
 			addChild(panel);	
 		}

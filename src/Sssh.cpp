@@ -93,7 +93,7 @@ struct SsshWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Sssh.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Sssh.svg")));
 			addChild(panel);
 		}
 

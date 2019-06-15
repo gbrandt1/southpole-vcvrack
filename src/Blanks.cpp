@@ -7,7 +7,7 @@ struct Blank1HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/sp-Blank2HP.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/sp-Blank2HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -19,7 +19,7 @@ struct Blank2HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/sp-Blank2HP.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/sp-Blank2HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -31,7 +31,7 @@ struct Blank4HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/sp-Blank4HP.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/sp-Blank4HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -43,7 +43,7 @@ struct Blank8HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/sp-Blank8HP.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/sp-Blank8HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -55,7 +55,7 @@ struct Blank16HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/sp-Blank16HP.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/sp-Blank16HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -67,7 +67,7 @@ struct Blank42HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/sp-Blank42HP.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/sp-Blank42HP.svg")));
 			addChild(panel);
 		}
 	}

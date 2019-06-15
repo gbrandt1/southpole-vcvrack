@@ -174,7 +174,7 @@ struct DeuxEtageresWidget : ModuleWidget {
 
         {
             SVGPanel *panel = new SVGPanel();
-            panel->setBackground(SVG::load(assetPlugin(plugin, "res/DeuxEtageres.svg")));
+            panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/DeuxEtageres.svg")));
             panel->box.size = box.size;
             addChild(panel);	
         }

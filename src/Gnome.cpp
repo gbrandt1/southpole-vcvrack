@@ -409,7 +409,7 @@ struct GnomeWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Gnome.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Gnome.svg")));
 			addChild(panel);
 		}
 

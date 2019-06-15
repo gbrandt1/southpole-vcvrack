@@ -77,7 +77,7 @@ struct BalaclavaWidget : ModuleWidget {
 
 		{
 			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Balaclava.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Balaclava.svg")));
 			panel->box.size = box.size;
 			addChild(panel);	
 		}

@@ -75,7 +75,7 @@ struct BandanaWidget : ModuleWidget {
 
 		{
 			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Bandana4HP.svg")));
+			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Bandana4HP.svg")));
 			panel->box.size = box.size;
 			addChild(panel);	
 		}

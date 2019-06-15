@@ -195,13 +195,13 @@ struct EtagereWidget : ModuleWidget {
 
         {
             noirPanel = new SVGPanel();
-            noirPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere.svg")));
+            noirPanel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Etagere.svg")));
             noirPanel->box.size = box.size;
             addChild(noirPanel);	
         }
         {
             blancPanel = new SVGPanel();
-            blancPanel->setBackground(SVG::load(assetPlugin(plugin, "res/Etagere_blanc.svg")));
+            blancPanel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Etagere_blanc.svg")));
             blancPanel->box.size = box.size;
             addChild(blancPanel);	
         }
