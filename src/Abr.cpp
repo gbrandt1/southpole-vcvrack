@@ -167,21 +167,21 @@ struct AbrWidget : ModuleWidget {
         {
             yPos += 32.;
 
-            addInput(Port::create<sp_Port>(Vec(x1, yPos), Port::INPUT, module, Abr::INA1_INPUT + i));
-            addParam(ParamWidget::create<sp_Switch>(Vec(x2+1, 3 + yPos), module, Abr::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
-            addInput(Port::create<sp_Port>(Vec(x3, yPos), Port::INPUT, module, Abr::INB1_INPUT + i));
-            addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, Abr::OUT1_OUTPUT + i));
+            addInput(createPort<sp_Port>(Vec(x1, yPos), PortWidget::INPUT, module, Abr::INA1_INPUT + i));
+            addParam(createParam<sp_Switch>(Vec(x2+1, 3 + yPos), module, Abr::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
+            addInput(createPort<sp_Port>(Vec(x3, yPos), PortWidget::INPUT, module, Abr::INB1_INPUT + i));
+            addOutput(createPort<sp_Port>(Vec(x4, yPos), PortWidget::OUTPUT, module, Abr::OUT1_OUTPUT + i));
         }
 
         yPos += 48.;
-        addOutput(Port::create<sp_Port>(Vec(x1, yPos), Port::OUTPUT, module, Abr::SUMA_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x3, yPos), Port::OUTPUT, module, Abr::SUMB_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, Abr::SUM_OUTPUT));
+        addOutput(createPort<sp_Port>(Vec(x1, yPos), PortWidget::OUTPUT, module, Abr::SUMA_OUTPUT));
+        addOutput(createPort<sp_Port>(Vec(x3, yPos), PortWidget::OUTPUT, module, Abr::SUMB_OUTPUT));
+        addOutput(createPort<sp_Port>(Vec(x4, yPos), PortWidget::OUTPUT, module, Abr::SUM_OUTPUT));
     }
 
 };
 
-Model *modelAbr = Model::create<Abr,AbrWidget>("Abr");
+Model *modelAbr = createModel<Abr,AbrWidget>("Abr");
 
 
 

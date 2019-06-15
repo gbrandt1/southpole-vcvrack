@@ -514,33 +514,33 @@ struct SnsWidget : ModuleWidget {
 		float x2 = 4.+30;
 		float x3 = 4.+60;
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1   ), module, Sns::K_PARAM, 0., 1., .25));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1   ), module, Sns::L_PARAM, 0., 1., 1.));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1   ), module, Sns::R_PARAM, 0., 1., 0.));
-		addInput(Port::create<sp_Port>(Vec(x1, y1+1*yh), Port::INPUT, module, Sns::K_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x2, y1+1*yh), Port::INPUT, module, Sns::L_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x3, y1+1*yh), Port::INPUT, module, Sns::R_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1   ), module, Sns::K_PARAM, 0., 1., .25));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1   ), module, Sns::L_PARAM, 0., 1., 1.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1   ), module, Sns::R_PARAM, 0., 1., 0.));
+		addInput(createPort<sp_Port>(Vec(x1, y1+1*yh), PortWidget::INPUT, module, Sns::K_INPUT));
+		addInput(createPort<sp_Port>(Vec(x2, y1+1*yh), PortWidget::INPUT, module, Sns::L_INPUT));
+		addInput(createPort<sp_Port>(Vec(x3, y1+1*yh), PortWidget::INPUT, module, Sns::R_INPUT));
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+2.5*yh), module, Sns::P_PARAM, 0., 1., 0.));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+2.5*yh), module, Sns::A_PARAM, 0., 1., 0.));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+2.5*yh), module, Sns::S_PARAM, 0., 1., 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2.5*yh), module, Sns::P_PARAM, 0., 1., 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2.5*yh), module, Sns::A_PARAM, 0., 1., 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2.5*yh), module, Sns::S_PARAM, 0., 1., 0.));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+3.5*yh), Port::INPUT, module, Sns::P_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x2, y1+3.5*yh), Port::INPUT, module, Sns::A_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x3, y1+3.5*yh), Port::INPUT, module, Sns::S_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y1+3.5*yh), PortWidget::INPUT, module, Sns::P_INPUT));
+		addInput(createPort<sp_Port>(Vec(x2, y1+3.5*yh), PortWidget::INPUT, module, Sns::A_INPUT));
+		addInput(createPort<sp_Port>(Vec(x3, y1+3.5*yh), PortWidget::INPUT, module, Sns::S_INPUT));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+4.65*yh), Port::INPUT, module, Sns::CLK_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, y1+5.4*yh), Port::INPUT, module, Sns::RESET_INPUT));
-		addOutput(Port::create<sp_Port>(Vec(x3, y1+4.65*yh), Port::OUTPUT, module, Sns::CLK_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x3, y1+5.4*yh), Port::OUTPUT, module, Sns::RESET_OUTPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y1+4.65*yh), PortWidget::INPUT, module, Sns::CLK_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y1+5.4*yh), PortWidget::INPUT, module, Sns::RESET_INPUT));
+		addOutput(createPort<sp_Port>(Vec(x3, y1+4.65*yh), PortWidget::OUTPUT, module, Sns::CLK_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x3, y1+5.4*yh), PortWidget::OUTPUT, module, Sns::RESET_OUTPUT));
 
-		addOutput(Port::create<sp_Port>(Vec(x2, y1+4.65*yh), Port::OUTPUT, module, Sns::GATE_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x2, y1+5.4*yh), Port::OUTPUT, module, Sns::ACCENT_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x2, y1+4.65*yh), PortWidget::OUTPUT, module, Sns::GATE_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x2, y1+5.4*yh), PortWidget::OUTPUT, module, Sns::ACCENT_OUTPUT));
 
 
-		//addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(4, 281), module, Sns::CLK_LIGHT));
-		//addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(4+25, 281), module, Sns::GATE_LIGHT));
-		//addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(4+50, 281), module, Sns::ACCENT_LIGHT));
+		//addChild(createLight<SmallLight<RedLight>>(Vec(4, 281), module, Sns::CLK_LIGHT));
+		//addChild(createLight<SmallLight<RedLight>>(Vec(4+25, 281), module, Sns::GATE_LIGHT));
+		//addChild(createLight<SmallLight<RedLight>>(Vec(4+50, 281), module, Sns::ACCENT_LIGHT));
 
 	}
 };
@@ -595,4 +595,4 @@ Menu *SnsWidget::createContextMenu() {
 	return menu;
 }
 
-Model *modelSns 	= Model::create<Sns,SnsWidget>("SNS");
+Model *modelSns 	= createModel<Sns,SnsWidget>("SNS");

@@ -164,33 +164,33 @@ struct PisteWidget : ModuleWidget {
 		const float y1 = 47.;
 		const float yh = 31.;
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1), Port::INPUT, module, Piste::IN_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1), module, Piste::DRIVE_PARAM, 0.0, 1.0, 0.0));
+		addInput(createPort<sp_Port>(Vec(x1, y1), PortWidget::INPUT, module, Piste::IN_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1), module, Piste::DRIVE_PARAM, 0.0, 1.0, 0.0));
 		
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+1*yh), module, Piste::FREQ_PARAM, -1.0, 1.0, 0.));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Piste::RESO_PARAM, .0, 1.0, 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+1*yh), module, Piste::FREQ_PARAM, -1.0, 1.0, 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Piste::RESO_PARAM, .0, 1.0, 0.));
 
-		addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x1+6, y1+2*yh+5), module, Piste::DECAY1_LIGHT));
-		addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x2+6, y1+2*yh+5), module, Piste::DECAY2_LIGHT));
+		addChild(createLight<SmallLight<RedLight>>(Vec(x1+6, y1+2*yh+5), module, Piste::DECAY1_LIGHT));
+		addChild(createLight<SmallLight<RedLight>>(Vec(x2+6, y1+2*yh+5), module, Piste::DECAY2_LIGHT));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+2.5*yh), Port::INPUT, module, Piste::TRIG1_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x2, y1+2.5*yh), Port::INPUT, module, Piste::TRIG2_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y1+2.5*yh), PortWidget::INPUT, module, Piste::TRIG1_INPUT));
+		addInput(createPort<sp_Port>(Vec(x2, y1+2.5*yh), PortWidget::INPUT, module, Piste::TRIG2_INPUT));
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+3.5*yh), module, Piste::SCALE1_PARAM, 0.0, 1.0, .5));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+3.5*yh), module, Piste::SCALE2_PARAM, 0.0, 1.0, 1.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+3.5*yh), module, Piste::SCALE1_PARAM, 0.0, 1.0, .5));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+3.5*yh), module, Piste::SCALE2_PARAM, 0.0, 1.0, 1.));
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+4.5*yh), module, Piste::DECAY1_PARAM, 0.0, 1.0, 0.5));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+4.5*yh), module, Piste::DECAY2_PARAM, 0.0, 1.0, 1.));
-		addInput(Port::create<sp_Port>(Vec(x1, y1+5.25*yh), Port::INPUT, module, Piste::DECAY1_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x2, y1+5.25*yh), Port::INPUT, module, Piste::DECAY2_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+4.5*yh), module, Piste::DECAY1_PARAM, 0.0, 1.0, 0.5));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4.5*yh), module, Piste::DECAY2_PARAM, 0.0, 1.0, 1.));
+		addInput(createPort<sp_Port>(Vec(x1, y1+5.25*yh), PortWidget::INPUT, module, Piste::DECAY1_INPUT));
+		addInput(createPort<sp_Port>(Vec(x2, y1+5.25*yh), PortWidget::INPUT, module, Piste::DECAY2_INPUT));
 
-		addOutput(Port::create<sp_Port>(Vec(x1, y1+6.5*yh), Port::OUTPUT, module, Piste::ENV1_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x2, y1+6.5*yh), Port::OUTPUT, module, Piste::ENV2_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x1, y1+6.5*yh), PortWidget::OUTPUT, module, Piste::ENV1_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x2, y1+6.5*yh), PortWidget::OUTPUT, module, Piste::ENV2_OUTPUT));
 
-		addInput(Port::create<sp_Port>(Vec(0.5*(x1+x2), 7.75*yh+y1), Port::INPUT, module, Piste::MUTE_INPUT));
-		addOutput(Port::create<sp_Port>(Vec(0.5*(x1+x2), y1+9*yh), Port::OUTPUT, module, Piste::OUT_OUTPUT));
+		addInput(createPort<sp_Port>(Vec(0.5*(x1+x2), 7.75*yh+y1), PortWidget::INPUT, module, Piste::MUTE_INPUT));
+		addOutput(createPort<sp_Port>(Vec(0.5*(x1+x2), y1+9*yh), PortWidget::OUTPUT, module, Piste::OUT_OUTPUT));
 
 	}
 };
 
-Model *modelPiste 	= Model::create<Piste,PisteWidget>("Piste");
+Model *modelPiste 	= createModel<Piste,PisteWidget>("Piste");

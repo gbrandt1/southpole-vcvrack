@@ -44,12 +44,12 @@ struct FtagnWidget : ModuleWidget {
 			addChild(panel);	
 		}
 
-		addInput(Port::create<sp_Port>(Vec( 6.,  380./2.-30.), Port::INPUT, module, Ftagn::IN1_INPUT));
-		addInput(Port::create<sp_Port>(Vec( 6.,  380./2.), Port::INPUT, module, Ftagn::IN2_INPUT));
+		addInput(createPort<sp_Port>(Vec( 6.,  380./2.-30.), PortWidget::INPUT, module, Ftagn::IN1_INPUT));
+		addInput(createPort<sp_Port>(Vec( 6.,  380./2.), PortWidget::INPUT, module, Ftagn::IN2_INPUT));
 
-		addOutput(Port::create<sp_Port>(Vec(35.,  380./2.-30.), Port::OUTPUT, module, Ftagn::OUT1_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(35.,  380./2.), Port::OUTPUT, module, Ftagn::OUT2_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(35.,  380./2.-30.), PortWidget::OUTPUT, module, Ftagn::OUT1_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(35.,  380./2.), PortWidget::OUTPUT, module, Ftagn::OUT2_OUTPUT));
 	}
 };
 
-Model *modelFtagn 	= Model::create<Ftagn,FtagnWidget>("Ftagn");
+Model *modelFtagn 	= createModel<Ftagn,FtagnWidget>("Ftagn");

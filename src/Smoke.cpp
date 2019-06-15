@@ -370,51 +370,51 @@ struct SmokeWidget : ModuleWidget {
       } 
     };
 
-    addInput(Port::create<sp_Port>(Vec(x1, .25*yh+y1), Port::INPUT, module, Smoke::TRIG_INPUT));
+    addInput(createPort<sp_Port>(Vec(x1, .25*yh+y1), PortWidget::INPUT, module, Smoke::TRIG_INPUT));
 
-    addInput(Port::create<sp_Port>(Vec(x1, 1.25*yh+y1), Port::INPUT, module, Smoke::FREEZE_INPUT));
-    addParam(ParamWidget::create<LEDButton>(Vec(  x2,   1.35*yh+y1  ), module, Smoke::FREEZE_PARAM, 0.0, 1.0, 0.0));
-    addChild(ModuleLightWidget::create<FreezeLight>(Vec(x2+3, 1.35*yh+y1+3), module,Smoke::FREEZE_LIGHT));
+    addInput(createPort<sp_Port>(Vec(x1, 1.25*yh+y1), PortWidget::INPUT, module, Smoke::FREEZE_INPUT));
+    addParam(createParam<LEDButton>(Vec(  x2,   1.35*yh+y1  ), module, Smoke::FREEZE_PARAM, 0.0, 1.0, 0.0));
+    addChild(createLight<FreezeLight>(Vec(x2+3, 1.35*yh+y1+3), module,Smoke::FREEZE_LIGHT));
   #ifdef PARASITES
-    addParam(ParamWidget::create<LEDButton>(Vec(  x3,   1.35*yh+y1  ), module, Smoke::REVERSE_PARAM, 0.0, 1.0, 0.0));
-    addChild(ModuleLightWidget::create<FreezeLight>(Vec(x3+3, 1.35*yh+y1+3), module, Smoke::REVERSE_LIGHT));
+    addParam(createParam<LEDButton>(Vec(  x3,   1.35*yh+y1  ), module, Smoke::REVERSE_PARAM, 0.0, 1.0, 0.0));
+    addChild(createLight<FreezeLight>(Vec(x3+3, 1.35*yh+y1+3), module, Smoke::REVERSE_LIGHT));
   #endif
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, 2.5*yh+y1), module, Smoke::POSITION_PARAM, 0.0, 1.0, 0.5));
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 2.5*yh+y1), module, Smoke::SIZE_PARAM, 0.0, 1.0, 0.5));
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, 2.5*yh+y1), module, Smoke::PITCH_PARAM, -2.0, 2.0, 0.0));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x1, 2.5*yh+y1), module, Smoke::POSITION_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 2.5*yh+y1), module, Smoke::SIZE_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x3, 2.5*yh+y1), module, Smoke::PITCH_PARAM, -2.0, 2.0, 0.0));
 
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, 5.0*yh+y1), module, Smoke::DENSITY_PARAM, 0.0, 1.0, 0.5));
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 5.0*yh+y1), module, Smoke::TEXTURE_PARAM, 0.0, 1.0, 0.5));
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, 5.0*yh+y1), module, Smoke::BLEND_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x1, 5.0*yh+y1), module, Smoke::DENSITY_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 5.0*yh+y1), module, Smoke::TEXTURE_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x3, 5.0*yh+y1), module, Smoke::BLEND_PARAM, 0.0, 1.0, 0.5));
     
     
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, 7.5*yh+y1), module, Smoke::SPREAD_PARAM, 0.0, 1.0, 0.5));
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 7.5*yh+y1), module, Smoke::FEEDBACK_PARAM, 0.0, 1.0, 0.5));
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, 7.5*yh+y1), module, Smoke::REVERB_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x1, 7.5*yh+y1), module, Smoke::SPREAD_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 7.5*yh+y1), module, Smoke::FEEDBACK_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x3, 7.5*yh+y1), module, Smoke::REVERB_PARAM, 0.0, 1.0, 0.5));
     
-    addInput(Port::create<sp_Port>(Vec(x1, 3.25*yh+y1), Port::INPUT, module, Smoke::POSITION_INPUT));
-    addInput(Port::create<sp_Port>(Vec(x2, 3.25*yh+y1), Port::INPUT, module, Smoke::SIZE_INPUT));
-    addInput(Port::create<sp_Port>(Vec(x3, 3.25*yh+y1), Port::INPUT, module, Smoke::PITCH_INPUT));
+    addInput(createPort<sp_Port>(Vec(x1, 3.25*yh+y1), PortWidget::INPUT, module, Smoke::POSITION_INPUT));
+    addInput(createPort<sp_Port>(Vec(x2, 3.25*yh+y1), PortWidget::INPUT, module, Smoke::SIZE_INPUT));
+    addInput(createPort<sp_Port>(Vec(x3, 3.25*yh+y1), PortWidget::INPUT, module, Smoke::PITCH_INPUT));
 
-    addInput(Port::create<sp_Port>(Vec(x1, 5.75*yh+y1), Port::INPUT, module, Smoke::DENSITY_INPUT));
-    addInput(Port::create<sp_Port>(Vec(x2, 5.75*yh+y1), Port::INPUT, module, Smoke::TEXTURE_INPUT));
-    addInput(Port::create<sp_Port>(Vec(x3, 5.75*yh+y1), Port::INPUT, module, Smoke::BLEND_INPUT));
+    addInput(createPort<sp_Port>(Vec(x1, 5.75*yh+y1), PortWidget::INPUT, module, Smoke::DENSITY_INPUT));
+    addInput(createPort<sp_Port>(Vec(x2, 5.75*yh+y1), PortWidget::INPUT, module, Smoke::TEXTURE_INPUT));
+    addInput(createPort<sp_Port>(Vec(x3, 5.75*yh+y1), PortWidget::INPUT, module, Smoke::BLEND_INPUT));
   
-    addInput(Port::create<sp_Port>(Vec(x1, 8.25*yh+y1), Port::INPUT, module, Smoke::SPREAD_INPUT));
-    addInput(Port::create<sp_Port>(Vec(x2, 8.25*yh+y1), Port::INPUT, module, Smoke::FEEDBACK_INPUT));
-    addInput(Port::create<sp_Port>(Vec(x3, 8.25*yh+y1), Port::INPUT, module, Smoke::REVERB_INPUT));
+    addInput(createPort<sp_Port>(Vec(x1, 8.25*yh+y1), PortWidget::INPUT, module, Smoke::SPREAD_INPUT));
+    addInput(createPort<sp_Port>(Vec(x2, 8.25*yh+y1), PortWidget::INPUT, module, Smoke::FEEDBACK_INPUT));
+    addInput(createPort<sp_Port>(Vec(x3, 8.25*yh+y1), PortWidget::INPUT, module, Smoke::REVERB_INPUT));
 
-    addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 10*yh+y1), module, Smoke::IN_GAIN_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 10*yh+y1), module, Smoke::IN_GAIN_PARAM, 0.0, 1.0, 0.5));
 
-    addInput(Port::create<sp_Port>(Vec(x1, 9.5*yh+y1), Port::INPUT, module, Smoke::IN_L_INPUT));
-    addInput(Port::create<sp_Port>(Vec(x1, 10.5*yh+y1), Port::INPUT, module, Smoke::IN_R_INPUT));
-    addOutput(Port::create<sp_Port>(Vec(x3, 9.5*yh+y1), Port::OUTPUT, module, Smoke::OUT_L_OUTPUT));
-    addOutput(Port::create<sp_Port>(Vec(x3, 10.5*yh+y1), Port::OUTPUT, module, Smoke::OUT_R_OUTPUT));
+    addInput(createPort<sp_Port>(Vec(x1, 9.5*yh+y1), PortWidget::INPUT, module, Smoke::IN_L_INPUT));
+    addInput(createPort<sp_Port>(Vec(x1, 10.5*yh+y1), PortWidget::INPUT, module, Smoke::IN_R_INPUT));
+    addOutput(createPort<sp_Port>(Vec(x3, 9.5*yh+y1), PortWidget::OUTPUT, module, Smoke::OUT_L_OUTPUT));
+    addOutput(createPort<sp_Port>(Vec(x3, 10.5*yh+y1), PortWidget::OUTPUT, module, Smoke::OUT_R_OUTPUT));
     
-    addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 40), module, Smoke::MIX_GREEN_LIGHT));
-    addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 30), module, Smoke::PAN_GREEN_LIGHT));
-    addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 20), module, Smoke::FEEDBACK_GREEN_LIGHT));
-    addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 10), module, Smoke::REVERB_GREEN_LIGHT));
+    addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 40), module, Smoke::MIX_GREEN_LIGHT));
+    addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 30), module, Smoke::PAN_GREEN_LIGHT));
+    addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 20), module, Smoke::FEEDBACK_GREEN_LIGHT));
+    addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 10), module, Smoke::REVERB_GREEN_LIGHT));
   
   }
 };
@@ -545,6 +545,6 @@ Menu *SmokeWidget::createContextMenu() {
   return menu;
 }
 
-Model *modelSmoke 	= Model::create<Smoke,SmokeWidget>("Smoke");
+Model *modelSmoke 	= createModel<Smoke,SmokeWidget>("Smoke");
 
 

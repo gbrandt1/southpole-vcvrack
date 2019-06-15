@@ -253,38 +253,38 @@ struct SplashParasiteWidget : ModuleWidget {
   	const float yh = 38.0f;
 
 
-	addParam(ParamWidget::create<CKD6>(Vec(x3-3,y1-3), module, SplashParasite::MODE_PARAM, 0.0, 1.0, 0.0));
-	addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, SplashParasite::MODE_GREEN_LIGHT));
+	addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, SplashParasite::MODE_PARAM, 0.0, 1.0, 0.0));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, SplashParasite::MODE_GREEN_LIGHT));
 
-	addParam(ParamWidget::create<CKD6>(Vec(x3-3,y1+1.45*yh), module, SplashParasite::RANGE_PARAM, 0.0, 1.0, 0.0));
-	addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, SplashParasite::RANGE_GREEN_LIGHT));
+	addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, SplashParasite::RANGE_PARAM, 0.0, 1.0, 0.0));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, SplashParasite::RANGE_GREEN_LIGHT));
 
-	addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, SplashParasite::PHASE_GREEN_LIGHT));
-	addParam(ParamWidget::create<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, SplashParasite::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
+	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, SplashParasite::PHASE_GREEN_LIGHT));
+	addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, SplashParasite::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
 
-	addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, SplashParasite::SHAPE_PARAM, -1.0, 1.0, 0.0));
-	addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, SplashParasite::SLOPE_PARAM, -1.0, 1.0, 0.0));
-	addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, SplashParasite::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, SplashParasite::SHAPE_PARAM, -1.0, 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, SplashParasite::SLOPE_PARAM, -1.0, 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, SplashParasite::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
 
 
-	addInput(Port::create<sp_Port>(Vec(x1, y1), Port::INPUT, module, SplashParasite::TRIG_INPUT));
-	addInput(Port::create<sp_Port>(Vec(x2, y1), Port::INPUT, module, SplashParasite::FREEZE_INPUT));
+	addInput(createPort<sp_Port>(Vec(x1, y1), PortWidget::INPUT, module, SplashParasite::TRIG_INPUT));
+	addInput(createPort<sp_Port>(Vec(x2, y1), PortWidget::INPUT, module, SplashParasite::FREEZE_INPUT));
 
-	addInput(Port::create<sp_Port>(Vec(x1, y2+2*yh), Port::INPUT, module, SplashParasite::PITCH_INPUT));
-	addInput(Port::create<sp_Port>(Vec(x1,   y2+3.25*yh), Port::INPUT, module, SplashParasite::FM_INPUT));
-	addParam(ParamWidget::create<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, SplashParasite::FM_PARAM, -12.0, 12.0, 0.0));
+	addInput(createPort<sp_Port>(Vec(x1, y2+2*yh), PortWidget::INPUT, module, SplashParasite::PITCH_INPUT));
+	addInput(createPort<sp_Port>(Vec(x1,   y2+3.25*yh), PortWidget::INPUT, module, SplashParasite::FM_INPUT));
+	addParam(createParam<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, SplashParasite::FM_PARAM, -12.0, 12.0, 0.0));
 
-	addInput(Port::create<sp_Port>(Vec(x1, y2+4*yh), Port::INPUT, module, SplashParasite::SHAPE_INPUT));
-	addInput(Port::create<sp_Port>(Vec(x1, y2+4.75*yh), Port::INPUT, module, SplashParasite::SLOPE_INPUT));
-	addInput(Port::create<sp_Port>(Vec(x1, y2+5.5*yh), Port::INPUT, module, SplashParasite::SMOOTHNESS_INPUT));
+	addInput(createPort<sp_Port>(Vec(x1, y2+4*yh), PortWidget::INPUT, module, SplashParasite::SHAPE_INPUT));
+	addInput(createPort<sp_Port>(Vec(x1, y2+4.75*yh), PortWidget::INPUT, module, SplashParasite::SLOPE_INPUT));
+	addInput(createPort<sp_Port>(Vec(x1, y2+5.5*yh), PortWidget::INPUT, module, SplashParasite::SMOOTHNESS_INPUT));
 
-	addInput(Port::create<sp_Port>(Vec(x3, y1+5.9*yh), Port::INPUT, module, SplashParasite::LEVEL_INPUT));
-	addInput(Port::create<sp_Port>(Vec(x1, y1+5.9*yh), Port::INPUT, module, SplashParasite::CLOCK_INPUT));
+	addInput(createPort<sp_Port>(Vec(x3, y1+5.9*yh), PortWidget::INPUT, module, SplashParasite::LEVEL_INPUT));
+	addInput(createPort<sp_Port>(Vec(x1, y1+5.9*yh), PortWidget::INPUT, module, SplashParasite::CLOCK_INPUT));
 
-	addOutput(Port::create<sp_Port>(Vec(x1, y1+7.125*yh), Port::OUTPUT, module, SplashParasite::HIGH_OUTPUT));
-	addOutput(Port::create<sp_Port>(Vec(x1+1*28., y1+7.125*yh), Port::OUTPUT, module, SplashParasite::LOW_OUTPUT));
-	addOutput(Port::create<sp_Port>(Vec(x1+2*28., y1+7.125*yh), Port::OUTPUT, module, SplashParasite::UNI_OUTPUT));
-	addOutput(Port::create<sp_Port>(Vec(x1+3*28., y1+7.125*yh), Port::OUTPUT, module, SplashParasite::BI_OUTPUT));
+	addOutput(createPort<sp_Port>(Vec(x1, y1+7.125*yh), PortWidget::OUTPUT, module, SplashParasite::HIGH_OUTPUT));
+	addOutput(createPort<sp_Port>(Vec(x1+1*28., y1+7.125*yh), PortWidget::OUTPUT, module, SplashParasite::LOW_OUTPUT));
+	addOutput(createPort<sp_Port>(Vec(x1+2*28., y1+7.125*yh), PortWidget::OUTPUT, module, SplashParasite::UNI_OUTPUT));
+	addOutput(createPort<sp_Port>(Vec(x1+3*28., y1+7.125*yh), PortWidget::OUTPUT, module, SplashParasite::BI_OUTPUT));
 	
 }
 };

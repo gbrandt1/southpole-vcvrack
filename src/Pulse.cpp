@@ -189,37 +189,37 @@ struct PulseWidget : ModuleWidget {
 		const float y1 = 40.;
 		const float yh = 35.;
 		
-		addInput(Port::create<sp_Port>(Vec(x1, y1+0*yh), Port::INPUT, module, Pulse::CLOCK_INPUT));
-		addOutput(Port::create<sp_Port>(Vec(x2, y1+0*yh), Port::OUTPUT, module, Pulse::CLOCK_OUTPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y1+0*yh), PortWidget::INPUT, module, Pulse::CLOCK_INPUT));
+		addOutput(createPort<sp_Port>(Vec(x2, y1+0*yh), PortWidget::OUTPUT, module, Pulse::CLOCK_OUTPUT));
 		
-		addInput(Port::create<sp_Port>(Vec(x1, y1+1*yh), Port::INPUT, module, Pulse::TRIG_INPUT));
-		addParam(ParamWidget::create<TL1105>(Vec(x2, y1+1*yh), module, Pulse::TRIG_PARAM, 0.0, 1.0, 0.));
+		addInput(createPort<sp_Port>(Vec(x1, y1+1*yh), PortWidget::INPUT, module, Pulse::TRIG_INPUT));
+		addParam(createParam<TL1105>(Vec(x2, y1+1*yh), module, Pulse::TRIG_PARAM, 0.0, 1.0, 0.));
 
-		addParam(ParamWidget::create<sp_Switch>(Vec(x1, y1+1.75*yh), module, Pulse::RESET_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_Switch>(Vec(x1, y1+2.25*yh), module, Pulse::REPEAT_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_Switch>(Vec(x1, y1+2.75*yh), module, Pulse::RANGE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_Switch>(Vec(x1, y1+1.75*yh), module, Pulse::RESET_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_Switch>(Vec(x1, y1+2.25*yh), module, Pulse::REPEAT_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_Switch>(Vec(x1, y1+2.75*yh), module, Pulse::RANGE_PARAM, 0.0, 1.0, 0.0));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+4*yh), Port::INPUT, module, Pulse::TIME_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Pulse::TIME_PARAM, 0.0, 1.0, 0.0));
+		addInput(createPort<sp_Port>(Vec(x1, y1+4*yh), PortWidget::INPUT, module, Pulse::TIME_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Pulse::TIME_PARAM, 0.0, 1.0, 0.0));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+5*yh), Port::INPUT, module, Pulse::DELAY_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Pulse::DELAY_PARAM, 0.0, 1.0, 0.0));
+		addInput(createPort<sp_Port>(Vec(x1, y1+5*yh), PortWidget::INPUT, module, Pulse::DELAY_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Pulse::DELAY_PARAM, 0.0, 1.0, 0.0));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+6*yh), Port::INPUT, module, Pulse::AMP_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Pulse::AMP_PARAM, 0.0, 1.0, 1.0));
+		addInput(createPort<sp_Port>(Vec(x1, y1+6*yh), PortWidget::INPUT, module, Pulse::AMP_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Pulse::AMP_PARAM, 0.0, 1.0, 1.0));
 
-		//addInput(Port::create<sp_Port>		   (Vec(x1, y1+7*yh), module, Pulse::OFFSET_INPUT));
-		//addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::OFFSET_PARAM, -1.0, 1.0, 0.));
+		//addInput(createPort<sp_Port>		   (Vec(x1, y1+7*yh), module, Pulse::OFFSET_INPUT));
+		//addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::OFFSET_PARAM, -1.0, 1.0, 0.));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+7*yh), Port::INPUT, module, Pulse::SLEW_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::SLEW_PARAM, 0.0, 1.0, 0.));
+		addInput(createPort<sp_Port>(Vec(x1, y1+7*yh), PortWidget::INPUT, module, Pulse::SLEW_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::SLEW_PARAM, 0.0, 1.0, 0.));
 
-		addOutput(Port::create<sp_Port>(Vec(x1, y1+8.25*yh), Port::OUTPUT, module, Pulse::EOC_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x2, y1+8.25*yh), Port::OUTPUT, module, Pulse::GATE_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x1, y1+8.25*yh), PortWidget::OUTPUT, module, Pulse::EOC_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x2, y1+8.25*yh), PortWidget::OUTPUT, module, Pulse::GATE_OUTPUT));
 
-		addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x1+7, y1+7.65*yh), module, Pulse::EOC_LIGHT));
-		addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x2+7, y1+7.65*yh), module, Pulse::GATE_LIGHT));
+		addChild(createLight<SmallLight<RedLight>>(Vec(x1+7, y1+7.65*yh), module, Pulse::EOC_LIGHT));
+		addChild(createLight<SmallLight<RedLight>>(Vec(x2+7, y1+7.65*yh), module, Pulse::GATE_LIGHT));
 	}
 };
 
-Model *modelPulse	= Model::create<Pulse,PulseWidget>("Pulse");
+Model *modelPulse	= createModel<Pulse,PulseWidget>("Pulse");

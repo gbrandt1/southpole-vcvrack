@@ -86,36 +86,36 @@ struct BalaclavaWidget : ModuleWidget {
 		const float x2 = 20.;
 		const float x3 = 36.;	
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 52+8), module, Balaclava::GAIN1_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 131+8), module, Balaclava::GAIN2_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 210+8), module, Balaclava::GAIN3_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 288+8), module, Balaclava::GAIN4_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 52+8), module, Balaclava::GAIN1_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 131+8), module, Balaclava::GAIN2_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 210+8), module, Balaclava::GAIN3_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 288+8), module, Balaclava::GAIN4_PARAM, 0.0, 1.0, 0.0));
 
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x3,  80), module, Balaclava::RESPONSE1_PARAM, 0.0, 1.0, 1.0));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x3, 159), module, Balaclava::RESPONSE2_PARAM, 0.0, 1.0, 1.0));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x3, 238), module, Balaclava::RESPONSE3_PARAM, 0.0, 1.0, 1.0));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x3, 316), module, Balaclava::RESPONSE4_PARAM, 0.0, 1.0, 1.0));
+		addParam(createParam<sp_Trimpot>(Vec(x3,  80), module, Balaclava::RESPONSE1_PARAM, 0.0, 1.0, 1.0));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 159), module, Balaclava::RESPONSE2_PARAM, 0.0, 1.0, 1.0));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 238), module, Balaclava::RESPONSE3_PARAM, 0.0, 1.0, 1.0));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 316), module, Balaclava::RESPONSE4_PARAM, 0.0, 1.0, 1.0));
 
-		addInput(Port::create<sp_Port>(Vec(x1, 41), Port::INPUT, module, Balaclava::IN1_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 120), Port::INPUT, module, Balaclava::IN2_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 198), Port::INPUT, module, Balaclava::IN3_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 277), Port::INPUT, module, Balaclava::IN4_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, 41), PortWidget::INPUT, module, Balaclava::IN1_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, 120), PortWidget::INPUT, module, Balaclava::IN2_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, 198), PortWidget::INPUT, module, Balaclava::IN3_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, 277), PortWidget::INPUT, module, Balaclava::IN4_INPUT));
 
-		addInput(Port::create<sp_Port>(Vec(x1, 80), Port::INPUT, module, Balaclava::CV1_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 159), Port::INPUT, module, Balaclava::CV2_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 238), Port::INPUT, module, Balaclava::CV3_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 316), Port::INPUT, module, Balaclava::CV4_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, 80), PortWidget::INPUT, module, Balaclava::CV1_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, 159), PortWidget::INPUT, module, Balaclava::CV2_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, 238), PortWidget::INPUT, module, Balaclava::CV3_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, 316), PortWidget::INPUT, module, Balaclava::CV4_INPUT));
 
-		addOutput(Port::create<sp_Port>(Vec(x3, 41), Port::OUTPUT, module, Balaclava::OUT1_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x3, 120), Port::OUTPUT, module, Balaclava::OUT2_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x3, 198), Port::OUTPUT, module, Balaclava::OUT3_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x3, 277), Port::OUTPUT, module, Balaclava::OUT4_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x3, 41), PortWidget::OUTPUT, module, Balaclava::OUT1_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x3, 120), PortWidget::OUTPUT, module, Balaclava::OUT2_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x3, 198), PortWidget::OUTPUT, module, Balaclava::OUT3_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x3, 277), PortWidget::OUTPUT, module, Balaclava::OUT4_OUTPUT));
 
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 87-22), module, Balaclava::OUT1_POS_LIGHT));
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 166-22), module, Balaclava::OUT2_POS_LIGHT));
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 245-22), module, Balaclava::OUT3_POS_LIGHT));
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 324-22), module, Balaclava::OUT4_POS_LIGHT));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 87-22), module, Balaclava::OUT1_POS_LIGHT));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 166-22), module, Balaclava::OUT2_POS_LIGHT));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 245-22), module, Balaclava::OUT3_POS_LIGHT));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 324-22), module, Balaclava::OUT4_POS_LIGHT));
 	}
 };
 
-Model *modelBalaclava = Model::create<Balaclava,BalaclavaWidget>("Balaclava");
+Model *modelBalaclava = createModel<Balaclava,BalaclavaWidget>("Balaclava");

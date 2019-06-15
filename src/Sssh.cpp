@@ -102,14 +102,14 @@ struct SsshWidget : ModuleWidget {
 
 		for (unsigned int i=0; i<4; i++)
 		{
-			addInput(Port::create<sp_Port>(Vec(  5, y1+i*yh), Port::INPUT, module, Sssh::SH1_INPUT + i));
-			addInput(Port::create<sp_Port>(Vec( 34, y1+i*yh), Port::INPUT, module, Sssh::TRIG1_INPUT + i));
-			addOutput(Port::create<sp_Port>(Vec(5, 35+y1+i*yh), Port::OUTPUT, module, Sssh::NOISE1_OUTPUT + i));
-			addOutput(Port::create<sp_Port>(Vec(34, 35+y1+i*yh), Port::OUTPUT, module, Sssh::SH1_OUTPUT + i));
+			addInput(createPort<sp_Port>(Vec(  5, y1+i*yh), PortWidget::INPUT, module, Sssh::SH1_INPUT + i));
+			addInput(createPort<sp_Port>(Vec( 34, y1+i*yh), PortWidget::INPUT, module, Sssh::TRIG1_INPUT + i));
+			addOutput(createPort<sp_Port>(Vec(5, 35+y1+i*yh), PortWidget::OUTPUT, module, Sssh::NOISE1_OUTPUT + i));
+			addOutput(createPort<sp_Port>(Vec(34, 35+y1+i*yh), PortWidget::OUTPUT, module, Sssh::SH1_OUTPUT + i));
 
-			addChild(ModuleLightWidget::create<SmallLight<GreenRedLight>>(Vec(26, y1+i*yh-4), module, Sssh::SH_POS1_LIGHT + 2*i));
+			addChild(createLight<SmallLight<GreenRedLight>>(Vec(26, y1+i*yh-4), module, Sssh::SH_POS1_LIGHT + 2*i));
 		}
 	}
 };
 
-Model *modelSssh 	= Model::create<Sssh,SsshWidget>("Sssh");
+Model *modelSssh 	= createModel<Sssh,SsshWidget>("Sssh");

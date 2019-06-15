@@ -84,19 +84,19 @@ struct WriggleWidget : ModuleWidget {
 		const float y1 = 40.;
 		const float yh = 31.;
 		
-		addInput(Port::create<sp_Port		  >(Vec(x1, y1+0*yh), Port::INPUT, module, Wriggle::IN_INPUT));
-		addInput(Port::create<sp_Port		  >(Vec(x1, y1+1.125*yh), Port::INPUT, module, Wriggle::TENS_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, Wriggle::TENS_PARAM, 0.0, 1.0, 0.5));
-		addInput(Port::create<sp_Port		  >(Vec(x1, y1+3.125*yh), Port::INPUT, module, Wriggle::DAMP_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+4*yh), module, Wriggle::DAMP_PARAM, 0.0, 1.0, 0.5));
-		addInput(Port::create<sp_Port		  >(Vec(x1, y1+5.125*yh), Port::INPUT, module, Wriggle::SCALE_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+6*yh), module, Wriggle::SCALE_PARAM, 0.0, 1.0, 0.5));
-		addInput(Port::create<sp_Port  		  >(Vec(x1, y1+7.125*yh), Port::INPUT, module, Wriggle::OFFSET_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+8*yh), module, Wriggle::OFFSET_PARAM, 0.0, 1.0, 0.5));
-		addOutput(Port::create<sp_Port		  >(Vec(x1, y1+9.25*yh), Port::OUTPUT, module, Wriggle::OUT_OUTPUT));
+		addInput(createPort<sp_Port		  >(Vec(x1, y1+0*yh), PortWidget::INPUT, module, Wriggle::IN_INPUT));
+		addInput(createPort<sp_Port		  >(Vec(x1, y1+1.125*yh), PortWidget::INPUT, module, Wriggle::TENS_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, Wriggle::TENS_PARAM, 0.0, 1.0, 0.5));
+		addInput(createPort<sp_Port		  >(Vec(x1, y1+3.125*yh), PortWidget::INPUT, module, Wriggle::DAMP_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+4*yh), module, Wriggle::DAMP_PARAM, 0.0, 1.0, 0.5));
+		addInput(createPort<sp_Port		  >(Vec(x1, y1+5.125*yh), PortWidget::INPUT, module, Wriggle::SCALE_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+6*yh), module, Wriggle::SCALE_PARAM, 0.0, 1.0, 0.5));
+		addInput(createPort<sp_Port  		  >(Vec(x1, y1+7.125*yh), PortWidget::INPUT, module, Wriggle::OFFSET_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+8*yh), module, Wriggle::OFFSET_PARAM, 0.0, 1.0, 0.5));
+		addOutput(createPort<sp_Port		  >(Vec(x1, y1+9.25*yh), PortWidget::OUTPUT, module, Wriggle::OUT_OUTPUT));
 
-	//	addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(94, 109), module, Wriggle::DECAY_LIGHT));
+	//	addChild(createLight<SmallLight<RedLight>>(Vec(94, 109), module, Wriggle::DECAY_LIGHT));
 	}
 };
 
-Model *modelWriggle = Model::create<Wriggle,WriggleWidget>("Wriggle");
+Model *modelWriggle = createModel<Wriggle,WriggleWidget>("Wriggle");

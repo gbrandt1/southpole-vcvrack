@@ -175,22 +175,22 @@ struct ButWidget : ModuleWidget {
         {
             yPos += 32.;
 
-            addInput(Port::create<sp_Port>(Vec(x1, yPos), Port::INPUT, module, But::IN1_INPUT + i));
-            addOutput(Port::create<sp_Port>(Vec(x2, yPos), Port::OUTPUT, module, But::OUTA1_OUTPUT + i));
-            addParam(ParamWidget::create<sp_Switch>(Vec(x3+1, 3 + yPos), module, But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
-            addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, But::OUTB1_OUTPUT + i));
+            addInput(createPort<sp_Port>(Vec(x1, yPos), PortWidget::INPUT, module, But::IN1_INPUT + i));
+            addOutput(createPort<sp_Port>(Vec(x2, yPos), PortWidget::OUTPUT, module, But::OUTA1_OUTPUT + i));
+            addParam(createParam<sp_Switch>(Vec(x3+1, 3 + yPos), module, But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
+            addOutput(createPort<sp_Port>(Vec(x4, yPos), PortWidget::OUTPUT, module, But::OUTB1_OUTPUT + i));
         }
 
         yPos += 48.;
-        addOutput(Port::create<sp_Port>(Vec(x1, yPos), Port::OUTPUT, module, But::SUMA1_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x2, yPos), Port::OUTPUT, module, But::SUMA2_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x3+3, yPos), Port::OUTPUT, module, But::SUMB1_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, But::SUMB2_OUTPUT));
+        addOutput(createPort<sp_Port>(Vec(x1, yPos), PortWidget::OUTPUT, module, But::SUMA1_OUTPUT));
+        addOutput(createPort<sp_Port>(Vec(x2, yPos), PortWidget::OUTPUT, module, But::SUMA2_OUTPUT));
+        addOutput(createPort<sp_Port>(Vec(x3+3, yPos), PortWidget::OUTPUT, module, But::SUMB1_OUTPUT));
+        addOutput(createPort<sp_Port>(Vec(x4, yPos), PortWidget::OUTPUT, module, But::SUMB2_OUTPUT));
     }
 
 };
 
-Model *modelBut 	= Model::create<But,ButWidget>("But");
+Model *modelBut 	= createModel<But,ButWidget>("But");
 
 
 

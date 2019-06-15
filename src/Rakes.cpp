@@ -194,28 +194,28 @@ struct RakesWidget : ModuleWidget {
 		const float y1 = 40.;
 		const float yh = 32.;
 		
-		addInput(Port::create<sp_Port>(Vec(x2, y1+0*yh), Port::INPUT, module, Rakes::DECAY_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+0*yh), module, Rakes::DECAY_PARAM, 0.0, 1.0, 0.0));
-		//addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec(x3, y1+0*yh), module, Rakes::FOLLOW_PARAM, 0.0, 1.0, 0.0));
+		addInput(createPort<sp_Port>(Vec(x2, y1+0*yh), PortWidget::INPUT, module, Rakes::DECAY_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+0*yh), module, Rakes::DECAY_PARAM, 0.0, 1.0, 0.0));
+		//addParam(createParam<sp_SmallBlackKnob>	(Vec(x3, y1+0*yh), module, Rakes::FOLLOW_PARAM, 0.0, 1.0, 0.0));
 
 		for (int j=0; j < NBUF; j++) {
-			addInput(Port::create<sp_Port>			(Vec(x1, y1+(j+1.5)*yh), Port::INPUT, module, Rakes::TUNE1_INPUT + j));
-			addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec(x2, y1+(j+1.5)*yh), module, Rakes::TUNE1_PARAM + j,  -5.0, 5.5, 0.0));
-			addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec(x3, y1+(j+1.5)*yh), module, Rakes::FINE1_PARAM + j,  -1.0, 1.0, 0.0));
-			addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec(x4, y1+(j+1.5)*yh), module, Rakes::GAIN1_PARAM + j,  0.0, 1.0, 0.0));
+			addInput(createPort<sp_Port>			(Vec(x1, y1+(j+1.5)*yh), PortWidget::INPUT, module, Rakes::TUNE1_INPUT + j));
+			addParam(createParam<sp_SmallBlackKnob>	(Vec(x2, y1+(j+1.5)*yh), module, Rakes::TUNE1_PARAM + j,  -5.0, 5.5, 0.0));
+			addParam(createParam<sp_SmallBlackKnob>	(Vec(x3, y1+(j+1.5)*yh), module, Rakes::FINE1_PARAM + j,  -1.0, 1.0, 0.0));
+			addParam(createParam<sp_SmallBlackKnob>	(Vec(x4, y1+(j+1.5)*yh), module, Rakes::GAIN1_PARAM + j,  0.0, 1.0, 0.0));
 		}
 
 
-		addInput(Port::create<sp_Port>	(Vec(x1, y1+8*yh), Port::INPUT, module, Rakes::INL_INPUT));
-		addInput(Port::create<sp_Port>	(Vec(x1, y1+9*yh), Port::INPUT, module, Rakes::INR_INPUT));
+		addInput(createPort<sp_Port>	(Vec(x1, y1+8*yh), PortWidget::INPUT, module, Rakes::INL_INPUT));
+		addInput(createPort<sp_Port>	(Vec(x1, y1+9*yh), PortWidget::INPUT, module, Rakes::INR_INPUT));
 
-		addParam(ParamWidget::create<CKSS>( Vec(x2, y1+7.5*yh), module, Rakes::QUANT_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec((x2+x3)/2., y1+8.5*yh), module, Rakes::MIX_PARAM, 0.0, 1.0, 0.5));
+		addParam(createParam<CKSS>( Vec(x2, y1+7.5*yh), module, Rakes::QUANT_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>	(Vec((x2+x3)/2., y1+8.5*yh), module, Rakes::MIX_PARAM, 0.0, 1.0, 0.5));
 
-		addOutput(Port::create<sp_Port> (Vec(x4, y1+8*yh), Port::OUTPUT, module, Rakes::OUTL_OUTPUT));
-		addOutput(Port::create<sp_Port> (Vec(x4, y1+9*yh), Port::OUTPUT, module, Rakes::OUTR_OUTPUT));
+		addOutput(createPort<sp_Port> (Vec(x4, y1+8*yh), PortWidget::OUTPUT, module, Rakes::OUTL_OUTPUT));
+		addOutput(createPort<sp_Port> (Vec(x4, y1+9*yh), PortWidget::OUTPUT, module, Rakes::OUTR_OUTPUT));
 	}
 };
 
-Model *modelRakes 	= Model::create<Rakes,RakesWidget>("Rakes");
+Model *modelRakes 	= createModel<Rakes,RakesWidget>("Rakes");
 

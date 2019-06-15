@@ -13,8 +13,8 @@ void init(rack::Plugin *p) {
 	p->manual = "https://github.com/gbrandt1/southpole-vcvrack/blob/master/README.md";
 
 	#ifdef PARASITES
-		Model *modelSmoke  			= Model::create<Smoke,SmokeWidget>(	"Southpole-parasites", "Smoke", "Smoke Parasite", GRANULAR_TAG, REVERB_TAG);
-		Model *modelSplashParasite 	= Model::create<SplashParasite,SplashParasiteWidget>("Southpole-parasites", "Splash Parasite", "Splash Parasites", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG);
+		Model *modelSmoke  			= createModel<Smoke,SmokeWidget>(	"Southpole-parasites", "Smoke", "Smoke Parasite", GRANULAR_TAG, REVERB_TAG);
+		Model *modelSplashParasite 	= createModel<SplashParasite,SplashParasiteWidget>("Southpole-parasites", "Splash Parasite", "Splash Parasites", LFO_TAG, OSCILLATOR_TAG, WAVESHAPER_TAG, FUNCTION_GENERATOR_TAG);
 	#endif
 	//#endif
 

@@ -99,15 +99,15 @@ struct FallsWidget : ModuleWidget {
 		const float x3 = 36.;
 
 		for (int i=0; i < NUMP; i++) {
-			addInput(Port::create<sp_Port>(Vec(x1,  y1+i*yh), Port::INPUT, module, Falls::IN1_INPUT + i));
-			addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x2+6,  y1+i*yh), module, Falls::OUT1_POS_LIGHT + 2*i));	
-			addOutput(Port::create<sp_Port>(Vec(x3,  y1+i*yh), Port::OUTPUT, module, Falls::OUT1_OUTPUT + i));
-			addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+i*yh+18), module, Falls::GAIN1_PARAM + i, -1.0, 1.0, 0.0));
+			addInput(createPort<sp_Port>(Vec(x1,  y1+i*yh), PortWidget::INPUT, module, Falls::IN1_INPUT + i));
+			addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+6,  y1+i*yh), module, Falls::OUT1_POS_LIGHT + 2*i));	
+			addOutput(createPort<sp_Port>(Vec(x3,  y1+i*yh), PortWidget::OUTPUT, module, Falls::OUT1_OUTPUT + i));
+			addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+i*yh+18), module, Falls::GAIN1_PARAM + i, -1.0, 1.0, 0.0));
 		}
 
-		addParam(ParamWidget::create<sp_Switch>(Vec(x2, y1 + NUMP*yh ), module, Falls::RANGE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_Switch>(Vec(x2, y1 + NUMP*yh ), module, Falls::RANGE_PARAM, 0.0, 1.0, 0.0));
 
 	}
 };
 
-Model *modelFalls 	= Model::create<Falls,FallsWidget>("Falls");
+Model *modelFalls 	= createModel<Falls,FallsWidget>("Falls");

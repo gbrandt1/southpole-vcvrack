@@ -231,43 +231,43 @@ struct SplashWidget : ModuleWidget {
 		const float yh = 38.0f;
 
 
-		addParam(ParamWidget::create<CKD6>(Vec(x3-3,y1-3), module, Splash::MODE_PARAM, 0.0, 1.0, 0.0));
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, Splash::MODE_GREEN_LIGHT));
+		addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, Splash::MODE_PARAM, 0.0, 1.0, 0.0));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, Splash::MODE_GREEN_LIGHT));
 
-		addParam(ParamWidget::create<CKD6>(Vec(x3-3,y1+1.45*yh), module, Splash::RANGE_PARAM, 0.0, 1.0, 0.0));
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, Splash::RANGE_GREEN_LIGHT));
+		addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, Splash::RANGE_PARAM, 0.0, 1.0, 0.0));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, Splash::RANGE_GREEN_LIGHT));
 
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, Splash::PHASE_GREEN_LIGHT));
-		addParam(ParamWidget::create<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, Splash::PHASE_GREEN_LIGHT));
+		addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, Splash::SHAPE_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, Splash::SLOPE_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, Splash::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, Splash::SHAPE_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, Splash::SLOPE_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, Splash::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
 
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1), Port::INPUT, module, Splash::TRIG_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x2, y1), Port::INPUT, module, Splash::FREEZE_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y1), PortWidget::INPUT, module, Splash::TRIG_INPUT));
+		addInput(createPort<sp_Port>(Vec(x2, y1), PortWidget::INPUT, module, Splash::FREEZE_INPUT));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y2+2*yh), Port::INPUT, module, Splash::PITCH_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1,   y2+3.25*yh), Port::INPUT, module, Splash::FM_INPUT));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, Splash::FM_PARAM, -12.0, 12.0, 0.0));
+		addInput(createPort<sp_Port>(Vec(x1, y2+2*yh), PortWidget::INPUT, module, Splash::PITCH_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1,   y2+3.25*yh), PortWidget::INPUT, module, Splash::FM_INPUT));
+		addParam(createParam<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, Splash::FM_PARAM, -12.0, 12.0, 0.0));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y2+4*yh), Port::INPUT, module, Splash::SHAPE_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, y2+4.75*yh), Port::INPUT, module, Splash::SLOPE_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, y2+5.5*yh), Port::INPUT, module, Splash::SMOOTHNESS_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y2+4*yh), PortWidget::INPUT, module, Splash::SHAPE_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y2+4.75*yh), PortWidget::INPUT, module, Splash::SLOPE_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y2+5.5*yh), PortWidget::INPUT, module, Splash::SMOOTHNESS_INPUT));
 
-		addInput(Port::create<sp_Port>(Vec(x3, y1+5.9*yh), Port::INPUT, module, Splash::LEVEL_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, y1+5.9*yh), Port::INPUT, module, Splash::CLOCK_INPUT));
+		addInput(createPort<sp_Port>(Vec(x3, y1+5.9*yh), PortWidget::INPUT, module, Splash::LEVEL_INPUT));
+		addInput(createPort<sp_Port>(Vec(x1, y1+5.9*yh), PortWidget::INPUT, module, Splash::CLOCK_INPUT));
 
-		addOutput(Port::create<sp_Port>(Vec(x1, y1+7.125*yh), Port::OUTPUT, module, Splash::HIGH_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x1+1*28., y1+7.125*yh), Port::OUTPUT, module, Splash::LOW_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x1+2*28., y1+7.125*yh), Port::OUTPUT, module, Splash::UNI_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x1+3*28., y1+7.125*yh), Port::OUTPUT, module, Splash::BI_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x1, y1+7.125*yh), PortWidget::OUTPUT, module, Splash::HIGH_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x1+1*28., y1+7.125*yh), PortWidget::OUTPUT, module, Splash::LOW_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x1+2*28., y1+7.125*yh), PortWidget::OUTPUT, module, Splash::UNI_OUTPUT));
+		addOutput(createPort<sp_Port>(Vec(x1+3*28., y1+7.125*yh), PortWidget::OUTPUT, module, Splash::BI_OUTPUT));
 
 	}
 };
 
-Model *modelSplash 	= Model::create<Splash,SplashWidget>("Splash");
+Model *modelSplash 	= createModel<Splash,SplashWidget>("Splash");
 
 
 void SplashWidget::step() {
