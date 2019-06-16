@@ -44,7 +44,7 @@ struct sp_Port : SVGPort {
 	}
 };
 
-struct sp_Switch : SVGSwitch, ToggleSwitch {
+struct sp_Switch : SVGSwitch, Switch {
 	sp_Switch() {
 		addFrame(SVG::load(assetPlugin(pluginInstance,"res/sp-switchv_0.svg")));
 		addFrame(SVG::load(assetPlugin(pluginInstance,"res/sp-switchv_1.svg")));
