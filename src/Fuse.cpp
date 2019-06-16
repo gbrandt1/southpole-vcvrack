@@ -208,7 +208,7 @@ struct FuseWidget : ModuleWidget {
 struct FuseGateModeItem : MenuItem {
 	Fuse *fuse;
 	bool gateMode;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		fuse->gateMode = gateMode;
 	}
 	void step() override {

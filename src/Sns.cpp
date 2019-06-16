@@ -550,7 +550,7 @@ struct SnsWidget : ModuleWidget {
 struct SnsGateModeItem : MenuItem {
 	Sns *sns;
 	Sns::gateModes gm;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		sns->gateMode = gm;
 	}
 	void step() override {
@@ -562,7 +562,7 @@ struct SnsGateModeItem : MenuItem {
 struct SnsPatternStyleItem : MenuItem {
 	Sns *sns;
 	Sns::patternStyle ps;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		sns->style = ps;
 		sns->reset();
 	}

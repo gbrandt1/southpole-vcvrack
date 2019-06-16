@@ -285,7 +285,7 @@ void SplashWidget::step() {
 
 struct SplashSheepItem : MenuItem {
 	Splash *tides;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		tides->sheep ^= true;
 	}
 	void step() override {

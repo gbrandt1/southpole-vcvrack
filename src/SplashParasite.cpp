@@ -316,7 +316,7 @@ void SplashParasiteWidget::step() {
 
 struct SplashParasiteSheepItem : MenuItem {
 	SplashParasite *tides;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		tides->sheep ^= true;
 	}
 	void step() override {
@@ -328,7 +328,7 @@ struct SplashParasiteSheepItem : MenuItem {
 struct SplashParasiteModeItem : MenuItem {
 	SplashParasite *module;
 	tides::Generator::FeatureMode mode;
-    	void onAction(EventAction &e) override {
+    	void onAction(const event::Action &e) override {
 	  //module->playback = playback;
 	    module->generator.feature_mode_ = mode;
 	}

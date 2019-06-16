@@ -272,7 +272,7 @@ void EtagereWidget::step() {
 
 struct EtagereBlancItem : MenuItem {
 	Etagere *m;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		m->blanc ^= true;
 	}
 	void step() override {

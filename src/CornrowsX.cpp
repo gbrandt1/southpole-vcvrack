@@ -545,7 +545,7 @@ struct CornrowsXSettingItem : MenuItem {
 	uint8_t *setting = NULL;
 	uint8_t offValue = 0;
 	uint8_t onValue = 1;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		// Toggle setting
 		*setting = (*setting == onValue) ? offValue : onValue;
 	}
@@ -557,7 +557,7 @@ struct CornrowsXSettingItem : MenuItem {
 
 struct CornrowsXLowCpuItem : MenuItem {
 	CornrowsX *braids;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		braids->lowCpu = !braids->lowCpu;
 	}
 	void step() override {
@@ -568,7 +568,7 @@ struct CornrowsXLowCpuItem : MenuItem {
 
 struct CornrowsXPaquesItem : MenuItem {
 	CornrowsX *braids;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		braids->paques = !braids->paques;
 	}
 	void step() override {

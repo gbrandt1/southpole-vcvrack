@@ -323,7 +323,7 @@ void AnnuliWidget::step() {
 struct AnnuliModelItem : MenuItem {
 	Annuli *rings;
 	rings::ResonatorModel model;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		rings->model = model;
 	}
 	void step() override {
@@ -334,7 +334,7 @@ struct AnnuliModelItem : MenuItem {
 
 struct AnnuliEasterEggItem : MenuItem {
 	Annuli *rings;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		rings->easterEgg = !rings->easterEgg;
 	}
 	void step() override {

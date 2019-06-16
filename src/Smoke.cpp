@@ -463,7 +463,7 @@ struct CloudsModeItem : MenuItem {
   Smoke *clouds;
   clouds::PlaybackMode mode;
 
-  void onAction(EventAction &e) override {
+  void onAction(const event::Action &e) override {
     clouds->playbackmode = mode;
   }
   void step() override {
@@ -476,7 +476,7 @@ struct CloudsMonoItem : MenuItem {
   Smoke *clouds;
   bool setting;
 
-  void onAction(EventAction &e) override {
+  void onAction(const event::Action &e) override {
     clouds->mono = setting;
   }
   void step() override {
@@ -489,7 +489,7 @@ struct CloudsLofiItem : MenuItem {
   Smoke *clouds;
   bool setting;
 
-  void onAction(EventAction &e) override {
+  void onAction(const event::Action &e) override {
     clouds->lofi = setting;
   }
   void step() override {
@@ -502,7 +502,7 @@ struct CloudsBufferItem : MenuItem {
   Smoke *clouds;
   int setting;
 
-  void onAction(EventAction &e) override {
+  void onAction(const event::Action &e) override {
     clouds->buffersize = setting;
   }
   void step() override {
