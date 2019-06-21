@@ -1,10 +1,6 @@
 
 #include "Southpole.hpp"
 
-#include "dsp/decimator.hpp"
-#include "dsp/filter.hpp"
-#include "dsp/digital.hpp"
-
 #include "VAStateVariableFilter.h"
 
 extern float sawTable[2048];

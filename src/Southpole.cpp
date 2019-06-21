@@ -1,4 +1,3 @@
-
 #include "Southpole.hpp"
 
 Plugin *pluginInstance;
@@ -41,4 +40,5 @@ void init(rack::Plugin *p) {
 		p->addModel(modelSplash); 	
 		p->addModel(modelSssh); 	
 		p->addModel(modelWriggle);
+
 }

@@ -6,10 +6,6 @@
 
 #include <string.h>
 #include "Southpole.hpp"
-#include "dsp/samplerate.hpp"
-#include "dsp/ringbuffer.hpp"
-#include "dsp/digital.hpp"
-#include "dsp/vumeter.hpp"
 #include "clouds/dsp/granular_processor.h"
 
 

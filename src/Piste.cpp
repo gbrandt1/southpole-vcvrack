@@ -1,6 +1,5 @@
 
 #include "Southpole.hpp"
-#include "dsp/digital.hpp"
 #include "VAStateVariableFilter.h"
 
 

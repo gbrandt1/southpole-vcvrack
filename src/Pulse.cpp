@@ -1,5 +1,4 @@
 #include "Southpole.hpp"
-#include "dsp/digital.hpp"
 
 struct Pulse : Module {
 	enum ParamIds {

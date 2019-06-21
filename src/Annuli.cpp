@@ -1,9 +1,5 @@
 #include <string.h>
 #include "Southpole.hpp"
-#include "dsp/functions.hpp"
-#include "dsp/samplerate.hpp"
-#include "dsp/ringbuffer.hpp"
-#include "dsp/digital.hpp"
 #include "rings/dsp/part.h"
 #include "rings/dsp/strummer.h"
 #include "rings/dsp/string_synth_part.h"

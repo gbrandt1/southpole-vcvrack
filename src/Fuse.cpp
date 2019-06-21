@@ -1,7 +1,4 @@
-
 #include "Southpole.hpp"
-
-#include "dsp/digital.hpp"
 
 struct Fuse : Module {
 	enum ParamIds {

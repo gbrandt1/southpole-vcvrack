@@ -3,8 +3,6 @@
 
 #include "Southpole.hpp"
 
-#include "dsp/samplerate.hpp"
-#include "dsp/digital.hpp"
 #include "tides/generator.h"
 
 struct Splash : Module {

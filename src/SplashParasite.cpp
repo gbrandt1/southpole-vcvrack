@@ -1,7 +1,5 @@
 #include <string.h>
 #include "Southpole.hpp"
-#include "dsp/samplerate.hpp"
-#include "dsp/digital.hpp"
 #include "tides/generator.h"
 
 struct SplashParasite : Module {

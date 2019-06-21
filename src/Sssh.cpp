@@ -1,5 +1,4 @@
 #include "Southpole.hpp"
-#include "dsp/digital.hpp"
 
 
 struct Sssh : Module {

@@ -1,6 +1,5 @@
 #include <array>
 #include "Southpole.hpp"
-#include "dsp/digital.hpp"
 #include "Bjorklund.hpp"
 
 struct Sns : Module {

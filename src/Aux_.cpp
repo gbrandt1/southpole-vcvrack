@@ -1,6 +1,5 @@
 
 #include "Southpole.hpp"
-#include "dsp/digital.hpp"
 
 #define NUMAUX 2
 

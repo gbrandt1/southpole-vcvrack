@@ -1,5 +1,4 @@
 #include "Southpole.hpp"
-#include "dsp/digital.hpp"
 
 #define NSNAKEBUSS  16
 #define NSNAKEPORTS 10

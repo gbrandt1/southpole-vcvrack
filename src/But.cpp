@@ -79,14 +79,14 @@ struct But : Module
 
     void step() override;
 
-    void reset() override 
+    void reset()
     {
         for (int i = 0; i < 8; i++) 
         {
             swState[i] = false;
 		}
 	}
-    void randomize() override 
+    void randomize()
     {
         for (int i = 0; i < 8; i++) 
         {

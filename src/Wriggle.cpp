@@ -1,11 +1,6 @@
-
-
 #include <iostream>
 
 #include "Southpole.hpp"
-
-#include "dsp/digital.hpp"
-
 
 struct Wriggle : Module {
 	enum ParamIds {
