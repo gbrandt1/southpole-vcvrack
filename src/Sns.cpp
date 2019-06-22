@@ -448,6 +448,10 @@ struct SnsDisplay : TransparentWidget {
 
 	void draw(NVGcontext *vg) override {
 
+    if (!module) {
+      return;
+    }
+
 		// i know ... shouldn't be here at all	
 		if (module->calculate) {
 		   module->reset();

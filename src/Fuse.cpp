@@ -134,32 +134,32 @@ struct FuseDisplay : TransparentWidget {
 
 	FuseDisplay() {}
 
-	void draw(NVGcontext *vg) override {
+  void draw(const DrawArgs &args) override {
 
-		// Background
-		NVGcolor backgroundColor = nvgRGB(0x30, 0x00, 0x10);
-		NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
-		nvgFillColor(vg, backgroundColor);
-		nvgFill(vg);
-		nvgStrokeWidth(vg, 1.5);
-		nvgStrokeColor(vg, borderColor);
-		nvgStroke(vg);
+    // Background
+    NVGcolor backgroundColor = nvgRGB(0x30, 0x00, 0x10);
+    NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
+    nvgBeginPath(args.vg);
+    nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+    nvgFillColor(args.vg, backgroundColor);
+    nvgFill(args.vg);
+    nvgStrokeWidth(args.vg, 1.5);
+    nvgStrokeColor(args.vg, borderColor);
+    nvgStroke(args.vg);
 
-		// Lights
-		nvgStrokeColor(vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
-		nvgFillColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
-		for ( unsigned y_ = 0; y_ < 16; y_++ ) {
-			unsigned y = 15 - y_;
-			nvgBeginPath(vg);
-			nvgStrokeWidth(vg, 1.);
-	    	nvgRect(vg, 3., y*box.size.y/18.+7.*floor(y/4.)+9., box.size.x-6., box.size.y/18.-6.);
-			if (y_ <= module->curstep) nvgFill(vg);
-			nvgStroke(vg);
-		}
+    // Lights
+    nvgStrokeColor(args.vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
+    nvgFillColor(args.vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+    for ( unsigned y_ = 0; y_ < 16; y_++ ) {
+      unsigned y = 15 - y_;
+      nvgBeginPath(args.vg);
+      nvgStrokeWidth(args.vg, 1.);
+        nvgRect(args.vg, 3., y*box.size.y/18.+7.*floor(y/4.)+9., box.size.x-6., box.size.y/18.-6.);
+      if (module && (y_ <= module->curstep)) nvgFill(args.vg);
+      nvgStroke(args.vg);
+    }
 
-	}	
+  } 
 };
 
 struct FuseWidget : ModuleWidget {

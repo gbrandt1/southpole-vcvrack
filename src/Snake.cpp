@@ -170,6 +170,10 @@ struct SnakeDisplay : TransparentWidget {
 
 	void draw(NVGcontext *vg) override {
 
+    if(!module) {
+      return;
+    }
+
 		// Background
 		NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
 		NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);

@@ -356,115 +356,114 @@ struct CornrowsXDisplay : TransparentWidget {
 		font = Font::load(assetPlugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
 	}
 
-	void draw(NVGcontext *vg) override {
-		int shape=0;
-		const char *text="";
+  void draw(const DrawArgs &args) override {
+    int shape = module ? module->settings.shape : 0;
+    const char *text="";
 
-		// Background
-		NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
-		NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
-		nvgFillColor(vg, backgroundColor);
-		nvgFill(vg);
-		nvgStrokeWidth(vg, 1.5);
-		nvgStrokeColor(vg, borderColor);
-		nvgStroke(vg);
+    // Background
+    NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
+    NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
+    nvgBeginPath(args.vg);
+    nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+    nvgFillColor(args.vg, backgroundColor);
+    nvgFill(args.vg);
+    nvgStrokeWidth(args.vg, 1.5);
+    nvgStrokeColor(args.vg, borderColor);
+    nvgStroke(args.vg);
 
-		nvgFontSize(vg, 20.);
-		nvgFontFaceId(vg, font->handle);
-		nvgTextLetterSpacing(vg, 2.);
+    nvgFontSize(args.vg, 20.);
+    nvgFontFaceId(args.vg, font->handle);
+    nvgTextLetterSpacing(args.vg, 2.);
 
-		Vec textPos = Vec(5, 28);
-		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
-		nvgFillColor(vg, nvgTransRGBA(textColor, 16));
-		nvgText(vg, textPos.x, textPos.y, "~~~~", NULL);
-		nvgFillColor(vg, textColor);
-		//blink
-		if ( module->disp_timeout & 0x1000 ) return;
-		if (module->last_setting_changed == braids::SETTING_OSCILLATOR_SHAPE) {
-			shape = module->settings.shape;
-			if (module->paques) {
-			  text = "  49"; 		
-			} else {
-			  text = algo_values[shape];
-			}
-		}
-		if (module->last_setting_changed == braids::SETTING_META_MODULATION) {
-		    shape = module->settings.ad_timbre;
-		 	text = "META";
-		}
-		if (module->last_setting_changed == braids::SETTING_RESOLUTION) {
-		    shape = module->settings.resolution;
-		 	text = bits_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_SAMPLE_RATE) {
-		    shape = module->settings.sample_rate;
-		 	text = rates_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_TRIG_SOURCE) {
-		    shape = module->settings.ad_timbre;
-		 	text = "AUTO";
-		}
-		if (module->last_setting_changed == braids::SETTING_TRIG_DELAY) {
-		    shape = module->settings.trig_delay;
-		 	text = trig_delay_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_ATTACK) {
-		    shape = module->settings.ad_attack;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_DECAY) {
-		    shape = module->settings.ad_decay;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_FM) {
-		    shape = module->settings.ad_fm;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_TIMBRE) {
-		    shape = module->settings.ad_color;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_COLOR) {
-		    shape = module->settings.ad_color;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_VCA) {
-		    shape = module->settings.ad_color;
-		 	text = "\\VCA";
-		}
-		if (module->last_setting_changed == braids::SETTING_PITCH_RANGE) {
-		    shape = module->settings.pitch_range;
-		 	text = pitch_range_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_PITCH_OCTAVE) {
-		    shape = module->settings.pitch_octave;
-		 	text = octave_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_QUANTIZER_SCALE) {
-		    shape = module->settings.quantizer_scale;
-		 	text = quantization_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_QUANTIZER_ROOT) {
-		    shape = module->settings.quantizer_root;
-		 	text = note_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_VCO_FLATTEN) {
-		    shape = module->settings.quantizer_scale;
-		 	text = "FLAT";
-		}
-		if (module->last_setting_changed == braids::SETTING_VCO_DRIFT) {
-		    shape = module->settings.quantizer_scale;
-		 	text = "DRFT";
-		}
-		if (module->last_setting_changed == braids::SETTING_SIGNATURE) {
-		    shape = module->settings.quantizer_scale;
-		 	text = "SIGN";
-		}
-		nvgText(vg, textPos.x, textPos.y, text, NULL);
-		//nvgText(vg, textPos.x, textPos.y, algo_values[shape], NULL);
-	}
+    Vec textPos = Vec(5, 28);
+    NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
+    nvgFillColor(args.vg, nvgTransRGBA(textColor, 16));
+    nvgText(args.vg, textPos.x, textPos.y, "~~~~", NULL);
+    nvgFillColor(args.vg, textColor);
+    //blink
+    if (module && module->disp_timeout & 0x1000 ) return;
+    if (module && module->last_setting_changed == braids::SETTING_OSCILLATOR_SHAPE) {
+      shape = module->settings.shape;
+      if (module->paques) {
+        text = "  49";    
+      } else {
+        text = algo_values[shape];
+      }
+    }
+    if (module && module->last_setting_changed == braids::SETTING_META_MODULATION) {
+        shape = module->settings.ad_timbre;
+      text = "META";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_RESOLUTION) {
+        shape = module->settings.resolution;
+      text = bits_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_SAMPLE_RATE) {
+        shape = module->settings.sample_rate;
+      text = rates_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_TRIG_SOURCE) {
+        shape = module->settings.ad_timbre;
+      text = "AUTO";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_TRIG_DELAY) {
+        shape = module->settings.trig_delay;
+      text = trig_delay_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_ATTACK) {
+        shape = module->settings.ad_attack;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_DECAY) {
+        shape = module->settings.ad_decay;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_FM) {
+        shape = module->settings.ad_fm;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_TIMBRE) {
+        shape = module->settings.ad_color;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_COLOR) {
+        shape = module->settings.ad_color;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_VCA) {
+        shape = module->settings.ad_color;
+      text = "\\VCA";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_PITCH_RANGE) {
+        shape = module->settings.pitch_range;
+      text = pitch_range_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_PITCH_OCTAVE) {
+        shape = module->settings.pitch_octave;
+      text = octave_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_QUANTIZER_SCALE) {
+        shape = module->settings.quantizer_scale;
+      text = quantization_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_QUANTIZER_ROOT) {
+        shape = module->settings.quantizer_root;
+      text = note_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_VCO_FLATTEN) {
+        shape = module->settings.quantizer_scale;
+      text = "FLAT";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_VCO_DRIFT) {
+        shape = module->settings.quantizer_scale;
+      text = "DRFT";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_SIGNATURE) {
+        shape = module->settings.quantizer_scale;
+      text = "SIGN";
+    }
+    nvgText(args.vg, textPos.x, textPos.y, text, NULL);
+  }
 };
 
 struct CornrowsXWidget : ModuleWidget {

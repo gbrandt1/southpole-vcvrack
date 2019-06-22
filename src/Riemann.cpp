@@ -466,6 +466,9 @@ struct RiemannDisplay : TransparentWidget {
   	}
 
 	void draw(NVGcontext *vg) {
+    if (!module) {
+      return;
+    }
 		
 		//Rect b = Rect(Vec(2, 2), box.size.minus(Vec(2, 2)));
 		cx = box.size.x*0.5;

@@ -281,7 +281,6 @@ struct SmokeWidget : ModuleWidget {
 	SVGPanel *panel4;
 	SVGPanel *panel5;
 	SVGPanel *panel6;	
-	void step() override;
 
 
   SmokeWidget(Smoke *module) {
@@ -501,48 +500,46 @@ struct SmokeWidget : ModuleWidget {
 #endif  
 
   }
+
+  void step() override {
+    Smoke *smoke = dynamic_cast<Smoke*>(module);
+
+    if (smoke) {
+      panel1->visible = true;
+      panel2->visible = false;
+      panel3->visible = false;
+      panel4->visible = false;
+#ifdef PARASITES
+      panel5->visible = false;
+      panel6->visible = false;
+#endif
+      if ( smoke->playbackmode == clouds::PLAYBACK_MODE_SPECTRAL) {
+        panel1->visible = false;
+        panel2->visible = true;
+      }
+      if ( smoke->playbackmode == clouds::PLAYBACK_MODE_LOOPING_DELAY) {
+        panel1->visible = false;
+        panel3->visible = true;
+      }
+      if ( smoke->playbackmode == clouds::PLAYBACK_MODE_STRETCH) {
+        panel1->visible = false;
+        panel4->visible = true;
+      }
+#ifdef PARASITES
+      if ( smoke->playbackmode == clouds::PLAYBACK_MODE_OLIVERB) {
+        panel1->visible = false;
+        panel5->visible = true;    
+      }
+      if ( smoke->playbackmode == clouds::PLAYBACK_MODE_RESONESTOR) {
+        panel1->visible = false;
+        panel6->visible = true;
+      }
+#endif
+    }
+    
+    ModuleWidget::step();
+
+  }
 };
 
-void SmokeWidget::step() {
-	Smoke *smoke = dynamic_cast<Smoke*>(module);
-	assert(smoke);
-
-	panel1->visible = true;
-	panel2->visible = false;
-	panel3->visible = false;
-	panel4->visible = false;
-  #ifdef PARASITES
-    panel5->visible = false;
-    panel6->visible = false;
-  #endif
-  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_SPECTRAL) {
-    panel1->visible = false;
-    panel2->visible = true;
-  }
-  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_LOOPING_DELAY) {
-    panel1->visible = false;
-    panel3->visible = true;
-  }
-  if ( smoke->playbackmode == clouds::PLAYBACK_MODE_STRETCH) {
-    panel1->visible = false;
-    panel4->visible = true;
-  }
-  #ifdef PARASITES
-    if ( smoke->playbackmode == clouds::PLAYBACK_MODE_OLIVERB) {
-      panel1->visible = false;
-      panel5->visible = true;    
-    }
-    if ( smoke->playbackmode == clouds::PLAYBACK_MODE_RESONESTOR) {
-      panel1->visible = false;
-      panel6->visible = true;
-    }
-  #endif
-
-	ModuleWidget::step();
-}
-
-
-
-Model *modelSmoke 	= createModel<Smoke,SmokeWidget>("Smoke");
-
-
+Model *modelSmoke = createModel<Smoke,SmokeWidget>("Smoke");

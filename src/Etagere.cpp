@@ -187,8 +187,6 @@ struct EtagereWidget : ModuleWidget {
 	SVGPanel *blancPanel;
 	SVGPanel *noirPanel;	
 
-	void step() override;
-
     EtagereWidget(Etagere *module)  {
         setModule(module);
 
@@ -280,14 +278,16 @@ struct EtagereWidget : ModuleWidget {
         menu->addChild(construct<MenuLabel>());
         menu->addChild(construct<EtagereBlancItem>(&MenuItem::text, "blanc", &EtagereBlancItem::etagere, etagere));
     }
-};
 
-void EtagereWidget::step() {
-	Etagere *m = dynamic_cast<Etagere*>(module);
-	assert(m);
-	blancPanel->visible = !m->blanc;
-	noirPanel->visible = m->blanc;
-	ModuleWidget::step();
-}
+    void step() override {
+      Etagere *etagere = dynamic_cast<Etagere*>(module);
+      if (etagere) {
+        blancPanel->visible = !etagere->blanc;
+        noirPanel->visible = etagere->blanc;
+      }
+
+      ModuleWidget::step();
+    }
+};
 
 Model *modelEtagere = createModel<Etagere,EtagereWidget>("Etagere");

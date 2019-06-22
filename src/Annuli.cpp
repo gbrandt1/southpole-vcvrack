@@ -248,7 +248,6 @@ void Annuli::step() {
 struct AnnuliWidget : ModuleWidget {
 	SVGPanel *panel;
 	SVGPanel *panel2;
-	void step() override;
 
 	AnnuliWidget(Annuli *module) {
 		setModule(module);
@@ -345,16 +344,17 @@ struct AnnuliWidget : ModuleWidget {
     menu->addChild(construct<MenuItem>());
     menu->addChild(construct<AnnuliEasterEggItem>(&MenuItem::text, "Disastrous Peace", &AnnuliEasterEggItem::rings, rings));
   }
+
+  void step() override {
+    Annuli *annuli = dynamic_cast<Annuli*>(module);
+
+    if (annuli) {
+      panel->visible  =  !annuli->easterEgg;
+      panel2->visible =  annuli->easterEgg;
+    }
+
+    ModuleWidget::step();
+  }
 };
-
-void AnnuliWidget::step() {
-	Annuli *annuli = dynamic_cast<Annuli*>(module);
-	assert(annuli);
-
-	panel->visible  =  !annuli->easterEgg;
-	panel2->visible =  annuli->easterEgg;
-
-	ModuleWidget::step();
-}
 
 Model *modelAnnuli 	= createModel<Annuli,AnnuliWidget>("Annuli");

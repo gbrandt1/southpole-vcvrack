@@ -203,7 +203,6 @@ void Splash::step() {
 struct SplashWidget : ModuleWidget {
 	SVGPanel *tidesPanel;
 	SVGPanel *sheepPanel;
-	void step() override;
 
 	SplashWidget(Splash *module) {
 		setModule(module);
@@ -284,16 +283,17 @@ struct SplashWidget : ModuleWidget {
     menu->addChild(construct<SplashSheepItem>(&MenuItem::text, "Lambs", &SplashSheepItem::tides, tides));
 
   }
+
+  void step() override {
+    Splash *tides = dynamic_cast<Splash*>(module);
+
+    if (tides) {
+      tidesPanel->visible = !tides->sheep;
+      sheepPanel->visible = tides->sheep;
+    }
+
+    ModuleWidget::step();
+  }
 };
-
-void SplashWidget::step() {
-	Splash *tides = dynamic_cast<Splash*>(module);
-	assert(tides);
-
-	tidesPanel->visible = !tides->sheep;
-	sheepPanel->visible = tides->sheep;
-
-	ModuleWidget::step();
-}
 
 Model *modelSplash = createModel<Splash,SplashWidget>("Splash");
