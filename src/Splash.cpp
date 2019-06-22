@@ -57,13 +57,13 @@ struct Splash : Module {
 	void step() override;
 
 
-	void reset() override {
+	void reset() {
 		generator.set_range(tides::GENERATOR_RANGE_MEDIUM);
 		generator.set_mode(tides::GENERATOR_MODE_LOOPING);
 		sheep = false;
 	}
 
-	void randomize() override {
+	void randomize() {
 		generator.set_range((tides::GeneratorRange) (randomu32() % 3));
 		generator.set_mode((tides::GeneratorMode) (randomu32() % 3));
 	}
@@ -204,7 +204,6 @@ struct SplashWidget : ModuleWidget {
 	SVGPanel *tidesPanel;
 	SVGPanel *sheepPanel;
 	void step() override;
-	Menu *createContextMenu() override;
 
 	SplashWidget(Splash *module) {
 		setModule(module);
@@ -265,10 +264,27 @@ struct SplashWidget : ModuleWidget {
 		addOutput(createPort<sp_Port>(Vec(x1+3*28., y1+7.125*yh), PortWidget::OUTPUT, module, Splash::BI_OUTPUT));
 
 	}
+
+  void appendContextMenu(Menu *menu) override {
+    Splash *tides = dynamic_cast<Splash*>(module);
+    assert(tides);
+
+    struct SplashSheepItem : MenuItem {
+      Splash *tides;
+      void onAction(const event::Action &e) override {
+        tides->sheep ^= true;
+      }
+      void step() override {
+        rightText = (tides->sheep) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    menu->addChild(construct<MenuLabel>());
+    menu->addChild(construct<SplashSheepItem>(&MenuItem::text, "Lambs", &SplashSheepItem::tides, tides));
+
+  }
 };
-
-Model *modelSplash 	= createModel<Splash,SplashWidget>("Splash");
-
 
 void SplashWidget::step() {
 	Splash *tides = dynamic_cast<Splash*>(module);
@@ -280,27 +296,4 @@ void SplashWidget::step() {
 	ModuleWidget::step();
 }
 
-
-struct SplashSheepItem : MenuItem {
-	Splash *tides;
-	void onAction(const event::Action &e) override {
-		tides->sheep ^= true;
-	}
-	void step() override {
-		rightText = (tides->sheep) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-
-Menu *SplashWidget::createContextMenu() {
-	Menu *menu = ModuleWidget::createContextMenu();
-
-	Splash *tides = dynamic_cast<Splash*>(module);
-	assert(tides);
-
-	menu->addChild(construct<MenuLabel>());
-	menu->addChild(construct<SplashSheepItem>(&MenuItem::text, "Lambs", &SplashSheepItem::tides, tides));
-
-	return menu;
-}
+Model *modelSplash = createModel<Splash,SplashWidget>("Splash");

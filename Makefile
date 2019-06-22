@@ -35,7 +35,7 @@ SOURCES += src/Splash.cpp
 SOURCES += eurorack/stmlib/utils/random.cc
 SOURCES += eurorack/stmlib/dsp/atan.cc
 SOURCES += eurorack/stmlib/dsp/units.cc
-SOURCES += eurorack/tides/generator.cc 
+SOURCES += eurorack/tides/generator.cc
 SOURCES += eurorack/tides/resources.cc
 
 #SOURCES += src/Cornrows.cpp	

@@ -99,7 +99,7 @@ struct Sns : Module {
 	}
 
 	void step() override;
-	void reset() override;
+	void reset();
 
 	unsigned int fib(unsigned int n){
    		return (n < 2) ? n : fib(n - 1) + fib(n - 2);
@@ -486,7 +486,6 @@ struct SnsDisplay : TransparentWidget {
 
 struct SnsWidget : ModuleWidget { 
 	SnsWidget();
-	Menu *createContextMenu() override;
 	
 	SnsWidget(Sns *module) {
 		setModule(module);
@@ -544,56 +543,50 @@ struct SnsWidget : ModuleWidget {
 		//addChild(createLight<SmallLight<RedLight>>(Vec(4+50, 281), module, Sns::ACCENT_LIGHT));
 
 	}
+
+  void appendContextMenu(Menu *menu) override {
+      Sns *sns = dynamic_cast<Sns*>(module);
+      assert(sns);
+
+      struct SnsGateModeItem : MenuItem {
+          Sns *sns;
+          Sns::gateModes gm;
+          void onAction(const event::Action &e) override {
+              sns->gateMode = gm;
+          }
+          void step() override {
+              rightText = (sns->gateMode == gm) ? "✔" : "";
+              MenuItem::step();
+          }
+      };
+
+      struct SnsPatternStyleItem : MenuItem {
+          Sns *sns;
+          Sns::patternStyle ps;
+          void onAction(const event::Action &e) override {
+              sns->style = ps;
+              sns->reset();
+          }
+          void step() override {
+              rightText = (sns->style == ps) ? "✔" : "";
+              MenuItem::step();
+          }
+      };
+
+      menu->addChild(construct<MenuLabel>());
+      menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Gate Mode"));
+      menu->addChild(construct<SnsGateModeItem>(&MenuItem::text, "Trigger", &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TRIGGER_MODE));
+      menu->addChild(construct<SnsGateModeItem>(&MenuItem::text, "Gate",    &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::GATE_MODE));
+      menu->addChild(construct<SnsGateModeItem>(&MenuItem::text, "Turing",  &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TURING_MODE));
+
+      menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Pattern Style"));
+      menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Euclid", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::EUCLIDEAN_PATTERN));
+      menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Fibonacci", &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::FIBONACCI_PATTERN));
+      menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Random", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::RANDOM_PATTERN));
+      menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Linear", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::LINEAR_PATTERN));
+
+  }
+
 };
-
-struct SnsGateModeItem : MenuItem {
-	Sns *sns;
-	Sns::gateModes gm;
-	void onAction(const event::Action &e) override {
-		sns->gateMode = gm;
-	}
-	void step() override {
-		rightText = (sns->gateMode == gm) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-struct SnsPatternStyleItem : MenuItem {
-	Sns *sns;
-	Sns::patternStyle ps;
-	void onAction(const event::Action &e) override {
-		sns->style = ps;
-		sns->reset();
-	}
-	void step() override {
-		rightText = (sns->style == ps) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-Menu *SnsWidget::createContextMenu() {
-	Sns *sns = dynamic_cast<Sns*>(module);
-	assert(sns);
-
-	Menu *menu = ModuleWidget::createContextMenu();
-
-	menu->addChild(construct<MenuLabel>());;
-
-	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Gate Mode"));
-	menu->addChild(construct<SnsGateModeItem>(&MenuItem::text, "Trigger", &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TRIGGER_MODE));
-    menu->addChild(construct<SnsGateModeItem>(&MenuItem::text, "Gate",    &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::GATE_MODE));
-	menu->addChild(construct<SnsGateModeItem>(&MenuItem::text, "Turing",  &SnsGateModeItem::sns, sns, &SnsGateModeItem::gm, Sns::TURING_MODE));
-
-	menu->addChild(construct<MenuLabel>());;
-
-	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Pattern Style"));
-	menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Euclid", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::EUCLIDEAN_PATTERN));
-	menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Fibonacci", &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::FIBONACCI_PATTERN));
-	menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Random", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::RANDOM_PATTERN));
-  //menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Cantor", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::CANTOR_PATTERN));
-	menu->addChild(construct<SnsPatternStyleItem>(&MenuItem::text, "Linear", 	 &SnsPatternStyleItem::sns, sns, &SnsPatternStyleItem::ps, Sns::LINEAR_PATTERN));
-
-	return menu;
-}
 
 Model *modelSns 	= createModel<Sns,SnsWidget>("SNS");

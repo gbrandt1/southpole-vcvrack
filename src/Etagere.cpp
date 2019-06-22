@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "Southpole.hpp"
+#include "plugin.hpp"
 #include "VAStateVariableFilter.h"
 
 
@@ -187,10 +188,9 @@ struct EtagereWidget : ModuleWidget {
 	SVGPanel *noirPanel;	
 
 	void step() override;
-	Menu *createContextMenu() override;
 
     EtagereWidget(Etagere *module)  {
-		setModule(module);
+        setModule(module);
 
         box.size = Vec(15*6, 380);
 
@@ -259,6 +259,27 @@ struct EtagereWidget : ModuleWidget {
 
         addChild(createLight<SmallLight<RedLight>>(Vec(x2+10., y1+12.5*yh), module, Etagere::CLIP5_LIGHT));
     }
+
+    void appendContextMenu(Menu *menu) override {
+        Etagere *etagere = dynamic_cast<Etagere*>(module);
+        assert(etagere);
+
+        struct EtagereBlancItem : MenuItem {
+            Etagere *etagere;
+            
+            void onAction(const event::Action &e) override {
+                etagere->blanc ^= true;
+            }
+
+            void step() override {
+                rightText = (!etagere->blanc) ?  "✔" : "";
+                MenuItem::step();
+            }
+        };
+
+        menu->addChild(construct<MenuLabel>());
+        menu->addChild(construct<EtagereBlancItem>(&MenuItem::text, "blanc", &EtagereBlancItem::etagere, etagere));
+    }
 };
 
 void EtagereWidget::step() {
@@ -267,26 +288,6 @@ void EtagereWidget::step() {
 	blancPanel->visible = !m->blanc;
 	noirPanel->visible = m->blanc;
 	ModuleWidget::step();
-}
-
-struct EtagereBlancItem : MenuItem {
-	Etagere *m;
-	void onAction(const event::Action &e) override {
-		m->blanc ^= true;
-	}
-	void step() override {
-		rightText = (!m->blanc) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-Menu *EtagereWidget::createContextMenu() {
-	Menu *menu = ModuleWidget::createContextMenu();
-	Etagere *m = dynamic_cast<Etagere*>(module);
-	assert(m);
-	menu->addChild(construct<MenuLabel>());
-	menu->addChild(construct<EtagereBlancItem>(&MenuItem::text, "blanc", &EtagereBlancItem::m, m));
-	return menu;
 }
 
 Model *modelEtagere = createModel<Etagere,EtagereWidget>("Etagere");

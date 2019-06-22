@@ -282,7 +282,6 @@ struct SmokeWidget : ModuleWidget {
 	SVGPanel *panel5;
 	SVGPanel *panel6;	
 	void step() override;
-	Menu *createContextMenu() override;
 
 
   SmokeWidget(Smoke *module) {
@@ -415,6 +414,93 @@ struct SmokeWidget : ModuleWidget {
     addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 10), module, Smoke::REVERB_GREEN_LIGHT));
   
   }
+
+  void appendContextMenu(Menu *menu) override {
+    Smoke *clouds = dynamic_cast<Smoke*>(module);
+    assert(clouds);
+
+    struct CloudsModeItem : MenuItem {
+      Smoke *clouds;
+      clouds::PlaybackMode mode;
+
+      void onAction(const event::Action &e) override {
+        clouds->playbackmode = mode;
+      }
+      void step() override {
+        rightText = (clouds->playbackmode == mode) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    struct CloudsMonoItem : MenuItem {
+      Smoke *clouds;
+      bool setting;
+
+      void onAction(const event::Action &e) override {
+        clouds->mono = setting;
+      }
+      void step() override {
+        rightText = (clouds->mono == setting) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    struct CloudsLofiItem : MenuItem {
+      Smoke *clouds;
+      bool setting;
+
+      void onAction(const event::Action &e) override {
+        clouds->lofi = setting;
+      }
+      void step() override {
+        rightText = (clouds->lofi == setting) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+
+    struct CloudsBufferItem : MenuItem {
+      Smoke *clouds;
+      int setting;
+
+      void onAction(const event::Action &e) override {
+        clouds->buffersize = setting;
+      }
+      void step() override {
+        rightText = (clouds->buffersize == setting) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    menu->addChild(construct<MenuLabel>());
+
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "MODE"));
+    menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "GRANULAR", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_GRANULAR));
+    menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "SPECTRAL", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_SPECTRAL));
+    menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "LOOPING_DELAY", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_LOOPING_DELAY));
+    menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "STRETCH", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_STRETCH));
+#ifdef PARASITES  
+    menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "OLIVERB", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_OLIVERB));
+    menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "RESONESTOR", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_RESONESTOR));
+#endif     
+    menu->addChild(construct<MenuItem>(&MenuItem::text, "STEREO/MONO"));
+    menu->addChild(construct<CloudsMonoItem>(&MenuItem::text, "STEREO", &CloudsMonoItem::clouds, clouds, &CloudsMonoItem::setting, false));
+    menu->addChild(construct<CloudsMonoItem>(&MenuItem::text, "MONO", &CloudsMonoItem::clouds, clouds, &CloudsMonoItem::setting, true));  
+    
+    menu->addChild(construct<MenuItem>(&MenuItem::text, "HIFI/LOFI"));
+    menu->addChild(construct<CloudsLofiItem>(&MenuItem::text, "HIFI", &CloudsLofiItem::clouds, clouds, &CloudsLofiItem::setting, false));
+    menu->addChild(construct<CloudsLofiItem>(&MenuItem::text, "LOFI", &CloudsLofiItem::clouds, clouds, &CloudsLofiItem::setting, true));  
+    
+#ifdef BUFFERRESIZING
+  // disable by default as it seems to make alternative modes unstable
+    menu->addChild(construct<MenuItem>(&MenuItem::text, "BUFFER SIZE (EXPERIMENTAL)"));
+    menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "ORIGINAL", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 1));
+    menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "2X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 2));
+    menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "4X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 4));
+    menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "8X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 8));
+#endif  
+
+  }
 };
 
 void SmokeWidget::step() {
@@ -455,93 +541,7 @@ void SmokeWidget::step() {
 	ModuleWidget::step();
 }
 
-struct CloudsModeItem : MenuItem {
-  Smoke *clouds;
-  clouds::PlaybackMode mode;
 
-  void onAction(const event::Action &e) override {
-    clouds->playbackmode = mode;
-  }
-  void step() override {
-    rightText = (clouds->playbackmode == mode) ? "✔" : "";
-  }
-};
-
-
-struct CloudsMonoItem : MenuItem {
-  Smoke *clouds;
-  bool setting;
-
-  void onAction(const event::Action &e) override {
-    clouds->mono = setting;
-  }
-  void step() override {
-    rightText = (clouds->mono == setting) ? "✔" : "";
-  }
-};
-
-
-struct CloudsLofiItem : MenuItem {
-  Smoke *clouds;
-  bool setting;
-
-  void onAction(const event::Action &e) override {
-    clouds->lofi = setting;
-  }
-  void step() override {
-    rightText = (clouds->lofi == setting) ? "✔" : "";
-  }
-};
-
-
-struct CloudsBufferItem : MenuItem {
-  Smoke *clouds;
-  int setting;
-
-  void onAction(const event::Action &e) override {
-    clouds->buffersize = setting;
-  }
-  void step() override {
-    rightText = (clouds->buffersize == setting) ? "✔" : "";
-  }
-};
-
-Menu *SmokeWidget::createContextMenu() {
-  Menu *menu = ModuleWidget::createContextMenu();
-
-  Smoke *clouds = dynamic_cast<Smoke*>(module);
-  assert(clouds);
-
-
-  menu->addChild(construct<MenuLabel>());
-  menu->addChild(construct<MenuLabel>(&MenuLabel::text, "MODE"));
-  menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "GRANULAR", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_GRANULAR));
-  menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "SPECTRAL", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_SPECTRAL));
-  menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "LOOPING_DELAY", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_LOOPING_DELAY));
-  menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "STRETCH", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_STRETCH));
-#ifdef PARASITES  
-  menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "OLIVERB", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_OLIVERB));
-  menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "RESONESTOR", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_RESONESTOR));
-#endif     
-  menu->addChild(construct<MenuItem>(&MenuItem::text, "STEREO/MONO"));
-  menu->addChild(construct<CloudsMonoItem>(&MenuItem::text, "STEREO", &CloudsMonoItem::clouds, clouds, &CloudsMonoItem::setting, false));
-  menu->addChild(construct<CloudsMonoItem>(&MenuItem::text, "MONO", &CloudsMonoItem::clouds, clouds, &CloudsMonoItem::setting, true));  
-  
-  menu->addChild(construct<MenuItem>(&MenuItem::text, "HIFI/LOFI"));
-  menu->addChild(construct<CloudsLofiItem>(&MenuItem::text, "HIFI", &CloudsLofiItem::clouds, clouds, &CloudsLofiItem::setting, false));
-  menu->addChild(construct<CloudsLofiItem>(&MenuItem::text, "LOFI", &CloudsLofiItem::clouds, clouds, &CloudsLofiItem::setting, true));  
-  
-#ifdef BUFFERRESIZING
-// disable by default as it seems to make alternative modes unstable
-  menu->addChild(construct<MenuItem>(&MenuItem::text, "BUFFER SIZE (EXPERIMENTAL)"));
-  menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "ORIGINAL", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 1));
-  menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "2X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 2));
-  menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "4X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 4));
-  menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "8X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 8));
-#endif  
-    
-  return menu;
-}
 
 Model *modelSmoke 	= createModel<Smoke,SmokeWidget>("Smoke");
 

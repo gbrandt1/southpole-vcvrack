@@ -469,8 +469,6 @@ struct CornrowsXDisplay : TransparentWidget {
 
 struct CornrowsXWidget : ModuleWidget {
 
-	Menu *createContextMenu() override;
-
 	CornrowsXWidget(CornrowsX *module)  {
 		setModule(module);
 
@@ -537,62 +535,59 @@ struct CornrowsXWidget : ModuleWidget {
 		addOutput(createPort<sp_Port>(Vec(x4, y1+5.75*yh), PortWidget::OUTPUT, module, CornrowsX::OUT_OUTPUT));
 
 	}
+
+  void appendContextMenu(Menu *menu) override {
+    CornrowsX *braids = dynamic_cast<CornrowsX*>(model);
+    assert(braids);
+
+    struct CornrowsXSettingItem : MenuItem {
+      CornrowsX *braids;
+      uint8_t *setting = NULL;
+      uint8_t offValue = 0;
+      uint8_t onValue = 1;
+      void onAction(const event::Action &e) override {
+        // Toggle setting
+        *setting = (*setting == onValue) ? offValue : onValue;
+      }
+      void step() override {
+        rightText = (*setting == onValue) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    struct CornrowsXLowCpuItem : MenuItem {
+      CornrowsX *braids;
+      void onAction(const event::Action &e) override {
+        braids->lowCpu = !braids->lowCpu;
+      }
+      void step() override {
+        rightText = (braids->lowCpu) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    struct CornrowsXPaquesItem : MenuItem {
+      CornrowsX *braids;
+      void onAction(const event::Action &e) override {
+        braids->paques = !braids->paques;
+      }
+      void step() override {
+        rightText = (braids->paques) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    menu->addChild(construct<MenuLabel>());
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Options"));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "META", &CornrowsXSettingItem::setting, &braids->settings.meta_modulation));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "AUTO", &CornrowsXSettingItem::setting, &braids->settings.auto_trig));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "|\\VCA", &CornrowsXSettingItem::setting, &braids->settings.ad_vca));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "FLAT", &CornrowsXSettingItem::setting, &braids->settings.vco_flatten, &CornrowsXSettingItem::onValue, 4));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "DRFT", &CornrowsXSettingItem::setting, &braids->settings.vco_drift, &CornrowsXSettingItem::onValue, 4));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "SIGN", &CornrowsXSettingItem::setting, &braids->settings.signature, &CornrowsXSettingItem::onValue, 4));
+    menu->addChild(construct<CornrowsXLowCpuItem>(&MenuItem::text, "Low CPU", &CornrowsXLowCpuItem::braids, braids));
+    menu->addChild(construct<CornrowsXPaquesItem>(&MenuItem::text, "Paques",  &CornrowsXPaquesItem::braids, braids));
+  }
 };
-
-struct CornrowsXSettingItem : MenuItem {
-	uint8_t *setting = NULL;
-	uint8_t offValue = 0;
-	uint8_t onValue = 1;
-	void onAction(const event::Action &e) override {
-		// Toggle setting
-		*setting = (*setting == onValue) ? offValue : onValue;
-	}
-	void step() override {
-		rightText = (*setting == onValue) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-struct CornrowsXLowCpuItem : MenuItem {
-	CornrowsX *braids;
-	void onAction(const event::Action &e) override {
-		braids->lowCpu = !braids->lowCpu;
-	}
-	void step() override {
-		rightText = (braids->lowCpu) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-struct CornrowsXPaquesItem : MenuItem {
-	CornrowsX *braids;
-	void onAction(const event::Action &e) override {
-		braids->paques = !braids->paques;
-	}
-	void step() override {
-		rightText = (braids->paques) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-Menu *CornrowsXWidget::createContextMenu() {
-	Menu *menu = ModuleWidget::createContextMenu();
-
-	CornrowsX *braids = dynamic_cast<CornrowsX*>(module);
-	assert(braids);
-
-	menu->addChild(construct<MenuLabel>());
-	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Options"));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "META", &CornrowsXSettingItem::setting, &braids->settings.meta_modulation));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "AUTO", &CornrowsXSettingItem::setting, &braids->settings.auto_trig));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "|\\VCA", &CornrowsXSettingItem::setting, &braids->settings.ad_vca));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "FLAT", &CornrowsXSettingItem::setting, &braids->settings.vco_flatten, &CornrowsXSettingItem::onValue, 4));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "DRFT", &CornrowsXSettingItem::setting, &braids->settings.vco_drift, &CornrowsXSettingItem::onValue, 4));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "SIGN", &CornrowsXSettingItem::setting, &braids->settings.signature, &CornrowsXSettingItem::onValue, 4));
-	menu->addChild(construct<CornrowsXLowCpuItem>(&MenuItem::text, "Low CPU", &CornrowsXLowCpuItem::braids, braids));
-	menu->addChild(construct<CornrowsXPaquesItem>(&MenuItem::text, "Paques",  &CornrowsXPaquesItem::braids, braids));
-
-	return menu;
-}
 
 Model *modelCornrowsX = createModel<CornrowsX,CornrowsXWidget>("CornrowsX");

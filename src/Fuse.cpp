@@ -163,8 +163,6 @@ struct FuseDisplay : TransparentWidget {
 };
 
 struct FuseWidget : ModuleWidget {
-	Menu *createContextMenu() override;
-
    	FuseWidget(Fuse *module)  {
 		setModule(module);
 
@@ -200,45 +198,37 @@ struct FuseWidget : ModuleWidget {
 		addInput(createPort<sp_Port>(Vec(x1, 330), PortWidget::INPUT, module, Fuse::CLK_INPUT));
 		addInput(createPort<sp_Port>(Vec(x2, 330), PortWidget::INPUT, module, Fuse::RESET_INPUT));
 	}
+
+    void appendContextMenu(Menu *menu) override {
+      Fuse *fuse = dynamic_cast<Fuse*>(module);
+      assert(fuse);
+
+      struct FuseGateModeItem : MenuItem {
+        Fuse *fuse;
+        bool gateMode;
+        void onAction(const event::Action &e) override {
+            fuse->gateMode = gateMode;
+        }
+        void step() override {
+            rightText = (fuse->gateMode == gateMode) ? "✔" : "";
+            MenuItem::step();
+        }
+      };
+
+      menu->addChild(construct<MenuLabel>());
+
+      menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Gate Mode"));
+      menu->addChild(construct<FuseGateModeItem>(
+            &FuseGateModeItem::text, "Trigger",
+            &FuseGateModeItem::fuse, fuse,
+            &FuseGateModeItem::gateMode, false
+      ));
+      menu->addChild(construct<FuseGateModeItem>(
+            &FuseGateModeItem::text, "Gate",
+            &FuseGateModeItem::fuse, fuse,
+            &FuseGateModeItem::gateMode, true
+      ));
+    }
 };
-
-struct FuseGateModeItem : MenuItem {
-	Fuse *fuse;
-	bool gateMode;
-	void onAction(const event::Action &e) override {
-		fuse->gateMode = gateMode;
-	}
-	void step() override {
-		rightText = (fuse->gateMode == gateMode) ? "✔" : "";
-	}
-};
-
-Menu *FuseWidget::createContextMenu() {
-	Menu *menu = ModuleWidget::createContextMenu();
-
-	MenuLabel *spacerLabel = new MenuLabel();
-	menu->addChild(spacerLabel);
-
-	Fuse *fuse = dynamic_cast<Fuse*>(module);
-	assert(fuse);
-
-	MenuLabel *modeLabel = new MenuLabel();
-	modeLabel->text = "Gate Mode";
-	menu->addChild(modeLabel);
-
-	FuseGateModeItem *triggerItem = new FuseGateModeItem();
-	triggerItem->text = "Trigger";
-	triggerItem->fuse = fuse;
-	triggerItem->gateMode = false;
-	menu->addChild(triggerItem);
-
-	FuseGateModeItem *gateItem = new FuseGateModeItem();
-	gateItem->text = "Gate";
-	gateItem->fuse = fuse;
-	gateItem->gateMode = true;
-	menu->addChild(gateItem);
-
-	return menu;
-}
 
 Model *modelFuse 	= createModel<Fuse,FuseWidget>("Fuse");

@@ -42,7 +42,7 @@ struct Sssh : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		//trigger.setThresholds(0.0, 0.7);
 	}
-	void reset() override {
+	void reset() {
 
 		for (unsigned int i=0; i<4; i++) sample[i] = 0.;
 	}
