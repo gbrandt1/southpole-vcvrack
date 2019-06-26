@@ -37,14 +37,16 @@ struct Fuse : Module {
 
 	bool gateMode;
 
-	Fuse() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+  Fuse() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-        params.resize(NUM_PARAMS);
-        inputs.resize(NUM_INPUTS);
-        outputs.resize(NUM_OUTPUTS);
-        lights.resize(NUM_LIGHTS);
-	}
+    params.resize(NUM_PARAMS);
+    inputs.resize(NUM_INPUTS);
+    outputs.resize(NUM_OUTPUTS);
+    lights.resize(NUM_LIGHTS);
+
+    configParam(Fuse::SWITCH1_PARAM + 3 - i, 0.0, 1.0, 0.0, "");
+  }
 
 	void process(const ProcessArgs &args) override;
 
@@ -189,7 +191,7 @@ struct FuseWidget : ModuleWidget {
 		
 		for(int i = 0; i < 4; i++)
 		{
-			addParam(createParam<LEDButton>(Vec(x1+1, y1 + i*yh-22), module, Fuse::SWITCH1_PARAM + 3 - i, 0.0, 1.0, 0.0));
+			addParam(createParam<LEDButton>(Vec(x1+1, y1 + i*yh-22), module, Fuse::SWITCH1_PARAM + 3 - i));
 			addChild(createLight<MediumLight<YellowLight>>(Vec(x1+5, y1+ i*yh-18), module, Fuse::ARM1_LIGHT + 3 - i));
 			addInput(createInput<sp_Port>(Vec(x1, y1 + i*yh-45), module, Fuse::ARM1_INPUT + 3 - i));
 			addOutput(createOutput<sp_Port>(Vec(x1, y1 + i*yh), module, Fuse::OUT1_OUTPUT + 3 - i));

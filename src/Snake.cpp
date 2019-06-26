@@ -33,25 +33,27 @@ struct Snake : Module {
   	dsp::SchmittTrigger plusTrigger;
   	dsp::SchmittTrigger minusTrigger;
 
-	Snake() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+    Snake() {
+      config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-		// first Snake module instantiation
-		if (nsnakes == 0) {
-			//printf("initialize Snake system\n");		
-			for (int b=0; b< NSNAKEBUSS; b++) {
-				for (int i=0; i< NSNAKEPORTS; i++) {
-					cable[b][i] = 0.;
-					lockid[b][i] = 0;
-				}
-			}
-		}
+      // first Snake module instantiation
+      if (nsnakes == 0) {
+        //printf("initialize Snake system\n");		
+        for (int b=0; b< NSNAKEBUSS; b++) {
+          for (int i=0; i< NSNAKEPORTS; i++) {
+            cable[b][i] = 0.;
+            lockid[b][i] = 0;
+          }
+        }
+      }
 
-		nsnakes++;
-		buss = 0;
-		id = nsnakes;
-		//dump("constructor");
-	}
+      nsnakes++;
+      buss = 0;
+      id = nsnakes;
+
+      configParam(Snake::PLUS_PARAM, 0.0, 1.0, 0.0, "");
+      configParam(Snake::MINUS_PARAM, 0.0, 1.0, 0.0, "");
+    }
 
 	~Snake() {
 		// clean up
@@ -222,8 +224,8 @@ struct SnakeWidget : ModuleWidget {
 			addChild(display);
 		}
 
-		addParam(createParam<TL1105>(Vec( 40, 30 ), module, Snake::PLUS_PARAM, 0.0, 1.0, 0.0));
-		addParam(createParam<TL1105>(Vec( 40, 50 ), module, Snake::MINUS_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<TL1105>(Vec( 40, 30 ), module, Snake::PLUS_PARAM));
+		addParam(createParam<TL1105>(Vec( 40, 50 ), module, Snake::MINUS_PARAM));
 
 		float y1 = 85;	
 		float yh = 26;

@@ -46,20 +46,29 @@ struct Piste : Module {
 	dsp::SchmittTrigger trigger2;
 	dsp::SchmittTrigger mute;
 
-	Piste() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+  Piste() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-        params.resize(NUM_PARAMS);
-        inputs.resize(NUM_INPUTS);
-        outputs.resize(NUM_OUTPUTS);
-        lights.resize(NUM_LIGHTS);
+    params.resize(NUM_PARAMS);
+    inputs.resize(NUM_INPUTS);
+    outputs.resize(NUM_OUTPUTS);
+    lights.resize(NUM_LIGHTS);
 
-		//trigger1.setThresholds(0.0, 2.0);
-		//trigger1.setThresholds(0.0, 2.0);
+    //trigger1.setThresholds(0.0, 2.0);
+    //trigger1.setThresholds(0.0, 2.0);
 
-        lpFilter.setFilterType(SVFLowpass);
-        hpFilter.setFilterType(SVFHighpass);        
-	}
+    lpFilter.setFilterType(SVFLowpass);
+    hpFilter.setFilterType(SVFHighpass);        
+
+    configParam(Piste::DRIVE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Piste::FREQ_PARAM, -1.0, 1.0, 0., "");
+    configParam(Piste::RESO_PARAM, .0, 1.0, 0., "");
+    configParam(Piste::SCALE1_PARAM, 0.0, 1.0, .5, "");
+    configParam(Piste::SCALE2_PARAM, 0.0, 1.0, 1., "");
+    configParam(Piste::DECAY1_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Piste::DECAY2_PARAM, 0.0, 1.0, 1., "");
+  }
+
 	void process(const ProcessArgs &args) override;
 
     unsigned timer;
@@ -166,10 +175,10 @@ struct PisteWidget : ModuleWidget {
 		const float yh = 31.;
 
 		addInput(createInput<sp_Port>(Vec(x1, y1), module, Piste::IN_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1), module, Piste::DRIVE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1), module, Piste::DRIVE_PARAM));
 		
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+1*yh), module, Piste::FREQ_PARAM, -1.0, 1.0, 0.));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Piste::RESO_PARAM, .0, 1.0, 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+1*yh), module, Piste::FREQ_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Piste::RESO_PARAM));
 
 		addChild(createLight<SmallLight<RedLight>>(Vec(x1+6, y1+2*yh+5), module, Piste::DECAY1_LIGHT));
 		addChild(createLight<SmallLight<RedLight>>(Vec(x2+6, y1+2*yh+5), module, Piste::DECAY2_LIGHT));
@@ -177,11 +186,11 @@ struct PisteWidget : ModuleWidget {
 		addInput(createInput<sp_Port>(Vec(x1, y1+2.5*yh), module, Piste::TRIG1_INPUT));
 		addInput(createInput<sp_Port>(Vec(x2, y1+2.5*yh), module, Piste::TRIG2_INPUT));
 
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+3.5*yh), module, Piste::SCALE1_PARAM, 0.0, 1.0, .5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+3.5*yh), module, Piste::SCALE2_PARAM, 0.0, 1.0, 1.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+3.5*yh), module, Piste::SCALE1_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+3.5*yh), module, Piste::SCALE2_PARAM));
 
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+4.5*yh), module, Piste::DECAY1_PARAM, 0.0, 1.0, 0.5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4.5*yh), module, Piste::DECAY2_PARAM, 0.0, 1.0, 1.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+4.5*yh), module, Piste::DECAY1_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4.5*yh), module, Piste::DECAY2_PARAM));
 		addInput(createInput<sp_Port>(Vec(x1, y1+5.25*yh), module, Piste::DECAY1_INPUT));
 		addInput(createInput<sp_Port>(Vec(x2, y1+5.25*yh), module, Piste::DECAY2_INPUT));
 

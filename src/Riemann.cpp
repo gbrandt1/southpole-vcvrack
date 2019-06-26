@@ -50,11 +50,17 @@ struct Riemann : Module {
 		NUM_LIGHTS
 	};
 
-	Riemann() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		reset();
+  Riemann() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+    reset();
 
-	}
+    configParam(Riemann::GROUP_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Riemann::SUS_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Riemann::TRANSP_PARAM, 0., 1., 0., "");
+    configParam(Riemann::PARTS_PARAM, 0., 1., 0., "");
+    configParam(Riemann::VOICING_PARAM, -1., 1., 0., "");
+
+  }
 
 	void process(const ProcessArgs &args) override;
 	void reset();
@@ -544,15 +550,15 @@ struct RiemannWidget : ModuleWidget {
 		addInput(createInput<sp_Port>(Vec(x1     	       , y1+12.5 *yh), module, Riemann::X_INPUT));
 		addInput(createInput<sp_Port>(Vec(x1  	   	       , y1+14.25*yh), module, Riemann::Y_INPUT));
 	//CKSSThree
-		addParam(createParam<CKSS>(Vec(x1+xw*1.5, y1 + 12*yh ), module, Riemann::GROUP_PARAM, 0.0, 1.0, 0.0));
-		addParam(createParam<CKSS>(Vec(x1+xw*2.5, y1 + 12*yh ), module, Riemann::SUS_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<CKSS>(Vec(x1+xw*1.5, y1 + 12*yh ), module, Riemann::GROUP_PARAM));
+		addParam(createParam<CKSS>(Vec(x1+xw*2.5, y1 + 12*yh ), module, Riemann::SUS_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(			x1+xw*3.5, y1+12.5*yh), module, Riemann::TRANSP_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*4.5, y1+12.5*yh), module, Riemann::TRANSP_PARAM, 0., 1., 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*4.5, y1+12.5*yh), module, Riemann::TRANSP_PARAM));
 		//addInput(createInput<sp_Port>(Vec(			x1+xw*5, y1+12.5*yh), module, Riemann::PARTS_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*6, y1+12.5*yh), module, Riemann::PARTS_PARAM, 0., 1., 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*6, y1+12.5*yh), module, Riemann::PARTS_PARAM));
 		addInput(createInput<sp_Port>(Vec(			x1+xw*7, y1+12.5*yh), module, Riemann::VOICING_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*8, y1+12.5*yh), module, Riemann::VOICING_PARAM, -1., 1., 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1+xw*8, y1+12.5*yh), module, Riemann::VOICING_PARAM));
 
 		for (int i=0; i<MAXPARTS+1; i++)	{
 			addOutput(createOutput<sp_Port>(Vec(x1+26*(i+1),  y1+14.25*yh), module, Riemann::N0_OUTPUT + i));

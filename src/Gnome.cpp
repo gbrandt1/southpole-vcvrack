@@ -222,18 +222,39 @@ struct Gnome : Module {
 	float env = 0.0;
 	//dsp::SchmittTrigger envtrigger;
 
-	Gnome() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		params.resize(NUM_PARAMS);
-		inputs.resize(NUM_INPUTS);
-		outputs.resize(NUM_OUTPUTS);
-		lights.resize(NUM_LIGHTS);
+  Gnome() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+    params.resize(NUM_PARAMS);
+    inputs.resize(NUM_INPUTS);
+    outputs.resize(NUM_OUTPUTS);
+    lights.resize(NUM_LIGHTS);
 
-	   	lpfilter.setFilterType(SVFLowpass);
-	   	bpfilter.setFilterType(SVFBandpass);
-	   	hpfilter.setFilterType(SVFHighpass);
-	   	ntfilter.setFilterType(SVFNotch);
-	}
+    lpfilter.setFilterType(SVFLowpass);
+    bpfilter.setFilterType(SVFBandpass);
+    hpfilter.setFilterType(SVFHighpass);
+    ntfilter.setFilterType(SVFNotch);
+
+    configParam(Gnome::PITCH_PARAM, -54.0, 54.0, 0.0, "");
+    configParam(Gnome::OSC_PARAM, 0, 2, 1, "");
+    configParam(Gnome::SUBWAVE_PARAM, 0.0, 2.0, 0.0, "");
+    configParam(Gnome::SUB_PARAM, .0, 1.0, 0.0, "");
+    configParam(Gnome::EXT_PARAM, .0, 1.0, 0.0, "");
+    configParam(Gnome::PW_PARAM, 0.0, .5, 0.25, "");
+    configParam(Gnome::FM_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Gnome::LFOWAVE_PARAM, 0., 4., 0., "");
+    configParam(Gnome::LFOPITCH_PARAM, -8.0, 6.0, -1.0, "");
+    configParam(Gnome::LFOFM_PARAM, -1, 1, 1, "");
+    configParam(Gnome::GATE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Gnome::ATTACK_PARAM,  0.0, 1.0, 0.5, "");
+    configParam(Gnome::DECAY_PARAM,   0.0, 1.0, 0.5, "");
+    configParam(Gnome::SUSTAIN_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Gnome::RELEASE_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Gnome::VCFTYPE_PARAM, 0.0, 3.0, 0.0, "");
+    configParam(Gnome::VCFPITCH_PARAM, -4.0,  7.0, 0.0, "");
+    configParam(Gnome::VCFQ_PARAM,     0.0, 1.0, 0.0, "");
+    configParam(Gnome::VCFENV_PARAM,  -1.0, 1.0, 0.0, "");
+    configParam(Gnome::VCFLFO_PARAM,  -1.0, 1.0, 0.0, "");
+  }
 	void process(const ProcessArgs &args) override;
 };
 
@@ -422,44 +443,44 @@ struct GnomeWidget : ModuleWidget {
 
 		//VCO
 		addInput(createInput<sp_Port>(			Vec(x1, y1+1*yh), module, Gnome::PITCH_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Gnome::PITCH_PARAM, -54.0, 54.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Gnome::PITCH_PARAM));
 		addInput(createInput<sp_Port>(			Vec(x1, y1+2*yh), module, Gnome::OSC_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, Gnome::OSC_PARAM, 0, 2, 1));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+3*yh), module, Gnome::SUBWAVE_PARAM, 0.0, 2.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+3*yh), module, Gnome::SUB_PARAM, .0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, Gnome::OSC_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+3*yh), module, Gnome::SUBWAVE_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+3*yh), module, Gnome::SUB_PARAM));
 		addInput(createInput<sp_Port>(			Vec(x1, y1+4*yh), module, Gnome::EXT_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Gnome::EXT_PARAM, .0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Gnome::EXT_PARAM));
 		addInput(createInput<sp_Port>(			Vec(x1, y1+5*yh), module, Gnome::PW_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Gnome::PW_PARAM, 0.0, .5, 0.25));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Gnome::PW_PARAM));
 		addInput(createInput<sp_Port>(			Vec(x1, y1+6*yh), module, Gnome::FM_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Gnome::FM_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Gnome::FM_PARAM));
 		addOutput(createOutput<sp_Port>(		Vec(x2, y1+7*yh), module, Gnome::VCO_OUTPUT));
 
 		//LFO
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+1*yh), module, Gnome::LFOWAVE_PARAM, 0., 4., 0.));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+1*yh), module, Gnome::LFOPITCH_PARAM, -8.0, 6.0, -1.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+1*yh), module, Gnome::LFOWAVE_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+1*yh), module, Gnome::LFOPITCH_PARAM));
 		addInput(createInput<sp_Port>(			Vec(x3, y1+2*yh), module, Gnome::LFOFM_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+2*yh), module, Gnome::LFOFM_PARAM, -1, 1, 1));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+2*yh), module, Gnome::LFOFM_PARAM));
 		addOutput(createOutput<sp_Port>(		Vec(x4, y1+3*yh), module, Gnome::LFO_OUTPUT));
 		
 		//ADSR
 		addInput(createInput<sp_Port>(			Vec(x3, y1+4*yh), module, Gnome::GATE_INPUT));
-		addParam(createParam<CKSS>(       		Vec(x3, y1+5*yh), module, Gnome::GATE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<CKSS>(       		Vec(x3, y1+5*yh), module, Gnome::GATE_PARAM));
 		addChild(createLight<SmallLight<RedLight>>(Vec(x3, y1+6*yh), module, Gnome::ENV_LIGHT));
 		addOutput(createOutput<sp_Port>(Vec(x3, y1+7*yh), module, Gnome::ENVELOPE_OUTPUT));
 
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+4*yh), module, Gnome::ATTACK_PARAM,  0.0, 1.0, 0.5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+5*yh), module, Gnome::DECAY_PARAM,   0.0, 1.0, 0.5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+6*yh), module, Gnome::SUSTAIN_PARAM, 0.0, 1.0, 0.5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+7*yh), module, Gnome::RELEASE_PARAM, 0.0, 1.0, 0.5));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+4*yh), module, Gnome::ATTACK_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+5*yh), module, Gnome::DECAY_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+6*yh), module, Gnome::SUSTAIN_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+7*yh), module, Gnome::RELEASE_PARAM));
 
 		//VCF
-		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+1*yh), module, Gnome::VCFTYPE_PARAM, 0.0, 3.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+1*yh), module, Gnome::VCFTYPE_PARAM));
 		addInput(createInput<sp_Port>(			 Vec(x5, y1+2*yh), module, Gnome::VCFFREQ_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+3*yh), module, Gnome::VCFPITCH_PARAM, -4.0,  7.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+4*yh), module, Gnome::VCFQ_PARAM,     0.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+5*yh), module, Gnome::VCFENV_PARAM,  -1.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+6*yh), module, Gnome::VCFLFO_PARAM,  -1.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+3*yh), module, Gnome::VCFPITCH_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+4*yh), module, Gnome::VCFQ_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+5*yh), module, Gnome::VCFENV_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+6*yh), module, Gnome::VCFLFO_PARAM));
 		addOutput(createOutput<sp_Port>( 	  	 Vec(x5, y1+7*yh), module, Gnome::VCF_OUTPUT));
 
 		//VCA

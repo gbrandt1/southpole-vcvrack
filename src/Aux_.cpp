@@ -44,12 +44,21 @@ struct Aux : Module {
 	bool mute;
 	bool bypass;
 
-	Aux() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+  Aux() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-		mute = 0;
-		bypass = 0;
-	}
+    mute = 0;
+    bypass = 0;
+
+    configParam(Aux::SEND1_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Aux::RETURN1_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Aux::FEEDBACK1_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Aux::FEEDBACK2_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Aux::SEND2_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Aux::RETURN2_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Aux::MUTE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Aux::BYPASS_PARAM, 0.0, 1.0, 0.0, "");
+  }
 	void process(const ProcessArgs &args) override;
 
 	json_t *dataToJson()override {
@@ -178,24 +187,24 @@ struct AuxWidget : ModuleWidget {
 		addOutput(createOutput<sp_Port>(Vec(x1,  y1+ 1*yh), module, Aux::SEND1R_OUTPUT));
 		addInput(createInput<sp_Port>(  Vec(x3,  y1+ 0*yh), module, Aux::RETURN1L_INPUT));
 		addInput(createInput<sp_Port>(  Vec(x3,  y1+ 1*yh), module, Aux::RETURN1R_INPUT));		
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, Aux::SEND1_PARAM, 0.0, 1.0, 0.5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2*yh), module, Aux::RETURN1_PARAM, 0.0, 1.0, 0.5));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, Aux::SEND1_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2*yh), module, Aux::RETURN1_PARAM));
 
-		addParam(createParam<sp_Trimpot>(Vec(x1, y1+3.5*yh), module, Aux::FEEDBACK1_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_Trimpot>(Vec(x3, y1+3.5*yh), module, Aux::FEEDBACK2_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_Trimpot>(Vec(x1, y1+3.5*yh), module, Aux::FEEDBACK1_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, y1+3.5*yh), module, Aux::FEEDBACK2_PARAM));
 
 		addOutput(createOutput<sp_Port>(Vec(x1,  y1+ 5.5*yh), module, Aux::SEND2L_OUTPUT));
 		addOutput(createOutput<sp_Port>(Vec(x1,  y1+ 6.5*yh), module, Aux::SEND2R_OUTPUT));
 		addInput(createInput<sp_Port>(  Vec(x3,  y1+ 5.5*yh), module, Aux::RETURN2L_INPUT));
 		addInput(createInput<sp_Port>(  Vec(x3,  y1+ 6.5*yh), module, Aux::RETURN2R_INPUT));		
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+7.5*yh), module, Aux::SEND2_PARAM, 0.0, 1.0, 0.5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+7.5*yh), module, Aux::RETURN2_PARAM, 0.0, 1.0, 0.5));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+7.5*yh), module, Aux::SEND2_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+7.5*yh), module, Aux::RETURN2_PARAM));
 
 
-		addParam(createParam<LEDButton>          (Vec(x1,   y1+ 9*yh    ), module, Aux::MUTE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<LEDButton>          (Vec(x1,   y1+ 9*yh    ), module, Aux::MUTE_PARAM));
 		addChild(createLight<LargeLight<RedLight>>(Vec(x1+2.2, y1+ 9*yh+2), module, Aux::MUTE_LIGHT));
 
-		addParam(createParam<LEDButton>            (Vec(x3,   y1+ 9*yh  ), module, Aux::BYPASS_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<LEDButton>            (Vec(x3,   y1+ 9*yh  ), module, Aux::BYPASS_PARAM));
 		addChild(createLight<LargeLight<RedLight>>(Vec(x3+2.2, y1+ 9*yh+2), module, Aux::BYPASS_LIGHT));
 
 		addInput(createInput<sp_Port>(  Vec(x1,  y1+10*yh), module, Aux::INL_INPUT));

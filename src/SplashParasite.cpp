@@ -50,7 +50,15 @@ struct SplashParasite : Module {
 	dsp::SchmittTrigger modeTrigger;
 	dsp::SchmittTrigger rangeTrigger;
 
-	SplashParasite();
+  SplashParasite() {
+    configParam(SplashParasite::MODE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(SplashParasite::RANGE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(SplashParasite::FREQUENCY_PARAM, -48.0, 48.0, 0.0, "");
+    configParam(SplashParasite::SHAPE_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(SplashParasite::SLOPE_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(SplashParasite::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(SplashParasite::FM_PARAM, -12.0, 12.0, 0.0, "");
+  }
 	void process(const ProcessArgs &args) override;
 
 
@@ -253,18 +261,18 @@ struct SplashParasiteWidget : ModuleWidget {
   	const float yh = 38.0f;
 
 
-	addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, SplashParasite::MODE_PARAM, 0.0, 1.0, 0.0));
+	addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, SplashParasite::MODE_PARAM));
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, SplashParasite::MODE_GREEN_LIGHT));
 
-	addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, SplashParasite::RANGE_PARAM, 0.0, 1.0, 0.0));
+	addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, SplashParasite::RANGE_PARAM));
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, SplashParasite::RANGE_GREEN_LIGHT));
 
 	addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, SplashParasite::PHASE_GREEN_LIGHT));
-	addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, SplashParasite::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
+	addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, SplashParasite::FREQUENCY_PARAM));
 
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, SplashParasite::SHAPE_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, SplashParasite::SLOPE_PARAM, -1.0, 1.0, 0.0));
-	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, SplashParasite::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, SplashParasite::SHAPE_PARAM));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, SplashParasite::SLOPE_PARAM));
+	addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, SplashParasite::SMOOTHNESS_PARAM));
 
 
 	addInput(createInput<sp_Port>(Vec(x1, y1), module, SplashParasite::TRIG_INPUT));
@@ -272,7 +280,7 @@ struct SplashParasiteWidget : ModuleWidget {
 
 	addInput(createInput<sp_Port>(Vec(x1, y2+2*yh), module, SplashParasite::PITCH_INPUT));
 	addInput(createInput<sp_Port>(Vec(x1,   y2+3.25*yh), module, SplashParasite::FM_INPUT));
-	addParam(createParam<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, SplashParasite::FM_PARAM, -12.0, 12.0, 0.0));
+	addParam(createParam<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, SplashParasite::FM_PARAM));
 
 	addInput(createInput<sp_Port>(Vec(x1, y2+4*yh), module, SplashParasite::SHAPE_INPUT));
 	addInput(createInput<sp_Port>(Vec(x1, y2+4.75*yh), module, SplashParasite::SLOPE_INPUT));

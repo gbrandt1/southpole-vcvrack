@@ -68,8 +68,19 @@ struct Pulse : Module {
 	 	//,2.,3.,4. //,5.,6.,7.,8.,12.,16.
 	};
 
-	Pulse() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);	}
+  Pulse() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+    configParam(Pulse::TRIG_PARAM, 0.0, 1.0, 0., "");
+    configParam(Pulse::RESET_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::REPEAT_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::RANGE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::TIME_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::DELAY_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::AMP_PARAM, 0.0, 1.0, 1.0, "");
+    configParam(Pulse::OFFSET_PARAM, -1.0, 1.0, 0., "");
+    configParam(Pulse::SLEW_PARAM, 0.0, 1.0, 0., "");
+  }
 
 	void process(const ProcessArgs &args) override;
 };
@@ -194,26 +205,26 @@ struct PulseWidget : ModuleWidget {
 		addOutput(createOutput<sp_Port>(Vec(x2, y1+0*yh), module, Pulse::CLOCK_OUTPUT));
 		
 		addInput(createInput<sp_Port>(Vec(x1, y1+1*yh), module, Pulse::TRIG_INPUT));
-		addParam(createParam<TL1105>(Vec(x2, y1+1*yh), module, Pulse::TRIG_PARAM, 0.0, 1.0, 0.));
+		addParam(createParam<TL1105>(Vec(x2, y1+1*yh), module, Pulse::TRIG_PARAM));
 
-		addParam(createParam<sp_Switch>(Vec(x1, y1+1.75*yh), module, Pulse::RESET_PARAM, 0.0, 1.0, 0.0));
-		addParam(createParam<sp_Switch>(Vec(x1, y1+2.25*yh), module, Pulse::REPEAT_PARAM, 0.0, 1.0, 0.0));
-		addParam(createParam<sp_Switch>(Vec(x1, y1+2.75*yh), module, Pulse::RANGE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_Switch>(Vec(x1, y1+1.75*yh), module, Pulse::RESET_PARAM));
+		addParam(createParam<sp_Switch>(Vec(x1, y1+2.25*yh), module, Pulse::REPEAT_PARAM));
+		addParam(createParam<sp_Switch>(Vec(x1, y1+2.75*yh), module, Pulse::RANGE_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(x1, y1+4*yh), module, Pulse::TIME_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Pulse::TIME_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Pulse::TIME_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(x1, y1+5*yh), module, Pulse::DELAY_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Pulse::DELAY_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Pulse::DELAY_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(x1, y1+6*yh), module, Pulse::AMP_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Pulse::AMP_PARAM, 0.0, 1.0, 1.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Pulse::AMP_PARAM));
 
 		//addInput(createInput<sp_Port>		   (Vec(x1, y1+7*yh), module, Pulse::OFFSET_INPUT));
-		//addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::OFFSET_PARAM, -1.0, 1.0, 0.));
+		//addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::OFFSET_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(x1, y1+7*yh), module, Pulse::SLEW_INPUT));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::SLEW_PARAM, 0.0, 1.0, 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::SLEW_PARAM));
 
 		addOutput(createOutput<sp_Port>(Vec(x1, y1+8.25*yh), module, Pulse::EOC_OUTPUT));
 		addOutput(createOutput<sp_Port>(Vec(x2, y1+8.25*yh), module, Pulse::GATE_OUTPUT));

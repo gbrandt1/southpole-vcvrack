@@ -90,13 +90,20 @@ struct Sns : Module {
 	unsigned int  currentStep = 0;
 	unsigned int  turing = 0;
 
-	Sns() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	
-		sequence.fill(0);
-		accents.fill(0);
-		reset();
-	}
+  Sns() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+    sequence.fill(0);
+    accents.fill(0);
+    reset();
+
+    configParam(Sns::K_PARAM, 0., 1., .25, "");
+    configParam(Sns::L_PARAM, 0., 1., 1., "");
+    configParam(Sns::R_PARAM, 0., 1., 0., "");
+    configParam(Sns::P_PARAM, 0., 1., 0., "");
+    configParam(Sns::A_PARAM, 0., 1., 0., "");
+    configParam(Sns::S_PARAM, 0., 1., 0., "");
+  }
 
 	void process(const ProcessArgs &args) override;
 	void reset();
@@ -518,16 +525,16 @@ struct SnsWidget : ModuleWidget {
 		float x2 = 4.+30;
 		float x3 = 4.+60;
 
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1   ), module, Sns::K_PARAM, 0., 1., .25));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1   ), module, Sns::L_PARAM, 0., 1., 1.));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1   ), module, Sns::R_PARAM, 0., 1., 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1   ), module, Sns::K_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1   ), module, Sns::L_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1   ), module, Sns::R_PARAM));
 		addInput(createInput<sp_Port>(Vec(x1, y1+1*yh), module, Sns::K_INPUT));
 		addInput(createInput<sp_Port>(Vec(x2, y1+1*yh), module, Sns::L_INPUT));
 		addInput(createInput<sp_Port>(Vec(x3, y1+1*yh), module, Sns::R_INPUT));
 
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2.5*yh), module, Sns::P_PARAM, 0., 1., 0.));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2.5*yh), module, Sns::A_PARAM, 0., 1., 0.));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2.5*yh), module, Sns::S_PARAM, 0., 1., 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2.5*yh), module, Sns::P_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2.5*yh), module, Sns::A_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2.5*yh), module, Sns::S_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(x1, y1+3.5*yh), module, Sns::P_INPUT));
 		addInput(createInput<sp_Port>(Vec(x2, y1+3.5*yh), module, Sns::A_INPUT));

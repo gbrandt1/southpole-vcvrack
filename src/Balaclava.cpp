@@ -43,8 +43,18 @@ struct Balaclava : Module {
 		NUM_LIGHTS
 	};
 
-	Balaclava() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
+  Balaclava() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+    configParam(Balaclava::GAIN1_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Balaclava::GAIN2_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Balaclava::GAIN3_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Balaclava::GAIN4_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Balaclava::RESPONSE1_PARAM, 0.0, 1.0, 1.0, "");
+    configParam(Balaclava::RESPONSE2_PARAM, 0.0, 1.0, 1.0, "");
+    configParam(Balaclava::RESPONSE3_PARAM, 0.0, 1.0, 1.0, "");
+    configParam(Balaclava::RESPONSE4_PARAM, 0.0, 1.0, 1.0, "");
+  }
 	void process(const ProcessArgs &args) override;
 };
 
@@ -88,15 +98,15 @@ struct BalaclavaWidget : ModuleWidget {
 		const float x2 = 20.;
 		const float x3 = 36.;	
 
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 52+8), module, Balaclava::GAIN1_PARAM, 0.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 131+8), module, Balaclava::GAIN2_PARAM, 0.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 210+8), module, Balaclava::GAIN3_PARAM, 0.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 288+8), module, Balaclava::GAIN4_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 52+8), module, Balaclava::GAIN1_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 131+8), module, Balaclava::GAIN2_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 210+8), module, Balaclava::GAIN3_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 288+8), module, Balaclava::GAIN4_PARAM));
 
-		addParam(createParam<sp_Trimpot>(Vec(x3,  80), module, Balaclava::RESPONSE1_PARAM, 0.0, 1.0, 1.0));
-		addParam(createParam<sp_Trimpot>(Vec(x3, 159), module, Balaclava::RESPONSE2_PARAM, 0.0, 1.0, 1.0));
-		addParam(createParam<sp_Trimpot>(Vec(x3, 238), module, Balaclava::RESPONSE3_PARAM, 0.0, 1.0, 1.0));
-		addParam(createParam<sp_Trimpot>(Vec(x3, 316), module, Balaclava::RESPONSE4_PARAM, 0.0, 1.0, 1.0));
+		addParam(createParam<sp_Trimpot>(Vec(x3,  80), module, Balaclava::RESPONSE1_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 159), module, Balaclava::RESPONSE2_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 238), module, Balaclava::RESPONSE3_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 316), module, Balaclava::RESPONSE4_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(x1, 41), module, Balaclava::IN1_INPUT));
 		addInput(createInput<sp_Port>(Vec(x1, 120), module, Balaclava::IN2_INPUT));

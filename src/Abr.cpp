@@ -61,10 +61,11 @@ struct Abr : Module
 
     bool swState[8] = {};
     
-	Abr() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
-	{
-		reset();
-	}
+    Abr() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+      reset();
+
+      configParam(Abr::SWITCH1_PARAM + i, 0.0, 1.0, 0.0, "");
+    }
 
     void process(const ProcessArgs &args) override;
 
@@ -168,7 +169,7 @@ struct AbrWidget : ModuleWidget {
             yPos += 32.;
 
             addInput(createInput<sp_Port>(Vec(x1, yPos), module, Abr::INA1_INPUT + i));
-            addParam(createParam<sp_Switch>(Vec(x2+1, 3 + yPos), module, Abr::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
+            addParam(createParam<sp_Switch>(Vec(x2+1, 3 + yPos), module, Abr::SWITCH1_PARAM + i));
             addInput(createInput<sp_Port>(Vec(x3, yPos), module, Abr::INB1_INPUT + i));
             addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, Abr::OUT1_OUTPUT + i));
         }

@@ -53,7 +53,15 @@ struct Splash : Module {
 	dsp::SchmittTrigger modeTrigger;
 	dsp::SchmittTrigger rangeTrigger;
 
-	Splash();
+  Splash() {
+    configParam(Splash::MODE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Splash::RANGE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0, "");
+    configParam(Splash::SHAPE_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Splash::SLOPE_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Splash::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Splash::FM_PARAM, -12.0, 12.0, 0.0, "");
+  }
 	void process(const ProcessArgs &args) override;
 
 
@@ -229,18 +237,18 @@ struct SplashWidget : ModuleWidget {
 		const float yh = 38.0f;
 
 
-		addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, Splash::MODE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<CKD6>(Vec(x3-3,y1-3), module, Splash::MODE_PARAM));
 		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+7), module, Splash::MODE_GREEN_LIGHT));
 
-		addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, Splash::RANGE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<CKD6>(Vec(x3-3,y1+1.45*yh), module, Splash::RANGE_PARAM));
 		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+7, y1+2*yh-10), module, Splash::RANGE_GREEN_LIGHT));
 
 		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2-20, y2+2*yh), module, Splash::PHASE_GREEN_LIGHT));
-		addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0));
+		addParam(createParam<sp_BlackKnob>(Vec(x2-7,y2+1.75*yh), module, Splash::FREQUENCY_PARAM));
 
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, Splash::SHAPE_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, Splash::SLOPE_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, Splash::SMOOTHNESS_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4*yh), module, Splash::SHAPE_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+4.75*yh), module, Splash::SLOPE_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y2+5.5*yh), module, Splash::SMOOTHNESS_PARAM));
 
 
 		addInput(createInput<sp_Port>(Vec(x1, y1), module, Splash::TRIG_INPUT));
@@ -248,7 +256,7 @@ struct SplashWidget : ModuleWidget {
 
 		addInput(createInput<sp_Port>(Vec(x1, y2+2*yh), module, Splash::PITCH_INPUT));
 		addInput(createInput<sp_Port>(Vec(x1,   y2+3.25*yh), module, Splash::FM_INPUT));
-		addParam(createParam<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, Splash::FM_PARAM, -12.0, 12.0, 0.0));
+		addParam(createParam<sp_Trimpot>(Vec(x2,y2+3.25*yh), module, Splash::FM_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(x1, y2+4*yh), module, Splash::SHAPE_INPUT));
 		addInput(createInput<sp_Port>(Vec(x1, y2+4.75*yh), module, Splash::SLOPE_INPUT));

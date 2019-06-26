@@ -72,10 +72,11 @@ struct But : Module
 
     bool swState[8] = {};
     
-	But() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
-	{
-		reset();
-	}
+    But() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+      reset();
+
+      configParam(But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0, "");
+    }
 
     void process(const ProcessArgs &args) override;
 
@@ -177,7 +178,7 @@ struct ButWidget : ModuleWidget {
 
             addInput(createInput<sp_Port>(Vec(x1, yPos), module, But::IN1_INPUT + i));
             addOutput(createOutput<sp_Port>(Vec(x2, yPos), module, But::OUTA1_OUTPUT + i));
-            addParam(createParam<sp_Switch>(Vec(x3+1, 3 + yPos), module, But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
+            addParam(createParam<sp_Switch>(Vec(x3+1, 3 + yPos), module, But::SWITCH1_PARAM + i));
             addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, But::OUTB1_OUTPUT + i));
         }
 

@@ -44,8 +44,18 @@ struct Bandana : Module {
 		NUM_LIGHTS
 	};
 
-	Bandana() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
+  Bandana() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+    configParam(Bandana::GAIN1_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::GAIN2_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::GAIN3_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::GAIN4_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::MOD1_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::MOD2_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::MOD3_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::MOD4_PARAM, -1.0, 1.0, 0.0, "");
+  }
 	void process(const ProcessArgs &args) override;
 };
 
@@ -86,15 +96,15 @@ struct BandanaWidget : ModuleWidget {
 		const float x2 = 20.;
 		const float x3 = 36.;	
 
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 52+8), module, Bandana::GAIN1_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 131+8), module, Bandana::GAIN2_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 210+8), module, Bandana::GAIN3_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 288+8), module, Bandana::GAIN4_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 52+8), module, Bandana::GAIN1_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 131+8), module, Bandana::GAIN2_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 210+8), module, Bandana::GAIN3_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 288+8), module, Bandana::GAIN4_PARAM));
 
-		addParam(createParam<sp_Trimpot>(Vec(x3,  80), module, Bandana::MOD1_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_Trimpot>(Vec(x3, 159), module, Bandana::MOD2_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_Trimpot>(Vec(x3, 238), module, Bandana::MOD3_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_Trimpot>(Vec(x3, 316), module, Bandana::MOD4_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_Trimpot>(Vec(x3,  80), module, Bandana::MOD1_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 159), module, Bandana::MOD2_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 238), module, Bandana::MOD3_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 316), module, Bandana::MOD4_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(x1, 41), module, Bandana::IN1_INPUT));
 		addInput(createInput<sp_Port>(Vec(x1, 120), module, Bandana::IN2_INPUT));

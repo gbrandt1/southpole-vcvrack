@@ -64,7 +64,20 @@ struct Annuli : Module {
 	rings::ResonatorModel model = rings::RESONATOR_MODEL_MODAL;
 	bool easterEgg = false;
 
-	Annuli();
+  Annuli() {
+    configParam(Annuli::POLYPHONY_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Annuli::RESONATOR_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Annuli::FREQUENCY_PARAM, 0.0, 60.0, 30.0, "");
+    configParam(Annuli::STRUCTURE_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Annuli::BRIGHTNESS_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Annuli::DAMPING_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Annuli::POSITION_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(Annuli::BRIGHTNESS_MOD_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Annuli::FREQUENCY_MOD_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Annuli::DAMPING_MOD_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Annuli::STRUCTURE_MOD_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Annuli::POSITION_MOD_PARAM, -1.0, 1.0, 0.0, "");
+  }
 	void process(const ProcessArgs &args) override;
 
 	json_t *dataToJson() override {
@@ -272,20 +285,20 @@ struct AnnuliWidget : ModuleWidget {
 		const float y1 = 20.0f;
 		const float yh = 33.0f;
 		
-		addParam(createParam<TL1105>(Vec(x3, y1+.25*yh), module, Annuli::POLYPHONY_PARAM, 0.0, 1.0, 0.0));
-		addParam(createParam<TL1105>(Vec(x3, y1+yh), module, Annuli::RESONATOR_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<TL1105>(Vec(x3, y1+.25*yh), module, Annuli::POLYPHONY_PARAM));
+		addParam(createParam<TL1105>(Vec(x3, y1+yh), module, Annuli::RESONATOR_PARAM));
 
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2.12*yh), module, Annuli::FREQUENCY_PARAM, 0.0, 60.0, 30.0));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+3.12*yh), module, Annuli::STRUCTURE_PARAM, 0.0, 1.0, 0.5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+4.12*yh), module, Annuli::BRIGHTNESS_PARAM, 0.0, 1.0, 0.5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+5.12*yh), module, Annuli::DAMPING_PARAM, 0.0, 1.0, 0.5));
-		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+6.12*yh), module, Annuli::POSITION_PARAM, 0.0, 1.0, 0.5));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2.12*yh), module, Annuli::FREQUENCY_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+3.12*yh), module, Annuli::STRUCTURE_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+4.12*yh), module, Annuli::BRIGHTNESS_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+5.12*yh), module, Annuli::DAMPING_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+6.12*yh), module, Annuli::POSITION_PARAM));
 
-		addParam(createParam<sp_Trimpot>(Vec(x2, y1+2*yh+6), module, Annuli::BRIGHTNESS_MOD_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_Trimpot>(Vec(x2, y1+3*yh+6), module, Annuli::FREQUENCY_MOD_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_Trimpot>(Vec(x2, y1+4*yh+6), module, Annuli::DAMPING_MOD_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_Trimpot>(Vec(x2, y1+5*yh+6), module, Annuli::STRUCTURE_MOD_PARAM, -1.0, 1.0, 0.0));
-		addParam(createParam<sp_Trimpot>(Vec(x2, y1+6*yh+6), module, Annuli::POSITION_MOD_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_Trimpot>(Vec(x2, y1+2*yh+6), module, Annuli::BRIGHTNESS_MOD_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x2, y1+3*yh+6), module, Annuli::FREQUENCY_MOD_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x2, y1+4*yh+6), module, Annuli::DAMPING_MOD_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x2, y1+5*yh+6), module, Annuli::STRUCTURE_MOD_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x2, y1+6*yh+6), module, Annuli::POSITION_MOD_PARAM));
 
 		addInput(createInput<sp_Port>(Vec(x1, y1+2.12*yh), module, Annuli::BRIGHTNESS_MOD_INPUT));
 		addInput(createInput<sp_Port>(Vec(x1, y1+3.12*yh), module, Annuli::FREQUENCY_MOD_INPUT));
