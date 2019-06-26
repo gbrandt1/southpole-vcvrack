@@ -181,7 +181,7 @@ struct PulseWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Pulse.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Pulse.svg")));
 			addChild(panel);
 		}
 

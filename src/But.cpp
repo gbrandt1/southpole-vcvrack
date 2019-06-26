@@ -90,7 +90,7 @@ struct But : Module
     {
         for (int i = 0; i < 8; i++) 
         {
-            swState[i] = (randomUniform() < 0.5);
+            swState[i] = (random::uniform() < 0.5);
 		}
     }
     
@@ -160,7 +160,7 @@ struct ButWidget : ModuleWidget {
         {
             auto *panel = new SVGPanel();
             panel->box.size = box.size;
-            panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/But.svg")));
+            panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/But.svg")));
             addChild(panel);
         }
 

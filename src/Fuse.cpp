@@ -170,7 +170,7 @@ struct FuseWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Fuse.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Fuse.svg")));
 			addChild(panel);
 		}
 

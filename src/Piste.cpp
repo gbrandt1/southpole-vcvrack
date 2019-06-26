@@ -155,7 +155,7 @@ struct PisteWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Piste.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Piste.svg")));
 			addChild(panel);
 		}
 

@@ -48,7 +48,7 @@ struct VoltageControlledOscillator {
 		// Adjust pitch slew
 		if (++pitchSlewIndex > 32) {
 			const float pitchSlewTau = 100.0; // Time constant for leaky integrator in seconds
-			pitchSlew += (randomNormal() - pitchSlew / pitchSlewTau) / args.sampleRate;
+			pitchSlew += (random::normal() - pitchSlew / pitchSlewTau) / args.sampleRate;
 			pitchSlewIndex = 0;
 		}
 
@@ -132,7 +132,7 @@ struct LowFrequencyOscillator {
 		phase += deltaPhase;
 		if (phase >= 1.0) {
 			phase -= 1.0;
-			sample = randomNormal() / 2.3548;
+			sample = random::normal() / 2.3548;
 		}
 	}
 	float tri(float x) {
@@ -327,7 +327,7 @@ void Gnome::process(const ProcessArgs &args) {
 	subosc.process( tri );
 	float sub1 = subosc.count & 2 ? 5.0 : -5.0;
 	float sub2 = subosc.count & 4 ? 5.0 : -5.0;
-	float noise = 2.3548 * randomNormal();
+	float noise = 2.3548 * random::normal();
 
 	float sub =	0; 
 	float subwave = params[SUBWAVE_PARAM].value;
@@ -407,7 +407,7 @@ struct GnomeWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Gnome.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Gnome.svg")));
 			addChild(panel);
 		}
 

@@ -59,7 +59,7 @@ void Sssh::process(const ProcessArgs &args) {
 
 		// Gaussian noise generator
 		// TO DO: check correlation between calls
-		float noise = 5.0 * randomNormal();
+		float noise = 5.0 * random::normal();
 
 		if ( i==0 ) {
 			trig[0] = inputs[TRIG1_INPUT].normalize(0);
@@ -94,7 +94,7 @@ struct SsshWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Sssh.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Sssh.svg")));
 			addChild(panel);
 		}
 

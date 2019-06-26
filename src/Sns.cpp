@@ -144,7 +144,7 @@ void Sns::reset() {
 			std::fill(seq0.begin(), seq0.end(), 0);
 			unsigned int f = 0;
 			while ( f < par_k ) {
-				if ( randomUniform() < (float)par_k/(float)par_l ) {
+				if ( random::uniform() < (float)par_k/(float)par_l ) {
 					seq0.at(n % par_l) = 1;
 					f++;
 				}
@@ -157,7 +157,7 @@ void Sns::reset() {
 			std::fill(acc0.begin(), acc0.end(), 0);
 			unsigned int nacc = 0;
 			while ( nacc < par_a ) {
-				if ( randomUniform() < (float)par_a/(float)par_k ) {
+				if ( random::uniform() < (float)par_a/(float)par_k ) {
 					acc0.at(n % par_k) = 1;
 					nacc++;
 				}
@@ -340,8 +340,8 @@ struct SnsDisplay : TransparentWidget {
 	  
 	  y1 = y1_;
 	  yh = yh_;
-	  //font = APP->window->loadFont(assetPlugin(pluginInstance, "res/fonts/Sudo.ttf"));
-	  font = APP->window->loadFont(assetPlugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
+	  //font = APP->window->loadFont(asset::plugin(pluginInstance, "res/fonts/Sudo.ttf"));
+	  font = APP->window->loadFont(asset::plugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
 	}
 
 	void drawPolygon(NVGcontext *args.vg) {
@@ -499,7 +499,7 @@ struct SnsWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Sns.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Sns.svg")));
 			addChild(panel);
 		}
 

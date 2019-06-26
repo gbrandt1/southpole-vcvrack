@@ -100,8 +100,8 @@ struct Annuli : Module {
 	}
 
 	void randomize() {
-		polyphonyMode = randomu32() % 3;
-		model = (rings::ResonatorModel) (randomu32() % 3);
+		polyphonyMode = random::u32() % 3;
+		model = (rings::ResonatorModel) (random::u32() % 3);
 	}
 };
 
@@ -255,13 +255,13 @@ struct AnnuliWidget : ModuleWidget {
 		box.size = Vec(15*6, 380);
 		{
 			panel = new SVGPanel();
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Annuli.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Annuli.svg")));
 			panel->box.size = box.size;
 			addChild(panel);
 		}
 		{
 			panel2 = new SVGPanel();
-			panel2->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/DisastrousPeace.svg")));
+			panel2->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/DisastrousPeace.svg")));
 			panel2->box.size = box.size;
 			addChild(panel2);		
 		}

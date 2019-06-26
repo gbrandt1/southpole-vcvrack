@@ -79,7 +79,7 @@ struct Abr : Module
     {
         for (int i = 0; i < 8; i++) 
         {
-            swState[i] = (randomUniform() < 0.5);
+            swState[i] = (random::uniform() < 0.5);
 		}
     }
     
@@ -152,7 +152,7 @@ struct AbrWidget : ModuleWidget {
         {
             auto *panel = new SVGPanel();
             panel->box.size = box.size;
-            panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Abr.svg")));
+            panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Abr.svg")));
             addChild(panel);
         }
 

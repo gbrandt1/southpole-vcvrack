@@ -61,8 +61,8 @@ struct SplashParasite : Module {
 	}
 
 	void randomize() {
-		generator.set_range((tides::GeneratorRange) (randomu32() % 3));
-		generator.set_mode((tides::GeneratorMode) (randomu32() % 3));
+		generator.set_range((tides::GeneratorRange) (random::u32() % 3));
+		generator.set_mode((tides::GeneratorMode) (random::u32() % 3));
 	}
 
 	json_t *dataToJson() override {
@@ -228,19 +228,19 @@ struct SplashParasiteWidget : ModuleWidget {
 
   	{
 	  	panel0 = new SVGPanel();
-	  	panel0->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/SplashParasite.svg")));
+	  	panel0->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SplashParasite.svg")));
 	  	panel0->box.size = box.size;
 	  	addChild(panel0);
   	}
   	{
 	  	panel1 = new SVGPanel();
-	  	panel1->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/TwoBumps.svg")));
+	  	panel1->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/TwoBumps.svg")));
 	  	panel1->box.size = box.size;
 	  	addChild(panel1);
   	}
   	{
 	  	panel2 = new SVGPanel();
-	  	panel2->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/TwoDrunks.svg")));
+	  	panel2->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/TwoDrunks.svg")));
 	  	panel2->box.size = box.size;
 	  	addChild(panel2);
   	}

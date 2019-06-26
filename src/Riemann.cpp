@@ -294,7 +294,7 @@ struct RiemannDisplay : TransparentWidget {
 	float cy;
 
 	RiemannDisplay() {	  
-	  font = APP->window->loadFont(assetPlugin(pluginInstance, "res/DejaVuSansMono.ttf"));
+	  font = APP->window->loadFont(asset::plugin(pluginInstance, "res/DejaVuSansMono.ttf"));
 	}
 
 	void drawChordTriads(NVGcontext *args.vg) {
@@ -523,7 +523,7 @@ struct RiemannWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Riemann.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Riemann.svg")));
 			addChild(panel);
 		}
 

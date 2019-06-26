@@ -8,7 +8,7 @@ struct Blank1HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/sp-Blank2HP.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/sp-Blank2HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -21,7 +21,7 @@ struct Blank2HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/sp-Blank2HP.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/sp-Blank2HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -34,7 +34,7 @@ struct Blank4HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/sp-Blank4HP.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/sp-Blank4HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -47,7 +47,7 @@ struct Blank8HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/sp-Blank8HP.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/sp-Blank8HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -60,7 +60,7 @@ struct Blank16HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/sp-Blank16HP.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/sp-Blank16HP.svg")));
 			addChild(panel);
 		}
 	}
@@ -73,7 +73,7 @@ struct Blank42HPWidget : ModuleWidget {
 		{
 			auto *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/sp-Blank42HP.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/sp-Blank42HP.svg")));
 			addChild(panel);
 		}
 	}

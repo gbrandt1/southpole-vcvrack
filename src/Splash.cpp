@@ -64,8 +64,8 @@ struct Splash : Module {
 	}
 
 	void randomize() {
-		generator.set_range((tides::GeneratorRange) (randomu32() % 3));
-		generator.set_mode((tides::GeneratorMode) (randomu32() % 3));
+		generator.set_range((tides::GeneratorRange) (random::u32() % 3));
+		generator.set_mode((tides::GeneratorMode) (random::u32() % 3));
 	}
 
 	json_t *dataToJson() override {
@@ -211,13 +211,13 @@ struct SplashWidget : ModuleWidget {
 
 		{
 			tidesPanel = new SVGPanel();
-			tidesPanel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Splash.svg")));
+			tidesPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Splash.svg")));
 			tidesPanel->box.size = box.size;
 			addChild(tidesPanel);
 		}
 		{
 			sheepPanel = new SVGPanel();
-			sheepPanel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Lambs.svg")));
+			sheepPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Lambs.svg")));
 			sheepPanel->box.size = box.size;
 			addChild(sheepPanel);
 		}
