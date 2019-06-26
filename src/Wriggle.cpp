@@ -35,12 +35,12 @@ struct Wriggle : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
 
-void Wriggle::step() {
+void Wriggle::process(const ProcessArgs &args) {
 
 	float dt = 1./engineGetSampleRate();
 

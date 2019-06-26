@@ -50,7 +50,7 @@ struct Aux : Module {
 		mute = 0;
 		bypass = 0;
 	}
-	void step() override;
+	void process(const ProcessArgs &args) override;
 
 	json_t *dataToJson()override {
 		json_t *rootJm = json_object();
@@ -81,7 +81,7 @@ struct Aux : Module {
 };
 
 
-void Aux::step() {
+void Aux::process(const ProcessArgs &args) {
 
 	if (muteTrigger.process(params[MUTE_PARAM].value)){
 		mute = !mute;

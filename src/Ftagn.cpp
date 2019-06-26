@@ -22,11 +22,11 @@ struct Ftagn : Module {
 	Ftagn() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
-void Ftagn::step() {
+void Ftagn::process(const ProcessArgs &args) {
 
 	outputs[OUT1_OUTPUT].value = 0.0;
 	outputs[OUT2_OUTPUT].value = 0.0;

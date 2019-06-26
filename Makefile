@@ -1,8 +1,7 @@
 FLAGS += \
         -DTEST \
         -I./eurorack \
-        -Wno-unused-local-typedefs\
-				-w
+        -Wno-unused-local-typedefs
 
 # SOURCES += $(wildcard src/*.cpp)
 SOURCES += src/Southpole.cpp

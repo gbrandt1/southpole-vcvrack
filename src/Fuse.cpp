@@ -46,7 +46,7 @@ struct Fuse : Module {
         lights.resize(NUM_LIGHTS);
 	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 
   	SchmittTrigger clockTrigger;
   	SchmittTrigger resetTrigger;
@@ -74,7 +74,7 @@ struct Fuse : Module {
 	}
 };
 
-void Fuse::step() {
+void Fuse::process(const ProcessArgs &args) {
 
   	bool nextStep = false;
 
@@ -139,24 +139,24 @@ struct FuseDisplay : TransparentWidget {
     // Background
     NVGcolor backgroundColor = nvgRGB(0x30, 0x00, 0x10);
     NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
-    nvgBeginPath(args.vg);
-    nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
-    nvgFillColor(args.vg, backgroundColor);
-    nvgFill(args.vg);
-    nvgStrokeWidth(args.vg, 1.5);
-    nvgStrokeColor(args.vg, borderColor);
-    nvgStroke(args.vg);
+    nvgBeginPath(args.args.vg);
+    nvgRoundedRect(args.args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+    nvgFillColor(args.args.vg, backgroundColor);
+    nvgFill(args.args.vg);
+    nvgStrokeWidth(args.args.vg, 1.5);
+    nvgStrokeColor(args.args.vg, borderColor);
+    nvgStroke(args.args.vg);
 
     // Lights
-    nvgStrokeColor(args.vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
-    nvgFillColor(args.vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+    nvgStrokeColor(args.args.vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
+    nvgFillColor(args.args.vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
     for ( unsigned y_ = 0; y_ < 16; y_++ ) {
       unsigned y = 15 - y_;
-      nvgBeginPath(args.vg);
-      nvgStrokeWidth(args.vg, 1.);
-        nvgRect(args.vg, 3., y*box.size.y/18.+7.*floor(y/4.)+9., box.size.x-6., box.size.y/18.-6.);
-      if (module && (y_ <= module->curstep)) nvgFill(args.vg);
-      nvgStroke(args.vg);
+      nvgBeginPath(args.args.vg);
+      nvgStrokeWidth(args.args.vg, 1.);
+        nvgRect(args.args.vg, 3., y*box.size.y/18.+7.*floor(y/4.)+9., box.size.x-6., box.size.y/18.-6.);
+      if (module && (y_ <= module->curstep)) nvgFill(args.args.vg);
+      nvgStroke(args.args.vg);
     }
 
   } 
@@ -209,7 +209,7 @@ struct FuseWidget : ModuleWidget {
         void onAction(const event::Action &e) override {
             fuse->gateMode = gateMode;
         }
-        void step() override {
+        void process(const ProcessArgs &args) override {
             rightText = (fuse->gateMode == gateMode) ? "✔" : "";
             MenuItem::step();
         }

@@ -51,7 +51,7 @@ struct SplashParasite : Module {
 	SchmittTrigger rangeTrigger;
 
 	SplashParasite();
-	void step() override;
+	void process(const ProcessArgs &args) override;
 
 
 	void reset() {
@@ -106,7 +106,7 @@ SplashParasite::SplashParasite() {
 	reset();
 }
 
-void SplashParasite::step() {
+void SplashParasite::process(const ProcessArgs &args) {
 	tides::GeneratorMode mode = generator.mode();
 	if (modeTrigger.process(params[MODE_PARAM].value)) {
 		mode = (tides::GeneratorMode) (((int)mode - 1 + 3) % 3);
@@ -218,7 +218,7 @@ struct SplashParasiteWidget : ModuleWidget {
 	SVGPanel *panel0;
 	SVGPanel *panel1;
 	SVGPanel *panel2;
-	void step() override;
+	void process(const ProcessArgs &args) override;
 	Menu *createContextMenu() override;
 
 	SplashParasiteWidget(SplashParasite *module) {
@@ -289,7 +289,7 @@ struct SplashParasiteWidget : ModuleWidget {
 }
 };
 
-void SplashParasiteWidget::step() {
+void SplashParasiteWidget::process(const ProcessArgs &args) {
 	SplashParasite *tides = dynamic_cast<SplashParasite*>(module);
 	assert(tides);
 
@@ -317,7 +317,7 @@ struct SplashParasiteSheepItem : MenuItem {
 	void onAction(const event::Action &e) override {
 		tides->sheep ^= true;
 	}
-	void step() override {
+	void process(const ProcessArgs &args) override {
 		rightText = (tides->sheep) ? "✔" : "";
 		MenuItem::step();
 	}
@@ -330,7 +330,7 @@ struct SplashParasiteModeItem : MenuItem {
 	  //module->playback = playback;
 	    module->generator.feature_mode_ = mode;
 	}
-	void step() override {
+	void process(const ProcessArgs &args) override {
 	  rightText = (module->generator.feature_mode_ == mode) ? "✔" : "";
 		MenuItem::step();
 	}

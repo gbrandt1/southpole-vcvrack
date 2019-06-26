@@ -65,7 +65,7 @@ struct Snake : Module {
 		//dump("destructor");
 	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 
 	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
@@ -93,7 +93,7 @@ int   Snake::nsnakes = 0;
 float Snake::cable[NSNAKEBUSS][NSNAKEPORTS];
 int   Snake::lockid[NSNAKEBUSS][NSNAKEPORTS];
 
-void Snake::step() {
+void Snake::process(const ProcessArgs &args) {
 
 	// change buss on trigger
     if (plusTrigger.process(params[PLUS_PARAM].value)) {
@@ -168,7 +168,7 @@ struct SnakeDisplay : TransparentWidget {
 		font = Font::load(assetPlugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
 	}
 
-	void draw(NVGcontext *vg) override {
+	void draw(const DrawArgs &args) override {
 
     if(!module) {
       return;
@@ -177,26 +177,26 @@ struct SnakeDisplay : TransparentWidget {
 		// Background
 		NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
 		NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
-		nvgFillColor(vg, backgroundColor);
-		nvgFill(vg);
-		nvgStrokeWidth(vg, 1.5);
-		nvgStrokeColor(vg, borderColor);
-		nvgStroke(vg);
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+		nvgFillColor(args.vg, backgroundColor);
+		nvgFill(args.vg);
+		nvgStrokeWidth(args.vg, 1.5);
+		nvgStrokeColor(args.vg, borderColor);
+		nvgStroke(args.vg);
 
-		nvgFontSize(vg, 20.);
-		nvgFontFaceId(vg, font->handle);
-		nvgTextLetterSpacing(vg, 2.);
+		nvgFontSize(args.vg, 20.);
+		nvgFontFaceId(args.vg, font->handle);
+		nvgTextLetterSpacing(args.vg, 2.);
 
 		Vec textPos = Vec(5, 28);
 		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
-		nvgFillColor(vg, nvgTransRGBA(textColor, 16));
-		nvgText(vg, textPos.x, textPos.y, "~~~~", NULL);
-		nvgFillColor(vg, textColor);
+		nvgFillColor(args.vg, nvgTransRGBA(textColor, 16));
+		nvgText(args.vg, textPos.x, textPos.y, "~~~~", NULL);
+		nvgFillColor(args.vg, textColor);
 		char strbuss[4];
 		sprintf(strbuss,"%1x",module->buss);
-		nvgText(vg, textPos.x, textPos.y, strbuss, NULL);
+		nvgText(args.vg, textPos.x, textPos.y, strbuss, NULL);
 	}
 };
 

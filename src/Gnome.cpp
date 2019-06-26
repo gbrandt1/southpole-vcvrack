@@ -234,11 +234,11 @@ struct Gnome : Module {
 	   	hpfilter.setFilterType(SVFHighpass);
 	   	ntfilter.setFilterType(SVFNotch);
 	}
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
-void Gnome::step() {
+void Gnome::process(const ProcessArgs &args) {
 
 	// LFO
 

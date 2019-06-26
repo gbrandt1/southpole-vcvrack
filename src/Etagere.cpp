@@ -76,7 +76,7 @@ struct Etagere : Module {
         blanc = true;   
     }
 
-    void step() override;
+    void process(const ProcessArgs &args) override;
 
 	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
@@ -93,7 +93,7 @@ struct Etagere : Module {
 
 };
 
-void Etagere::step() {
+void Etagere::process(const ProcessArgs &args) {
 
 		float g_gain   = clamp(inputs[GAIN5_INPUT].normalize(0.), -1.0, 1.0);
         float gain1 = clamp(g_gain + params[GAIN1_PARAM].value + inputs[GAIN1_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
@@ -269,7 +269,7 @@ struct EtagereWidget : ModuleWidget {
                 etagere->blanc ^= true;
             }
 
-            void step() override {
+            void process(const ProcessArgs &args) override {
                 rightText = (!etagere->blanc) ?  "✔" : "";
                 MenuItem::step();
             }
@@ -279,7 +279,7 @@ struct EtagereWidget : ModuleWidget {
         menu->addChild(construct<EtagereBlancItem>(&MenuItem::text, "blanc", &EtagereBlancItem::etagere, etagere));
     }
 
-    void step() override {
+    void process(const ProcessArgs &args) override {
       Etagere *etagere = dynamic_cast<Etagere*>(module);
       if (etagere) {
         blancPanel->visible = !etagere->blanc;

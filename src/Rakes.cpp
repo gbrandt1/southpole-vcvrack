@@ -94,12 +94,12 @@ struct Rakes : Module {
 		return y;
 	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
 
-void Rakes::step() {
+void Rakes::process(const ProcessArgs &args) {
 
 	//float mix  = clamp(params[MIX_PARAM].value + inputs[MIX_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
 	float mix    = params[MIX_PARAM].value;

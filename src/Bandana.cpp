@@ -46,11 +46,11 @@ struct Bandana : Module {
 
 	Bandana() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
-void Bandana::step() {
+void Bandana::process(const ProcessArgs &args) {
 	float out = 0.0;
 
 	for (int i = 0; i < 4; i++) {

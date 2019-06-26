@@ -54,7 +54,7 @@ struct Splash : Module {
 	SchmittTrigger rangeTrigger;
 
 	Splash();
-	void step() override;
+	void process(const ProcessArgs &args) override;
 
 
 	void reset() {
@@ -105,7 +105,7 @@ Splash::Splash() {
 	reset();
 }
 
-void Splash::step() {
+void Splash::process(const ProcessArgs &args) {
 
 	tides::GeneratorMode mode = generator.mode();
 	if (modeTrigger.process(params[MODE_PARAM].value)) {
@@ -273,7 +273,7 @@ struct SplashWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         tides->sheep ^= true;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (tides->sheep) ? "✔" : "";
         MenuItem::step();
       }
@@ -284,7 +284,7 @@ struct SplashWidget : ModuleWidget {
 
   }
 
-  void step() override {
+  void process(const ProcessArgs &args) override {
     Splash *tides = dynamic_cast<Splash*>(module);
 
     if (tides) {

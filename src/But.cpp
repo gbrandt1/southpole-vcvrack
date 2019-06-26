@@ -77,7 +77,7 @@ struct But : Module
 		reset();
 	}
 
-    void step() override;
+    void process(const ProcessArgs &args) override;
 
     void reset()
     {
@@ -124,7 +124,7 @@ struct But : Module
 };
 
 
-void But::step() 
+void But::process(const ProcessArgs &args) 
 {
     float outa = 0.;
     float outb = 0.;

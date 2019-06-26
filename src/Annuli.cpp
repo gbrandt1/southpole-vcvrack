@@ -65,7 +65,7 @@ struct Annuli : Module {
 	bool easterEgg = false;
 
 	Annuli();
-	void step() override;
+	void process(const ProcessArgs &args) override;
 
 	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
@@ -120,7 +120,7 @@ Annuli::Annuli() {
 	//modelTrigger.setThresholds(0.0, 1.0);
 }
 
-void Annuli::step() {
+void Annuli::process(const ProcessArgs &args) {
 	// TODO
 	// "Normalized to a pulse/burst generator that reacts to note changes on the V/OCT input."
 	// Get input
@@ -315,7 +315,7 @@ struct AnnuliWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         rings->model = model;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (rings->model == model) ? "✔" : "";
         MenuItem::step();
       }
@@ -326,7 +326,7 @@ struct AnnuliWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         rings->easterEgg = !rings->easterEgg;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (rings->easterEgg) ? "✔" : "";
         MenuItem::step();
       }
@@ -345,7 +345,7 @@ struct AnnuliWidget : ModuleWidget {
     menu->addChild(construct<AnnuliEasterEggItem>(&MenuItem::text, "Disastrous Peace", &AnnuliEasterEggItem::rings, rings));
   }
 
-  void step() override {
+  void process(const ProcessArgs &args) override {
     Annuli *annuli = dynamic_cast<Annuli*>(module);
 
     if (annuli) {

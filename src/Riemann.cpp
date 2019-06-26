@@ -56,7 +56,7 @@ struct Riemann : Module {
 
 	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 	void reset();
 
 	// circle of fifths
@@ -153,7 +153,7 @@ void Riemann::reset() {
 	parts = 7;
 }
 
-void Riemann::step() {
+void Riemann::process(const ProcessArgs &args) {
 
 	x0 = inputs[X_INPUT].normalize(0.)+6;
 	y0 = inputs[Y_INPUT].normalize(0.)+1;
@@ -297,42 +297,42 @@ struct RiemannDisplay : TransparentWidget {
 	  font = Font::load(assetPlugin(pluginInstance, "res/DejaVuSansMono.ttf"));
 	}
 
-	void drawChordTriads(NVGcontext *vg) {
+	void drawChordTriads(NVGcontext *args.vg) {
 
 		// draw active chord - triangles
 		if (module->parts >= 3)
 		for (int i=0; i< module->parts-2; i++)	{
-			nvgBeginPath(vg);
-			nvgFillColor(vg, nvgRGBA(0x7f, 0x10, 0x10, 0xff));
-			nvgMoveTo(vg, module->chord[i  ]->x + cx, module->chord[i  ]->y + cy);
-			nvgLineTo(vg, module->chord[i+1]->x + cx, module->chord[i+1]->y + cy);
-			nvgLineTo(vg, module->chord[i+2]->x + cx, module->chord[i+2]->y + cy);
-			nvgClosePath(vg);
-			nvgFill(vg);
+			nvgBeginPath(args.vg);
+			nvgFillColor(args.vg, nvgRGBA(0x7f, 0x10, 0x10, 0xff));
+			nvgMoveTo(args.vg, module->chord[i  ]->x + cx, module->chord[i  ]->y + cy);
+			nvgLineTo(args.vg, module->chord[i+1]->x + cx, module->chord[i+1]->y + cy);
+			nvgLineTo(args.vg, module->chord[i+2]->x + cx, module->chord[i+2]->y + cy);
+			nvgClosePath(args.vg);
+			nvgFill(args.vg);
 		}
     }
 
-	void drawChordPath(NVGcontext *vg) {
+	void drawChordPath(NVGcontext *args.vg) {
 
 		// draw active chord path
 		if (module->chord_type == Riemann::MAJ_CHORD || module->chord_type == Riemann::MIN_CHORD ) {
 
-			nvgBeginPath(vg);
-			nvgStrokeWidth(vg, 2.);			
-			nvgStrokeColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
+			nvgBeginPath(args.vg);
+			nvgStrokeWidth(args.vg, 2.);			
+			nvgStrokeColor(args.vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
 			for (int i=0; i<module->parts-1; i++)	{
-				nvgMoveTo(vg, module->chord[i  ]->x + cx, module->chord[i  ]->y + cy);
-				nvgLineTo(vg, module->chord[i+1]->x + cx, module->chord[i+1]->y + cy);
+				nvgMoveTo(args.vg, module->chord[i  ]->x + cx, module->chord[i  ]->y + cy);
+				nvgLineTo(args.vg, module->chord[i+1]->x + cx, module->chord[i+1]->y + cy);
 			}
-			nvgStroke(vg);
+			nvgStroke(args.vg);
 			
 		} else if (module->chord_type == Riemann::SUS_CHORD ) {
-				nvgBeginPath(vg);
-				nvgStrokeWidth(vg, 2.);			
-				nvgStrokeColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
+				nvgBeginPath(args.vg);
+				nvgStrokeWidth(args.vg, 2.);			
+				nvgStrokeColor(args.vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
 				float x0 = module->chord[0]->x + cx;
 				float y0 = module->chord[0]->y + cy;
-				nvgMoveTo(vg, x0, y0);
+				nvgMoveTo(args.vg, x0, y0);
 				int nx = module->chord[0]->nx;
 				int ny = module->chord[0]->ny;
 				for (int i=0; i<module->parts; i++) {
@@ -340,41 +340,41 @@ struct RiemannDisplay : TransparentWidget {
 					//int ny = module->chord[i]->ny;
 					float x1 = module->notes[ny][(nx+i)%12].x + cx;
 					float y1 = module->notes[ny][(nx+i)%12].y + cy;
-					nvgLineTo(vg, x1, y1);			
+					nvgLineTo(args.vg, x1, y1);			
 				}	
-				nvgStroke(vg);
+				nvgStroke(args.vg);
 		} else {
 
 			for (int i=0; i<module->parts; i++) {
-				nvgBeginPath(vg);
-				nvgStrokeWidth(vg, 2.);			
-				nvgStrokeColor(vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
+				nvgBeginPath(args.vg);
+				nvgStrokeWidth(args.vg, 2.);			
+				nvgStrokeColor(args.vg, nvgRGBA(0xff, 0x10, 0x10, 0xff));
 				float x0 = module->chord[i]->x + cx;
 				float y0 = module->chord[i]->y + cy;
-				nvgMoveTo(vg, x0, y0);
+				nvgMoveTo(args.vg, x0, y0);
 				int nx = module->chord[i]->nx;
 				int ny = module->chord[i]->ny;
 				if (module->chord_type == Riemann::AUG_CHORD ) {
 					float x1 = module->notes[ny+1][nx].x + cx;
 					float y1 = module->notes[ny+1][nx].y + cy;
-					nvgLineTo(vg, x1, y1);			
+					nvgLineTo(args.vg, x1, y1);			
 				}							
 				if (module->chord_type == Riemann::DIM_CHORD ) {
 					float x1 = module->notes[ny+1][(nx+1)%12].x + cx;
 					float y1 = module->notes[ny+1][(nx+1)%12].y + cy;
-					nvgLineTo(vg, x1, y1);			
+					nvgLineTo(args.vg, x1, y1);			
 				}				
-				nvgStroke(vg);
+				nvgStroke(args.vg);
 			}
 
 		}		
 
 	}
 
-	void drawTonnetzGrid(NVGcontext *vg) {
+	void drawTonnetzGrid(NVGcontext *args.vg) {
 
-		nvgStrokeWidth(vg, .75);				
-		nvgStrokeColor(vg, nvgRGBA(0xff, 0x20, 0x20, 0xff));
+		nvgStrokeWidth(args.vg, .75);				
+		nvgStrokeColor(args.vg, nvgRGBA(0xff, 0x20, 0x20, 0xff));
 
 		// grid
 		for ( int ny = 0; ny < 4; ny++) {
@@ -383,43 +383,43 @@ struct RiemannDisplay : TransparentWidget {
 				float x = module->notes[ny][nx].x + cx;
 				float y = module->notes[ny][nx].y + cy;
 
-				nvgBeginPath(vg);
-				nvgMoveTo(vg, x, y);
+				nvgBeginPath(args.vg);
+				nvgMoveTo(args.vg, x, y);
 				float x1 = module->notes[ny][(nx+1)%12].x + cx;
 				float y1 = module->notes[ny][(nx+1)%12].y + cy;
-				nvgLineTo(vg, x1, y1);
+				nvgLineTo(args.vg, x1, y1);
 				if ( ny < 3 ) {
-					nvgMoveTo(vg, x, y);
+					nvgMoveTo(args.vg, x, y);
 					x1 = module->notes[ny+1][(nx)%12].x + cx;
 					y1 = module->notes[ny+1][(nx)%12].y + cy;
-					nvgLineTo(vg, x1, y1);
-					nvgMoveTo(vg, x, y);
+					nvgLineTo(args.vg, x1, y1);
+					nvgMoveTo(args.vg, x, y);
 					x1 = module->notes[ny+1][(nx+1)%12].x + cx;
 					y1 = module->notes[ny+1][(nx+1)%12].y + cy;
-					nvgLineTo(vg, x1, y1);
+					nvgLineTo(args.vg, x1, y1);
 				}
-				nvgStroke(vg);	
+				nvgStroke(args.vg);	
 			}
 		}
 	}
 
-	void drawActiveNotes(NVGcontext *vg) {
+	void drawActiveNotes(NVGcontext *args.vg) {
 
 		// circles for played notes
 		int i=0;
 		//for (int i=0; i<module->parts; i++) {
-		nvgBeginPath(vg);
-		nvgStrokeWidth(vg, 2.);
+		nvgBeginPath(args.vg);
+		nvgStrokeWidth(args.vg, 2.);
 		int b =	0; //0x40+module->octave[i]*0x0F;
-		nvgStrokeColor(vg, nvgRGBA(0xff, b, b, 0xff));
-		nvgFillColor(vg, nvgRGBA(0x30, 0x10, 0x10, 0xff));				
-		nvgCircle(vg, module->chord[i]->x + cx, module->chord[i]->y + cy, 8.);
-		nvgFill(vg);
-		nvgStroke(vg);
+		nvgStrokeColor(args.vg, nvgRGBA(0xff, b, b, 0xff));
+		nvgFillColor(args.vg, nvgRGBA(0x30, 0x10, 0x10, 0xff));				
+		nvgCircle(args.vg, module->chord[i]->x + cx, module->chord[i]->y + cy, 8.);
+		nvgFill(args.vg);
+		nvgStroke(args.vg);
 		//}
     }
 
-	void drawTonnetzNotes(NVGcontext *vg) {
+	void drawTonnetzNotes(NVGcontext *args.vg) {
 		// names		
 		for ( int ny = 0; ny < 4; ny++) {
 			for ( int nx = 0; nx < 12; nx++) {
@@ -428,44 +428,44 @@ struct RiemannDisplay : TransparentWidget {
 				float y = module->notes[ny][nx].y + cy;
 
 				// circle with note name
-				nvgBeginPath(vg);
-				nvgFillColor(vg, nvgRGBA(0x30, 0x10, 0x10, 0xff));				
-				nvgCircle(vg, x, y, 6.);
-				nvgFill(vg);
+				nvgBeginPath(args.vg);
+				nvgFillColor(args.vg, nvgRGBA(0x30, 0x10, 0x10, 0xff));				
+				nvgCircle(args.vg, x, y, 6.);
+				nvgFill(args.vg);
 
-				nvgFontSize(vg, 11);
-				nvgFontFaceId(vg, font->handle);
+				nvgFontSize(args.vg, 11);
+				nvgFontFaceId(args.vg, font->handle);
 				Vec textPos = Vec( x-4, y+4);
 				NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
-				nvgFillColor(vg, textColor);
+				nvgFillColor(args.vg, textColor);
 
 				int pc = (module->notes[ny][nx].pc + module->transp) %12;
 
-				nvgText(vg, textPos.x, textPos.y, note_names[ pc ], NULL);
+				nvgText(args.vg, textPos.x, textPos.y, note_names[ pc ], NULL);
 			}
 		}
   	}
 
-	void drawValues(NVGcontext *vg) {
+	void drawValues(NVGcontext *args.vg) {
 
 		// note values
-		nvgFontSize(vg, 10);
-		nvgFontFaceId(vg, font->handle);
+		nvgFontSize(args.vg, 10);
+		nvgFontFaceId(args.vg, font->handle);
 		Vec textPos = Vec( 3, box.size.y-25);
 		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
-		nvgFillColor(vg, textColor);
+		nvgFillColor(args.vg, textColor);
 		for (int i=0; i<module->parts; i++) {
 			int pc = (module->chord[i]->pc + module->transp) %12;
-			nvgText(vg, textPos.x+i*15, textPos.y   , note_names[pc], NULL);
+			nvgText(args.vg, textPos.x+i*15, textPos.y   , note_names[pc], NULL);
 			char so[4];
 			sprintf(so, "%2d", module->octave[i]);
-			nvgText(vg, textPos.x+i*15, textPos.y+15, so, NULL);
+			nvgText(args.vg, textPos.x+i*15, textPos.y+15, so, NULL);
 		}
-		//nvgStroke(vg);
+		//nvgStroke(args.vg);
 
   	}
 
-	void draw(NVGcontext *vg) {
+	void draw(const DrawArgs &args) {
     if (!module) {
       return;
     }
@@ -477,23 +477,23 @@ struct RiemannDisplay : TransparentWidget {
 		// Background
 		NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
 		NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
-		nvgFillColor(vg, backgroundColor);
-		nvgFill(vg);
-		nvgStrokeWidth(vg, 1.5);
-		nvgStrokeColor(vg, borderColor);
-		nvgStroke(vg);
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+		nvgFillColor(args.vg, backgroundColor);
+		nvgFill(args.vg);
+		nvgStrokeWidth(args.vg, 1.5);
+		nvgStrokeColor(args.vg, borderColor);
+		nvgStroke(args.vg);
 
 		if ( module->chord_type == Riemann::MAJ_CHORD || 
 			 module->chord_type == Riemann::MIN_CHORD ) {
-			drawChordTriads(vg);
+			drawChordTriads(args.vg);
 		}
 
-		drawTonnetzGrid(vg);
-		drawChordPath(vg);
-		drawActiveNotes(vg);
-		drawTonnetzNotes(vg);
+		drawTonnetzGrid(args.vg);
+		drawChordPath(args.vg);
+		drawActiveNotes(args.vg);
+		drawTonnetzNotes(args.vg);
 
 
 		// draw playhead	
@@ -502,13 +502,13 @@ struct RiemannDisplay : TransparentWidget {
 		float   r = radius + 25.*module->y0;
 		float x = r*sin(phi) + box.size.x*0.5;
 		float y = r*cos(phi) + box.size.y*0.5;
-		nvgBeginPath(vg);
-		nvgCircle(vg, x, y, 3.);
-		nvgFill(vg);
-		nvgStrokeWidth(vg, 1.5);
-		nvgStroke(vg);
+		nvgBeginPath(args.vg);
+		nvgCircle(args.vg, x, y, 3.);
+		nvgFill(args.vg);
+		nvgStrokeWidth(args.vg, 1.5);
+		nvgStroke(args.vg);
 
-		//drawValues(vg);
+		//drawValues(args.vg);
 		
 	}
 };

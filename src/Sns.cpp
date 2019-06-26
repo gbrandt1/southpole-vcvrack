@@ -98,7 +98,7 @@ struct Sns : Module {
 		reset();
 	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 	void reset();
 
 	unsigned int fib(unsigned int n){
@@ -242,7 +242,7 @@ void Sns::reset() {
 	from_reset = true;
 }
 
-void Sns::step() {
+void Sns::process(const ProcessArgs &args) {
 
   	bool nextStep = false;
 
@@ -344,7 +344,7 @@ struct SnsDisplay : TransparentWidget {
 	  font = Font::load(assetPlugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
 	}
 
-	void drawPolygon(NVGcontext *vg) {
+	void drawPolygon(NVGcontext *args.vg) {
 		
 		Rect b = Rect(Vec(2, 2), box.size.minus(Vec(2, 2)));
 
@@ -354,18 +354,18 @@ struct SnsDisplay : TransparentWidget {
 		const float r2 = .35*b.size.x;
 
 		// Circles
-		nvgBeginPath(vg);
-		nvgStrokeColor(vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
-		nvgFillColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));		
-		nvgStrokeWidth(vg, 1.);
-	    nvgCircle(vg, cx, cy, r1);
-	    nvgCircle(vg, cx, cy, r2);
-		nvgStroke(vg);
+		nvgBeginPath(args.vg);
+		nvgStrokeColor(args.vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
+		nvgFillColor(args.vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));		
+		nvgStrokeWidth(args.vg, 1.);
+	    nvgCircle(args.vg, cx, cy, r1);
+	    nvgCircle(args.vg, cx, cy, r2);
+		nvgStroke(args.vg);
 
 		unsigned len = module->par_l + module->par_p;
 
-		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
-		nvgBeginPath(vg);
+		nvgStrokeColor(args.vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+		nvgBeginPath(args.vg);
 		bool first = true;
 
 		// inactive Step Rings
@@ -376,20 +376,20 @@ struct SnsDisplay : TransparentWidget {
 				float x = cx + r * cosf(2.*M_PI*i/len-.5*M_PI);
 				float y = cy + r * sinf(2.*M_PI*i/len-.5*M_PI);
 
-				nvgBeginPath(vg);
-				nvgFillColor(vg, 	nvgRGBA(0x30, 0x10, 0x10, 0xff));
-				nvgStrokeWidth(vg, 1.);
-				nvgStrokeColor(vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
-				nvgCircle(vg, x, y, 3.);
-				nvgFill(vg);
-				nvgStroke(vg);
+				nvgBeginPath(args.vg);
+				nvgFillColor(args.vg, 	nvgRGBA(0x30, 0x10, 0x10, 0xff));
+				nvgStrokeWidth(args.vg, 1.);
+				nvgStrokeColor(args.vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
+				nvgCircle(args.vg, x, y, 3.);
+				nvgFill(args.vg);
+				nvgStroke(args.vg);
 			}
 		}
 
 		// Path
-		nvgBeginPath(vg);
-		nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
-		nvgStrokeWidth(vg, 1.);
+		nvgBeginPath(args.vg);
+		nvgStrokeColor(args.vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+		nvgStrokeWidth(args.vg, 1.);
 		for (unsigned int  i = 0; i < len; i++) {
 
 			if ( module->sequence[i] ) {
@@ -399,17 +399,17 @@ struct SnsDisplay : TransparentWidget {
 				float y = cy + r * sinf(2.*M_PI*a-.5*M_PI);
 
 				Vec p(x,y);
-				if (module->par_k == 1) nvgCircle(vg, x, y, 3.);				
+				if (module->par_k == 1) nvgCircle(args.vg, x, y, 3.);				
 				if (first) {
-					nvgMoveTo(vg, p.x, p.y);
+					nvgMoveTo(args.vg, p.x, p.y);
 				 	first = false;
 				} else {
-					nvgLineTo(vg, p.x, p.y);
+					nvgLineTo(args.vg, p.x, p.y);
 				}
 			}
 		}
-		nvgClosePath(vg);
-		nvgStroke(vg);
+		nvgClosePath(args.vg);
+		nvgStroke(args.vg);
 
 		// Active Step Rings
 		for (unsigned i = 0; i < len; i++) {
@@ -419,13 +419,13 @@ struct SnsDisplay : TransparentWidget {
 				float x = cx + r * cosf(2.*M_PI*i/len-.5*M_PI);
 				float y = cy + r * sinf(2.*M_PI*i/len-.5*M_PI);
 
-				nvgBeginPath(vg);
-				nvgFillColor(vg, 	nvgRGBA(0x30, 0x10, 0x10, 0xff));
-				nvgStrokeWidth(vg, 1.);
-				nvgStrokeColor(vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
-				nvgCircle(vg, x, y, 3.);
-				nvgFill(vg);
-				nvgStroke(vg);
+				nvgBeginPath(args.vg);
+				nvgFillColor(args.vg, 	nvgRGBA(0x30, 0x10, 0x10, 0xff));
+				nvgStrokeWidth(args.vg, 1.);
+				nvgStrokeColor(args.vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+				nvgCircle(args.vg, x, y, 3.);
+				nvgFill(args.vg);
+				nvgStroke(args.vg);
 			}	
 		}
 
@@ -433,20 +433,20 @@ struct SnsDisplay : TransparentWidget {
 		float r = module->accents[i] ? r1 : r2;
 		float x = cx + r * cosf(2.*M_PI*i/len-.5*M_PI);
 		float y = cy + r * sinf(2.*M_PI*i/len-.5*M_PI);
-		nvgBeginPath(vg);
-		nvgStrokeColor(vg, 	nvgRGBA(0xff, 0x00, 0x00, 0xff));
+		nvgBeginPath(args.vg);
+		nvgStrokeColor(args.vg, 	nvgRGBA(0xff, 0x00, 0x00, 0xff));
 		if ( module->sequence[i] ) {
-			nvgFillColor(vg, 	nvgRGBA(0xff, 0x00, 0x00, 0xff));
+			nvgFillColor(args.vg, 	nvgRGBA(0xff, 0x00, 0x00, 0xff));
 		} else {
-			nvgFillColor(vg, 	nvgRGBA(0x30, 0x10, 0x10, 0xff));
+			nvgFillColor(args.vg, 	nvgRGBA(0x30, 0x10, 0x10, 0xff));
 		}
-		nvgCircle(vg, x, y, 3.);
-		nvgStrokeWidth(vg, 1.5);
-		nvgFill(vg);
-		nvgStroke(vg);
+		nvgCircle(args.vg, x, y, 3.);
+		nvgStrokeWidth(args.vg, 1.5);
+		nvgFill(args.vg);
+		nvgStroke(args.vg);
 	}
 
-	void draw(NVGcontext *vg) override {
+	void draw(const DrawArgs &args) override {
 
     if (!module) {
       return;
@@ -463,28 +463,28 @@ struct SnsDisplay : TransparentWidget {
 		// Background
 		NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
 		NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
-		nvgFillColor(vg, backgroundColor);
-		nvgFill(vg);
-		nvgStrokeWidth(vg, 1.5);
-		nvgStrokeColor(vg, borderColor);
-		nvgStroke(vg);
+		nvgBeginPath(args.vg);
+		nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+		nvgFillColor(args.vg, backgroundColor);
+		nvgFill(args.vg);
+		nvgStrokeWidth(args.vg, 1.5);
+		nvgStrokeColor(args.vg, borderColor);
+		nvgStroke(args.vg);
 
-		drawPolygon(vg);
+		drawPolygon(args.vg);
 
-		nvgFontSize(vg, 8);
-		nvgFontFaceId(vg, font->handle);
+		nvgFontSize(args.vg, 8);
+		nvgFontFaceId(args.vg, font->handle);
 
 		Vec textPos = Vec(15, 105);
 		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
-		nvgFillColor(vg, textColor);
+		nvgFillColor(args.vg, textColor);
 		char str[20];
 		snprintf(str,sizeof(str),"%2d %2d %2d",int(module->par_k),int(module->par_l),int(module->par_r));
-		nvgText(vg, textPos.x, textPos.y-11, str, NULL);
+		nvgText(args.vg, textPos.x, textPos.y-11, str, NULL);
 
 		snprintf(str,sizeof(str),"%2d %2d %2d",int(module->par_p),int(module->par_a),int(module->par_s));
-		nvgText(vg, textPos.x, textPos.y, str, NULL);
+		nvgText(args.vg, textPos.x, textPos.y, str, NULL);
 	}
 };
 
@@ -558,7 +558,7 @@ struct SnsWidget : ModuleWidget {
           void onAction(const event::Action &e) override {
               sns->gateMode = gm;
           }
-          void step() override {
+          void process(const ProcessArgs &args) override {
               rightText = (sns->gateMode == gm) ? "✔" : "";
               MenuItem::step();
           }
@@ -571,7 +571,7 @@ struct SnsWidget : ModuleWidget {
               sns->style = ps;
               sns->reset();
           }
-          void step() override {
+          void process(const ProcessArgs &args) override {
               rightText = (sns->style == ps) ? "✔" : "";
               MenuItem::step();
           }

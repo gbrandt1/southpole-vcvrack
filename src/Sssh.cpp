@@ -47,11 +47,11 @@ struct Sssh : Module {
 		for (unsigned int i=0; i<4; i++) sample[i] = 0.;
 	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
-void Sssh::step() {
+void Sssh::process(const ProcessArgs &args) {
 
 	float in[4], trig[4];
 

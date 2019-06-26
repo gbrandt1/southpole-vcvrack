@@ -82,7 +82,7 @@ struct Smoke : Module {
 
   Smoke();
   ~Smoke();
-  void step() override;
+  void process(const ProcessArgs &args) override;
   
   
 	json_t *dataToJson() override {
@@ -147,7 +147,7 @@ Smoke::~Smoke() {
   delete[] block_ccm;
 }
 
-void Smoke::step() {
+void Smoke::process(const ProcessArgs &args) {
 
   Frame<2> inputFrame;
   // Get input
@@ -425,7 +425,7 @@ struct SmokeWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         clouds->playbackmode = mode;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (clouds->playbackmode == mode) ? "✔" : "";
         MenuItem::step();
       }
@@ -438,7 +438,7 @@ struct SmokeWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         clouds->mono = setting;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (clouds->mono == setting) ? "✔" : "";
         MenuItem::step();
       }
@@ -451,7 +451,7 @@ struct SmokeWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         clouds->lofi = setting;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (clouds->lofi == setting) ? "✔" : "";
         MenuItem::step();
       }
@@ -465,7 +465,7 @@ struct SmokeWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         clouds->buffersize = setting;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (clouds->buffersize == setting) ? "✔" : "";
         MenuItem::step();
       }
@@ -501,7 +501,7 @@ struct SmokeWidget : ModuleWidget {
 
   }
 
-  void step() override {
+  void process(const ProcessArgs &args) override {
     Smoke *smoke = dynamic_cast<Smoke*>(module);
 
     if (smoke) {

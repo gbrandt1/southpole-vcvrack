@@ -95,7 +95,7 @@ struct CornrowsX : Module {
 	uint32_t disp_timeout = 0;
 
 	CornrowsX();
-	void step() override;
+	void process(const ProcessArgs &args) override;
 	void setShape(int shape);
 
 	json_t *dataToJson() override {
@@ -150,7 +150,7 @@ CornrowsX::CornrowsX() {
 
 }
 
-void CornrowsX::step() {
+void CornrowsX::process(const ProcessArgs &args) {
 
 	settings.quantizer_scale = params[SCALE_PARAM].value * 48.; //sizeof(quantization_values);
 	settings.quantizer_root  = params[ROOT_PARAM].value * 11.;
@@ -363,23 +363,23 @@ struct CornrowsXDisplay : TransparentWidget {
     // Background
     NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
     NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
-    nvgBeginPath(args.vg);
-    nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
-    nvgFillColor(args.vg, backgroundColor);
-    nvgFill(args.vg);
-    nvgStrokeWidth(args.vg, 1.5);
-    nvgStrokeColor(args.vg, borderColor);
-    nvgStroke(args.vg);
+    nvgBeginPath(args.args.vg);
+    nvgRoundedRect(args.args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+    nvgFillColor(args.args.vg, backgroundColor);
+    nvgFill(args.args.vg);
+    nvgStrokeWidth(args.args.vg, 1.5);
+    nvgStrokeColor(args.args.vg, borderColor);
+    nvgStroke(args.args.vg);
 
-    nvgFontSize(args.vg, 20.);
-    nvgFontFaceId(args.vg, font->handle);
-    nvgTextLetterSpacing(args.vg, 2.);
+    nvgFontSize(args.args.vg, 20.);
+    nvgFontFaceId(args.args.vg, font->handle);
+    nvgTextLetterSpacing(args.args.vg, 2.);
 
     Vec textPos = Vec(5, 28);
     NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
-    nvgFillColor(args.vg, nvgTransRGBA(textColor, 16));
-    nvgText(args.vg, textPos.x, textPos.y, "~~~~", NULL);
-    nvgFillColor(args.vg, textColor);
+    nvgFillColor(args.args.vg, nvgTransRGBA(textColor, 16));
+    nvgText(args.args.vg, textPos.x, textPos.y, "~~~~", NULL);
+    nvgFillColor(args.args.vg, textColor);
     //blink
     if (module && module->disp_timeout & 0x1000 ) return;
     if (module && module->last_setting_changed == braids::SETTING_OSCILLATOR_SHAPE) {
@@ -462,7 +462,7 @@ struct CornrowsXDisplay : TransparentWidget {
         shape = module->settings.quantizer_scale;
       text = "SIGN";
     }
-    nvgText(args.vg, textPos.x, textPos.y, text, NULL);
+    nvgText(args.args.vg, textPos.x, textPos.y, text, NULL);
   }
 };
 
@@ -548,7 +548,7 @@ struct CornrowsXWidget : ModuleWidget {
         // Toggle setting
         *setting = (*setting == onValue) ? offValue : onValue;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (*setting == onValue) ? "✔" : "";
         MenuItem::step();
       }
@@ -559,7 +559,7 @@ struct CornrowsXWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         braids->lowCpu = !braids->lowCpu;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (braids->lowCpu) ? "✔" : "";
         MenuItem::step();
       }
@@ -570,7 +570,7 @@ struct CornrowsXWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         braids->paques = !braids->paques;
       }
-      void step() override {
+      void process(const ProcessArgs &args) override {
         rightText = (braids->paques) ? "✔" : "";
         MenuItem::step();
       }

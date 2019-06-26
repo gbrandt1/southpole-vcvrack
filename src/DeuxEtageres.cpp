@@ -66,7 +66,7 @@ struct DeuxEtageres : Module {
         }
         
     }
-    void step() override;
+    void process(const ProcessArgs &args) override;
 
 //    void reset() override {
 //    }
@@ -99,7 +99,7 @@ struct DeuxEtageres : Module {
     //unsigned timer;
 };
 
-void DeuxEtageres::step() {
+void DeuxEtageres::process(const ProcessArgs &args) {
 
 		float g_gain  = 0.;
         float gain1 = clamp(g_gain + params[GAIN1_PARAM].value + inputs[GAIN1_INPUT].normalize(0.) / 10.0f, -1.0f, 1.0f);

@@ -71,12 +71,12 @@ struct Pulse : Module {
 	Pulse() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
 
-void Pulse::step() {
+void Pulse::process(const ProcessArgs &args) {
 
 	bool triggered = false;
 

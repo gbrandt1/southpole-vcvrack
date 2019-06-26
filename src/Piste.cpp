@@ -60,7 +60,7 @@ struct Piste : Module {
         lpFilter.setFilterType(SVFLowpass);
         hpFilter.setFilterType(SVFHighpass);        
 	}
-	void step() override;
+	void process(const ProcessArgs &args) override;
 
     unsigned timer;
 
@@ -68,7 +68,7 @@ struct Piste : Module {
 
 
 
-void Piste::step() {
+void Piste::process(const ProcessArgs &args) {
     
 	float drive = clamp(params[DRIVE_PARAM].value, 0.0f, 1.0f);
 

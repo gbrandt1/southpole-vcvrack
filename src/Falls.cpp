@@ -52,11 +52,11 @@ struct Falls : Module {
 
 	Falls() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
-void Falls::step() {
+void Falls::process(const ProcessArgs &args) {
 
 	float range = params[RANGE_PARAM].value > 0.5 ? 10. : 1.;
 

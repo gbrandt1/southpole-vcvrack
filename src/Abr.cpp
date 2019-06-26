@@ -66,7 +66,7 @@ struct Abr : Module
 		reset();
 	}
 
-    void step() override;
+    void process(const ProcessArgs &args) override;
 
     void reset()
     {
@@ -113,7 +113,7 @@ struct Abr : Module
 };
 
 
-void Abr::step() 
+void Abr::process(const ProcessArgs &args) 
 {
     float outa = 0.;
     float outb = 0.;
