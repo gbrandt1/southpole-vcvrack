@@ -353,7 +353,7 @@ struct CornrowsXDisplay : TransparentWidget {
 	std::shared_ptr<Font> font;
 
 	CornrowsXDisplay() {
-		font = Font::load(assetPlugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
+		font = APP->window->loadFont(assetPlugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
 	}
 
   void draw(const DrawArgs &args) override {
@@ -475,7 +475,7 @@ struct CornrowsXWidget : ModuleWidget {
 
 		{
 			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Cornrows.svg")));
+			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Cornrows.svg")));
 			panel->box.size = box.size;
 			addChild(panel);	
 		}

@@ -88,7 +88,7 @@ struct FallsWidget : ModuleWidget {
 
 		{
 			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Falls.svg")));
+			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Falls.svg")));
 			panel->box.size = box.size;
 			addChild(panel);	
 		}

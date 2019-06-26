@@ -160,7 +160,7 @@ struct ButWidget : ModuleWidget {
         {
             auto *panel = new SVGPanel();
             panel->box.size = box.size;
-            panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/But.svg")));
+            panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/But.svg")));
             addChild(panel);
         }
 

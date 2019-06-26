@@ -340,8 +340,8 @@ struct SnsDisplay : TransparentWidget {
 	  
 	  y1 = y1_;
 	  yh = yh_;
-	  //font = Font::load(assetPlugin(pluginInstance, "res/fonts/Sudo.ttf"));
-	  font = Font::load(assetPlugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
+	  //font = APP->window->loadFont(assetPlugin(pluginInstance, "res/fonts/Sudo.ttf"));
+	  font = APP->window->loadFont(assetPlugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
 	}
 
 	void drawPolygon(NVGcontext *args.vg) {
@@ -499,7 +499,7 @@ struct SnsWidget : ModuleWidget {
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Sns.svg")));
+			panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Sns.svg")));
 			addChild(panel);
 		}
 

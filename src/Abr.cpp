@@ -152,7 +152,7 @@ struct AbrWidget : ModuleWidget {
         {
             auto *panel = new SVGPanel();
             panel->box.size = box.size;
-            panel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Abr.svg")));
+            panel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Abr.svg")));
             addChild(panel);
         }
 

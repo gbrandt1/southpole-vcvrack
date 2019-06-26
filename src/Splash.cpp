@@ -211,13 +211,13 @@ struct SplashWidget : ModuleWidget {
 
 		{
 			tidesPanel = new SVGPanel();
-			tidesPanel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Splash.svg")));
+			tidesPanel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Splash.svg")));
 			tidesPanel->box.size = box.size;
 			addChild(tidesPanel);
 		}
 		{
 			sheepPanel = new SVGPanel();
-			sheepPanel->setBackground(SVG::load(assetPlugin(pluginInstance, "res/Lambs.svg")));
+			sheepPanel->setBackground(APP->window->loadSvg(assetPlugin(pluginInstance, "res/Lambs.svg")));
 			sheepPanel->box.size = box.size;
 			addChild(sheepPanel);
 		}
