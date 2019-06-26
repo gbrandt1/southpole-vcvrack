@@ -30,8 +30,8 @@ struct Snake : Module {
 	int buss = 0;
 	int id;
 
-  	SchmittTrigger plusTrigger;
-  	SchmittTrigger minusTrigger;
+  	dsp::SchmittTrigger plusTrigger;
+  	dsp::SchmittTrigger minusTrigger;
 
 	Snake() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);

@@ -48,10 +48,10 @@ struct Fuse : Module {
 
 	void process(const ProcessArgs &args) override;
 
-  	SchmittTrigger clockTrigger;
-  	SchmittTrigger resetTrigger;
-  	SchmittTrigger armTrigger[4];
-	PulseGenerator pulse[4];
+  	dsp::SchmittTrigger clockTrigger;
+  	dsp::SchmittTrigger resetTrigger;
+  	dsp::SchmittTrigger armTrigger[4];
+	dsp::PulseGenerator pulse[4];
 
 	bool armed[4];
 	bool gateOn[4];

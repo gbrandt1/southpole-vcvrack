@@ -42,9 +42,9 @@ struct Piste : Module {
 
 	float env1 = 0.0;
 	float env2 = 0.0;
-	SchmittTrigger trigger1;
-	SchmittTrigger trigger2;
-	SchmittTrigger mute;
+	dsp::SchmittTrigger trigger1;
+	dsp::SchmittTrigger trigger2;
+	dsp::SchmittTrigger mute;
 
 	Piste() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);

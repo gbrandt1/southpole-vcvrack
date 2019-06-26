@@ -72,8 +72,8 @@ struct CornrowsX : Module {
 	uint16_t gain_lp;
     int16_t previous_pitch = 0;
 
-	SampleRateConverter<1> src;
-	DoubleRingBuffer<Frame<1>, 256> outputBuffer;
+	dsp::SampleRateConverter<1> src;
+	dsp::DoubleRingBuffer<dsp::Frame<1>, 256> outputBuffer;
 	bool lastTrig = false;
 	bool lowCpu = false;
 	bool paques = false;
@@ -320,14 +320,14 @@ void CornrowsX::process(const ProcessArgs &args) {
 
 		if (lowCpu) {
 			for (int i = 0; i < 24; i++) {
-				Frame<1> f;
+				dsp::Frame<1> f;
 				f.samples[0] = render_buffer[i] / 32768.0;
 				outputBuffer.push(f);
 			}
 		}
 		else {
 			// Sample rate convert
-			Frame<1> in[24];
+			dsp::Frame<1> in[24];
 			for (int i = 0; i < 24; i++) {
 				in[i].samples[0] = render_buffer[i] / 32768.0;
 			}
@@ -342,7 +342,7 @@ void CornrowsX::process(const ProcessArgs &args) {
 
 	// Output
 	if (!outputBuffer.empty()) {
-		Frame<1> f = outputBuffer.shift();
+		dsp::Frame<1> f = outputBuffer.shift();
 		outputs[OUT_OUTPUT].setVoltage(5.0 * f.samples[0]);
 	}
 }

@@ -74,10 +74,10 @@ struct Sns : Module {
 	unsigned int  par_a_last; 
 	
 
-  	SchmittTrigger clockTrigger;
-  	SchmittTrigger resetTrigger;
-	PulseGenerator gatePulse;
-	PulseGenerator accentPulse;
+  	dsp::SchmittTrigger clockTrigger;
+  	dsp::SchmittTrigger resetTrigger;
+	dsp::PulseGenerator gatePulse;
+	dsp::PulseGenerator accentPulse;
 	bool gateOn;
 	bool accOn;
 

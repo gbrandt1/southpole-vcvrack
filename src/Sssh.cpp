@@ -35,7 +35,7 @@ struct Sssh : Module {
 		NUM_LIGHTS
 	};
 
-	SchmittTrigger trigger[4];
+	dsp::SchmittTrigger trigger[4];
 	float sample[4] = { 0.0,0.,0.,0. };
 
 	Sssh() {

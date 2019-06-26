@@ -37,11 +37,11 @@ struct Pulse : Module {
 		NUM_LIGHTS
 	};
 
-	SchmittTrigger clock;
-	SchmittTrigger trigger;
-	SchmittTrigger triggerBtn;
-	PulseGenerator clkPulse;
-	PulseGenerator eocPulse;
+	dsp::SchmittTrigger clock;
+	dsp::SchmittTrigger trigger;
+	dsp::SchmittTrigger triggerBtn;
+	dsp::PulseGenerator clkPulse;
+	dsp::PulseGenerator eocPulse;
 
 	unsigned long delayt = 0;
 	unsigned long gatet = 0;

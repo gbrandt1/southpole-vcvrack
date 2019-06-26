@@ -52,7 +52,7 @@ struct Rakes : Module {
 		NUM_LIGHTS
 	};
 
-	//SchmittTrigger clock;
+	//dsp::SchmittTrigger clock;
 
 	float *bufl[NBUF];
 	float *bufr[NBUF];

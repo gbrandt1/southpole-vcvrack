@@ -50,8 +50,8 @@ struct Splash : Module {
 	tides::Generator generator;
 	int frame = 0;
 	uint8_t lastGate;
-	SchmittTrigger modeTrigger;
-	SchmittTrigger rangeTrigger;
+	dsp::SchmittTrigger modeTrigger;
+	dsp::SchmittTrigger rangeTrigger;
 
 	Splash();
 	void process(const ProcessArgs &args) override;

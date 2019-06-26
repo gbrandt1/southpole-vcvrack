@@ -54,10 +54,10 @@ struct Smoke : Module {
 				NUM_LIGHTS
 	};
 
-  SampleRateConverter<2> inputSrc;
-  SampleRateConverter<2> outputSrc;
-  DoubleRingBuffer<Frame<2>, 256> inputBuffer;
-  DoubleRingBuffer<Frame<2>, 256> outputBuffer;
+  dsp::SampleRateConverter<2> inputSrc;
+  dsp::SampleRateConverter<2> outputSrc;
+  dsp::DoubleRingBuffer<dsp::Frame<2>, 256> inputBuffer;
+  dsp::DoubleRingBuffer<dsp::Frame<2>, 256> outputBuffer;
 
   clouds::PlaybackMode playbackmode =  clouds::PLAYBACK_MODE_GRANULAR;
   
@@ -76,9 +76,9 @@ struct Smoke : Module {
 #ifdef PARASITES
   bool reverse = false;
   float reverseLight = 0.0;
-  SchmittTrigger reverseTrigger;
+  dsp::SchmittTrigger reverseTrigger;
 #endif
-  SchmittTrigger freezeTrigger;
+  dsp::SchmittTrigger freezeTrigger;
 
   Smoke();
   ~Smoke();
@@ -149,10 +149,10 @@ Smoke::~Smoke() {
 
 void Smoke::process(const ProcessArgs &args) {
 
-  Frame<2> inputFrame;
+  dsp::Frame<2> inputFrame;
   // Get input
   if (!inputBuffer.full()) {
-    //Frame<2> inputFrame;
+    //dsp::Frame<2> inputFrame;
     inputFrame.samples[0] = inputs[IN_L_INPUT].getVoltage() * params[IN_GAIN_PARAM].getValue() / 5.0;
     inputFrame.samples[1] = inputs[IN_R_INPUT].isConnected() ? inputs[IN_R_INPUT].getVoltage() * params[IN_GAIN_PARAM].getValue() / 5.0 : inputFrame.samples[0];
     inputBuffer.push(inputFrame);
@@ -169,7 +169,7 @@ void Smoke::process(const ProcessArgs &args) {
     // Convert input buffer
     {
       inputSrc.setRates(args.sampleRate, 32000);
-      Frame<2> inputFrames[32];
+      dsp::Frame<2> inputFrames[32];
       int inLen = inputBuffer.size();
       int outLen = 32;
       inputSrc.process(inputBuffer.startData(), &inLen, inputFrames, &outLen);
@@ -230,7 +230,7 @@ void Smoke::process(const ProcessArgs &args) {
 
     // Convert output buffer
     {
-      Frame<2> outputFrames[32];
+      dsp::Frame<2> outputFrames[32];
       for (int i = 0; i < 32; i++) {
         outputFrames[i].samples[0] = output[i].l / 32768.0;
         outputFrames[i].samples[1] = output[i].r / 32768.0;
@@ -247,7 +247,7 @@ void Smoke::process(const ProcessArgs &args) {
   }
 
   // Set output
-  Frame<2> outputFrame;
+  dsp::Frame<2> outputFrame;
   if (!outputBuffer.empty()) {
     outputFrame = outputBuffer.shift();
     outputs[OUT_L_OUTPUT].setVoltage(5.0 * outputFrame.samples[0]);
@@ -257,9 +257,9 @@ void Smoke::process(const ProcessArgs &args) {
 	// Lights
   
 	clouds::Parameters *p = processor->mutable_parameters();
-	VUMeter vuMeter;
+	dsp::VUMeter vuMeter;
 	vuMeter.dBInterval = 6.0;
-	Frame<2> lightFrame = p->freeze ? outputFrame : inputFrame;
+	dsp::Frame<2> lightFrame = p->freeze ? outputFrame : inputFrame;
 	vuMeter.setValue(fmaxf(fabsf(lightFrame.samples[0]), fabsf(lightFrame.samples[1])));
 	lights[FREEZE_LIGHT].setBrightness(p->freeze ? 0.75 : 0.0);
 	lights[MIX_GREEN_LIGHT].setBrightnessSmooth(vuMeter.getBrightness(3));

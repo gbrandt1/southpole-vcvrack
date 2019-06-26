@@ -39,8 +39,8 @@ struct Aux : Module {
 		NUM_LIGHTS
 	};
 
-  	SchmittTrigger muteTrigger;
-  	SchmittTrigger bypassTrigger;
+  	dsp::SchmittTrigger muteTrigger;
+  	dsp::SchmittTrigger bypassTrigger;
 	bool mute;
 	bool bypass;
 

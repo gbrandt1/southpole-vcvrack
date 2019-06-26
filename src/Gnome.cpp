@@ -15,10 +15,10 @@ struct VoltageControlledOscillator {
 	float pw = 0.5;
 	float pitch;
 
-	Decimator<OVERSAMPLE, QUALITY> triDecimator;
-	Decimator<OVERSAMPLE, QUALITY> sawDecimator;
-	Decimator<OVERSAMPLE, QUALITY> sqrDecimator;
-	RCFilter sqrFilter;
+	dsp::Decimator<OVERSAMPLE, QUALITY> triDecimator;
+	dsp::Decimator<OVERSAMPLE, QUALITY> sawDecimator;
+	dsp::Decimator<OVERSAMPLE, QUALITY> sqrDecimator;
+	dsp::RCFilter sqrFilter;
 
 	// For analog detuning effect
 	float pitchSlew = 0.0;
@@ -89,8 +89,8 @@ struct VoltageControlledOscillator {
 
 struct FlipFlop {
 
-	//RCFilter sqrFilter;
-	SchmittTrigger clockTrigger;
+	//dsp::RCFilter sqrFilter;
+	dsp::SchmittTrigger clockTrigger;
     float out;
     bool toggle = false;
 	int count = 0;
@@ -112,7 +112,7 @@ struct LowFrequencyOscillator {
 	float pw = 0.5;
 	float freq = 1.0;
 	float sample = 0;	
-	SchmittTrigger resetTrigger;
+	dsp::SchmittTrigger resetTrigger;
 	
 
 	LowFrequencyOscillator() {
@@ -220,7 +220,7 @@ struct Gnome : Module {
 
 	bool decaying = false;
 	float env = 0.0;
-	//SchmittTrigger envtrigger;
+	//dsp::SchmittTrigger envtrigger;
 
 	Gnome() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);

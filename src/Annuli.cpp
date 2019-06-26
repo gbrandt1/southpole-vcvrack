@@ -46,10 +46,10 @@ struct Annuli : Module {
 		NUM_LIGHTS
 	};
 
-	SampleRateConverter<1> inputSrc;
-	SampleRateConverter<2> outputSrc;
-	DoubleRingBuffer<Frame<1>, 256> inputBuffer;
-	DoubleRingBuffer<Frame<2>, 256> outputBuffer;
+	dsp::SampleRateConverter<1> inputSrc;
+	dsp::SampleRateConverter<2> outputSrc;
+	dsp::DoubleRingBuffer<dsp::Frame<1>, 256> inputBuffer;
+	dsp::DoubleRingBuffer<dsp::Frame<2>, 256> outputBuffer;
 
 	uint16_t reverb_buffer[32768] = {};
 	rings::Part part;
@@ -58,8 +58,8 @@ struct Annuli : Module {
 	bool strum = false;
 	bool lastStrum = false;
 
-	SchmittTrigger polyphonyTrigger;
-	SchmittTrigger modelTrigger;
+	dsp::SchmittTrigger polyphonyTrigger;
+	dsp::SchmittTrigger modelTrigger;
 	int polyphonyMode = 0;
 	rings::ResonatorModel model = rings::RESONATOR_MODEL_MODAL;
 	bool easterEgg = false;
@@ -125,7 +125,7 @@ void Annuli::process(const ProcessArgs &args) {
 	// "Normalized to a pulse/burst generator that reacts to note changes on the V/OCT input."
 	// Get input
 	if (!inputBuffer.full()) {
-		Frame<1> f;
+		dsp::Frame<1> f;
 		f.samples[0] = inputs[IN_INPUT].getVoltage() / 5.0;
 		inputBuffer.push(f);
 	}
@@ -156,7 +156,7 @@ void Annuli::process(const ProcessArgs &args) {
 			inputSrc.setRates(args.sampleRate, 48000.0);
 			int inLen = inputBuffer.size();
 			int outLen = 24;
-			inputSrc.process(inputBuffer.startData(), &inLen, (Frame<1>*) in, &outLen);
+			inputSrc.process(inputBuffer.startData(), &inLen, (dsp::Frame<1>*) in, &outLen);
 			inputBuffer.startIncr(inLen);
 		}
 
@@ -172,11 +172,11 @@ void Annuli::process(const ProcessArgs &args) {
 
 		// Patch
 		rings::Patch patch;
-		float structure 	= params[STRUCTURE_PARAM].getValue() + 3.3*quadraticBipolar(params[STRUCTURE_MOD_PARAM].getValue())*inputs[STRUCTURE_MOD_INPUT].getVoltage()/5.0;
+		float structure 	= params[STRUCTURE_PARAM].getValue() + 3.3*dsp::quadraticBipolar(params[STRUCTURE_MOD_PARAM].getValue())*inputs[STRUCTURE_MOD_INPUT].getVoltage()/5.0;
 		patch.structure 	= clamp(structure, 0.0f, 0.9995f);
-		patch.brightness 	= clamp(params[BRIGHTNESS_PARAM].getValue() + 3.3*quadraticBipolar(params[BRIGHTNESS_MOD_PARAM].getValue())*inputs[BRIGHTNESS_MOD_INPUT].getVoltage()/5.0, 0.0f, 1.0f);
-		patch.damping 		= clamp(params[DAMPING_PARAM].getValue() + 3.3*quadraticBipolar(params[DAMPING_MOD_PARAM].getValue())*inputs[DAMPING_MOD_INPUT].getVoltage()/5.0, 0.0f, 0.9995f);
-		patch.position	 	= clamp(params[POSITION_PARAM].getValue() + 3.3*quadraticBipolar(params[POSITION_MOD_PARAM].getValue())*inputs[POSITION_MOD_INPUT].getVoltage()/5.0, 0.0f, 0.9995f);
+		patch.brightness 	= clamp(params[BRIGHTNESS_PARAM].getValue() + 3.3*dsp::quadraticBipolar(params[BRIGHTNESS_MOD_PARAM].getValue())*inputs[BRIGHTNESS_MOD_INPUT].getVoltage()/5.0, 0.0f, 1.0f);
+		patch.damping 		= clamp(params[DAMPING_PARAM].getValue() + 3.3*dsp::quadraticBipolar(params[DAMPING_MOD_PARAM].getValue())*inputs[DAMPING_MOD_INPUT].getVoltage()/5.0, 0.0f, 0.9995f);
+		patch.position	 	= clamp(params[POSITION_PARAM].getValue() + 3.3*dsp::quadraticBipolar(params[POSITION_MOD_PARAM].getValue())*inputs[POSITION_MOD_INPUT].getVoltage()/5.0, 0.0f, 0.9995f);
 
 		// Performance
 		rings::PerformanceState performance_state;
@@ -187,7 +187,7 @@ void Annuli::process(const ProcessArgs &args) {
 			transpose = roundf(transpose);
 		}
 		performance_state.tonic = 12.0 + clamp(transpose, 0.0f, 60.0f);
-		performance_state.fm = clamp(48.0 * 3.3*quarticBipolar(params[FREQUENCY_MOD_PARAM].getValue()) * inputs[FREQUENCY_MOD_INPUT].normalize(1.0)/5.0, -48.0f, 48.0f);
+		performance_state.fm = clamp(48.0 * 3.3*dsp::quarticBipolar(params[FREQUENCY_MOD_PARAM].getValue()) * inputs[FREQUENCY_MOD_INPUT].normalize(1.0)/5.0, -48.0f, 48.0f);
 
 		performance_state.internal_exciter = !inputs[IN_INPUT].isConnected();
 		performance_state.internal_strum = !inputs[STRUM_INPUT].isConnected();
@@ -215,7 +215,7 @@ void Annuli::process(const ProcessArgs &args) {
 
 		// Convert output buffer
 		{
-			Frame<2> outputFrames[24];
+			dsp::Frame<2> outputFrames[24];
 			for (int i = 0; i < 24; i++) {
 				outputFrames[i].samples[0] = out[i];
 				outputFrames[i].samples[1] = aux[i];
@@ -231,7 +231,7 @@ void Annuli::process(const ProcessArgs &args) {
 
 	// Set output
 	if (!outputBuffer.empty()) {
-		Frame<2> outputFrame = outputBuffer.shift();
+		dsp::Frame<2> outputFrame = outputBuffer.shift();
 		// "Note that you need to insert a jack into each output to split the signals: when only one jack is inserted, both signals are mixed together."
 		if (outputs[ODD_OUTPUT].isConnected() && outputs[EVEN_OUTPUT].isConnected()) {
 			outputs[ODD_OUTPUT].setVoltage(clamp(outputFrame.samples[0], -1.0f, 1.0f)*5.0);
