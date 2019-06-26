@@ -421,32 +421,32 @@ struct GnomeWidget : ModuleWidget {
 		float x5 = 125;
 
 		//VCO
-		addInput(createPort<sp_Port>(			Vec(x1, y1+1*yh), PortWidget::INPUT, module, Gnome::PITCH_INPUT));
+		addInput(createInput<sp_Port>(			Vec(x1, y1+1*yh), module, Gnome::PITCH_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+1*yh), module, Gnome::PITCH_PARAM, -54.0, 54.0, 0.0));
-		addInput(createPort<sp_Port>(			Vec(x1, y1+2*yh), PortWidget::INPUT, module, Gnome::OSC_INPUT));
+		addInput(createInput<sp_Port>(			Vec(x1, y1+2*yh), module, Gnome::OSC_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, Gnome::OSC_PARAM, 0, 2, 1));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+3*yh), module, Gnome::SUBWAVE_PARAM, 0.0, 2.0, 0.0));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+3*yh), module, Gnome::SUB_PARAM, .0, 1.0, 0.0));
-		addInput(createPort<sp_Port>(			Vec(x1, y1+4*yh), PortWidget::INPUT, module, Gnome::EXT_INPUT));
+		addInput(createInput<sp_Port>(			Vec(x1, y1+4*yh), module, Gnome::EXT_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Gnome::EXT_PARAM, .0, 1.0, 0.0));
-		addInput(createPort<sp_Port>(			Vec(x1, y1+5*yh), PortWidget::INPUT, module, Gnome::PW_INPUT));
+		addInput(createInput<sp_Port>(			Vec(x1, y1+5*yh), module, Gnome::PW_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Gnome::PW_PARAM, 0.0, .5, 0.25));
-		addInput(createPort<sp_Port>(			Vec(x1, y1+6*yh), PortWidget::INPUT, module, Gnome::FM_INPUT));
+		addInput(createInput<sp_Port>(			Vec(x1, y1+6*yh), module, Gnome::FM_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Gnome::FM_PARAM, 0.0, 1.0, 0.0));
-		addOutput(createPort<sp_Port>(		Vec(x2, y1+7*yh), PortWidget::OUTPUT, module, Gnome::VCO_OUTPUT));
+		addOutput(createOutput<sp_Port>(		Vec(x2, y1+7*yh), module, Gnome::VCO_OUTPUT));
 
 		//LFO
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+1*yh), module, Gnome::LFOWAVE_PARAM, 0., 4., 0.));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+1*yh), module, Gnome::LFOPITCH_PARAM, -8.0, 6.0, -1.0));
-		addInput(createPort<sp_Port>(			Vec(x3, y1+2*yh), PortWidget::INPUT, module, Gnome::LFOFM_INPUT));
+		addInput(createInput<sp_Port>(			Vec(x3, y1+2*yh), module, Gnome::LFOFM_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+2*yh), module, Gnome::LFOFM_PARAM, -1, 1, 1));
-		addOutput(createPort<sp_Port>(		Vec(x4, y1+3*yh), PortWidget::OUTPUT, module, Gnome::LFO_OUTPUT));
+		addOutput(createOutput<sp_Port>(		Vec(x4, y1+3*yh), module, Gnome::LFO_OUTPUT));
 		
 		//ADSR
-		addInput(createPort<sp_Port>(			Vec(x3, y1+4*yh), PortWidget::INPUT, module, Gnome::GATE_INPUT));
+		addInput(createInput<sp_Port>(			Vec(x3, y1+4*yh), module, Gnome::GATE_INPUT));
 		addParam(createParam<CKSS>(       		Vec(x3, y1+5*yh), module, Gnome::GATE_PARAM, 0.0, 1.0, 0.0));
 		addChild(createLight<SmallLight<RedLight>>(Vec(x3, y1+6*yh), module, Gnome::ENV_LIGHT));
-		addOutput(createPort<sp_Port>(Vec(x3, y1+7*yh), PortWidget::OUTPUT, module, Gnome::ENVELOPE_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3, y1+7*yh), module, Gnome::ENVELOPE_OUTPUT));
 
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+4*yh), module, Gnome::ATTACK_PARAM,  0.0, 1.0, 0.5));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x4, y1+5*yh), module, Gnome::DECAY_PARAM,   0.0, 1.0, 0.5));
@@ -455,15 +455,15 @@ struct GnomeWidget : ModuleWidget {
 
 		//VCF
 		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+1*yh), module, Gnome::VCFTYPE_PARAM, 0.0, 3.0, 0.0));
-		addInput(createPort<sp_Port>(			 Vec(x5, y1+2*yh), PortWidget::INPUT, module, Gnome::VCFFREQ_INPUT));
+		addInput(createInput<sp_Port>(			 Vec(x5, y1+2*yh), module, Gnome::VCFFREQ_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+3*yh), module, Gnome::VCFPITCH_PARAM, -4.0,  7.0, 0.0));
 		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+4*yh), module, Gnome::VCFQ_PARAM,     0.0, 1.0, 0.0));
 		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+5*yh), module, Gnome::VCFENV_PARAM,  -1.0, 1.0, 0.0));
 		addParam(createParam<sp_SmallBlackKnob>( Vec(x5, y1+6*yh), module, Gnome::VCFLFO_PARAM,  -1.0, 1.0, 0.0));
-		addOutput(createPort<sp_Port>( 	  	 Vec(x5, y1+7*yh), PortWidget::OUTPUT, module, Gnome::VCF_OUTPUT));
+		addOutput(createOutput<sp_Port>( 	  	 Vec(x5, y1+7*yh), module, Gnome::VCF_OUTPUT));
 
 		//VCA
-		addOutput(createPort<sp_Port>(Vec(x3, y1+8*yh), PortWidget::OUTPUT, module, Gnome::AUDIO_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3, y1+8*yh), module, Gnome::AUDIO_OUTPUT));
 	
 
 		addChild(createLight<SmallLight<GreenRedLight>>(Vec(x3, y1+3*yh), module, Gnome::PHASE_POS_LIGHT));

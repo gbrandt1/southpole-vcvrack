@@ -81,16 +81,16 @@ struct WriggleWidget : ModuleWidget {
 		const float y1 = 40.;
 		const float yh = 31.;
 		
-		addInput(createPort<sp_Port		  >(Vec(x1, y1+0*yh), PortWidget::INPUT, module, Wriggle::IN_INPUT));
-		addInput(createPort<sp_Port		  >(Vec(x1, y1+1.125*yh), PortWidget::INPUT, module, Wriggle::TENS_INPUT));
+		addInput(createInput<sp_Port		  >(Vec(x1, y1+0*yh), module, Wriggle::IN_INPUT));
+		addInput(createInput<sp_Port		  >(Vec(x1, y1+1.125*yh), module, Wriggle::TENS_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, Wriggle::TENS_PARAM, 0.0, 1.0, 0.5));
-		addInput(createPort<sp_Port		  >(Vec(x1, y1+3.125*yh), PortWidget::INPUT, module, Wriggle::DAMP_INPUT));
+		addInput(createInput<sp_Port		  >(Vec(x1, y1+3.125*yh), module, Wriggle::DAMP_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+4*yh), module, Wriggle::DAMP_PARAM, 0.0, 1.0, 0.5));
-		addInput(createPort<sp_Port		  >(Vec(x1, y1+5.125*yh), PortWidget::INPUT, module, Wriggle::SCALE_INPUT));
+		addInput(createInput<sp_Port		  >(Vec(x1, y1+5.125*yh), module, Wriggle::SCALE_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+6*yh), module, Wriggle::SCALE_PARAM, 0.0, 1.0, 0.5));
-		addInput(createPort<sp_Port  		  >(Vec(x1, y1+7.125*yh), PortWidget::INPUT, module, Wriggle::OFFSET_INPUT));
+		addInput(createInput<sp_Port  		  >(Vec(x1, y1+7.125*yh), module, Wriggle::OFFSET_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+8*yh), module, Wriggle::OFFSET_PARAM, 0.0, 1.0, 0.5));
-		addOutput(createPort<sp_Port		  >(Vec(x1, y1+9.25*yh), PortWidget::OUTPUT, module, Wriggle::OUT_OUTPUT));
+		addOutput(createOutput<sp_Port		  >(Vec(x1, y1+9.25*yh), module, Wriggle::OUT_OUTPUT));
 
 	//	addChild(createLight<SmallLight<RedLight>>(Vec(94, 109), module, Wriggle::DECAY_LIGHT));
 	}

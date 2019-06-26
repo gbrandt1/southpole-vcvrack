@@ -191,12 +191,12 @@ struct FuseWidget : ModuleWidget {
 		{
 			addParam(createParam<LEDButton>(Vec(x1+1, y1 + i*yh-22), module, Fuse::SWITCH1_PARAM + 3 - i, 0.0, 1.0, 0.0));
 			addChild(createLight<MediumLight<YellowLight>>(Vec(x1+5, y1+ i*yh-18), module, Fuse::ARM1_LIGHT + 3 - i));
-			addInput(createPort<sp_Port>(Vec(x1, y1 + i*yh-45), PortWidget::INPUT, module, Fuse::ARM1_INPUT + 3 - i));
-			addOutput(createPort<sp_Port>(Vec(x1, y1 + i*yh), PortWidget::OUTPUT, module, Fuse::OUT1_OUTPUT + 3 - i));
+			addInput(createInput<sp_Port>(Vec(x1, y1 + i*yh-45), module, Fuse::ARM1_INPUT + 3 - i));
+			addOutput(createOutput<sp_Port>(Vec(x1, y1 + i*yh), module, Fuse::OUT1_OUTPUT + 3 - i));
 		}
 
-		addInput(createPort<sp_Port>(Vec(x1, 330), PortWidget::INPUT, module, Fuse::CLK_INPUT));
-		addInput(createPort<sp_Port>(Vec(x2, 330), PortWidget::INPUT, module, Fuse::RESET_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, 330), module, Fuse::CLK_INPUT));
+		addInput(createInput<sp_Port>(Vec(x2, 330), module, Fuse::RESET_INPUT));
 	}
 
     void appendContextMenu(Menu *menu) override {

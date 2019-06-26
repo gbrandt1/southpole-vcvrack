@@ -194,36 +194,36 @@ struct DeuxEtageresWidget : ModuleWidget {
 
         // TO DO possible default freqs: 880, 5000
 
-        addInput(createPort<sp_Port>(Vec(x1, y1+ 1* yh), PortWidget::INPUT, module, DeuxEtageres::FREQ4_INPUT));
-        addInput(createPort<sp_Port>(Vec(x1, y1+ 2* yh), PortWidget::INPUT, module, DeuxEtageres::GAIN4_INPUT));
+        addInput(createInput<sp_Port>(Vec(x1, y1+ 1* yh), module, DeuxEtageres::FREQ4_INPUT));
+        addInput(createInput<sp_Port>(Vec(x1, y1+ 2* yh), module, DeuxEtageres::GAIN4_INPUT));
         addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 1*yh), module, DeuxEtageres::FREQ4_PARAM, vfmin, vfmax, 0.));
         addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 2*yh), module, DeuxEtageres::GAIN4_PARAM,  gmin,  gmax, 0.));
 
-        addInput(createPort<sp_Port>(Vec(x1, y1+ 3* yh), PortWidget::INPUT, module, DeuxEtageres::FREQ2_INPUT));
-        addInput(createPort<sp_Port>(Vec(x1, y1+ 4* yh), PortWidget::INPUT, module, DeuxEtageres::GAIN2_INPUT));
-        addInput(createPort<sp_Port>(Vec(x1, y1+ 5* yh), PortWidget::INPUT, module, DeuxEtageres::Q2_INPUT));
+        addInput(createInput<sp_Port>(Vec(x1, y1+ 3* yh), module, DeuxEtageres::FREQ2_INPUT));
+        addInput(createInput<sp_Port>(Vec(x1, y1+ 4* yh), module, DeuxEtageres::GAIN2_INPUT));
+        addInput(createInput<sp_Port>(Vec(x1, y1+ 5* yh), module, DeuxEtageres::Q2_INPUT));
         addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 3*yh), module, DeuxEtageres::FREQ2_PARAM, vfmin, vfmax, 0.));
         addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 4*yh), module, DeuxEtageres::GAIN2_PARAM,  gmin,  gmax, 0.));
         addParam(createParam<sp_Trimpot>(Vec(x2, y1+ 5*yh), module, DeuxEtageres::Q2_PARAM,      0.0,   1.0, 0.));
         
-        addInput(createPort<sp_Port>(Vec(x1, y1+ 6* yh), PortWidget::INPUT, module, DeuxEtageres::FREQ3_INPUT));
-        addInput(createPort<sp_Port>(Vec(x1, y1+ 7* yh), PortWidget::INPUT, module, DeuxEtageres::GAIN3_INPUT));
-        addInput(createPort<sp_Port>(Vec(x1, y1+ 8* yh), PortWidget::INPUT, module, DeuxEtageres::Q3_INPUT));
+        addInput(createInput<sp_Port>(Vec(x1, y1+ 6* yh), module, DeuxEtageres::FREQ3_INPUT));
+        addInput(createInput<sp_Port>(Vec(x1, y1+ 7* yh), module, DeuxEtageres::GAIN3_INPUT));
+        addInput(createInput<sp_Port>(Vec(x1, y1+ 8* yh), module, DeuxEtageres::Q3_INPUT));
         addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 6*yh), module, DeuxEtageres::FREQ3_PARAM, vfmin, vfmax, 0.));
         addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 7*yh), module, DeuxEtageres::GAIN3_PARAM,  gmin,  gmax, 0.));
         addParam(createParam<sp_Trimpot>(Vec(x2, y1+ 8*yh), module, DeuxEtageres::Q3_PARAM,      0.0,   1.0, 0.));
         
-        addInput(createPort<sp_Port>(Vec(x1, y1+ 9* yh), PortWidget::INPUT, module, DeuxEtageres::FREQ1_INPUT));
-        addInput(createPort<sp_Port>(Vec(x1, y1+10* yh), PortWidget::INPUT, module, DeuxEtageres::GAIN1_INPUT));    
+        addInput(createInput<sp_Port>(Vec(x1, y1+ 9* yh), module, DeuxEtageres::FREQ1_INPUT));
+        addInput(createInput<sp_Port>(Vec(x1, y1+10* yh), module, DeuxEtageres::GAIN1_INPUT));    
         addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+ 9*yh), module, DeuxEtageres::FREQ1_PARAM, vfmin, vfmax, 0.));
         addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+10*yh), module, DeuxEtageres::GAIN1_PARAM,  gmin,  gmax, 0.));
         
-        addInput(createPort<sp_Port>(  Vec(x1, y1+12*yh), PortWidget::INPUT, module, DeuxEtageres::INL_INPUT));    
-        addOutput(createPort<sp_Port>(Vec(x2, y1+12*yh), PortWidget::OUTPUT, module, DeuxEtageres::OUTL_OUTPUT));
+        addInput(createInput<sp_Port>(  Vec(x1, y1+12*yh), module, DeuxEtageres::INL_INPUT));    
+        addOutput(createOutput<sp_Port>(Vec(x2, y1+12*yh), module, DeuxEtageres::OUTL_OUTPUT));
         addChild(createLight<SmallLight<RedLight>>(Vec(x2-10., y1+12.2*yh), module, DeuxEtageres::CLIPL_LIGHT));
 
-        addInput(createPort<sp_Port>(  Vec(x1, y1+13*yh), PortWidget::INPUT, module, DeuxEtageres::INR_INPUT));    
-        addOutput(createPort<sp_Port>(Vec(x2, y1+13*yh), PortWidget::OUTPUT, module, DeuxEtageres::OUTR_OUTPUT));
+        addInput(createInput<sp_Port>(  Vec(x1, y1+13*yh), module, DeuxEtageres::INR_INPUT));    
+        addOutput(createOutput<sp_Port>(Vec(x2, y1+13*yh), module, DeuxEtageres::OUTR_OUTPUT));
         addChild(createLight<SmallLight<RedLight>>(Vec(x2-10., y1+13.2*yh), module, DeuxEtageres::CLIPR_LIGHT));
     }
 };

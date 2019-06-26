@@ -501,13 +501,13 @@ struct CornrowsXWidget : ModuleWidget {
 
 		addParam(createParam<sp_Encoder>(Vec(x3+4, 78), module, CornrowsX::SHAPE_PARAM, 0.0, 1.0, 0.0));
 
-		addInput(createPort<sp_Port>(Vec(x1, y1-1*yh), PortWidget::INPUT, module, CornrowsX::TRIG_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1-1*yh), module, CornrowsX::TRIG_INPUT));
 		addParam(createParam<sp_Trimpot>(Vec(x2, y1-1*yh), module, CornrowsX::TRIG_DELAY_PARAM,  0.0, 1.0, 0.0));
 
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+0*yh), module, CornrowsX::ATT_PARAM,   0.0, 1.0, 0.0));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+0*yh), module, CornrowsX::DEC_PARAM,   0.0, 1.0, 0.5));
 
-		addInput(createPort<sp_Port>(Vec(x1, y1+yh), PortWidget::INPUT, module, CornrowsX::PITCH_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1+yh), module, CornrowsX::PITCH_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+yh), module, CornrowsX::FINE_PARAM, -1.0, 1.0, 0.0));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+yh), module, CornrowsX::COARSE_PARAM, -2.0, 2.0, 0.0));
 		addParam(createParam<sp_Trimpot>(Vec(x4, y1+yh), module, CornrowsX::PITCH_OCTAVE_PARAM,  0.0, 1.0, 0.5));
@@ -516,22 +516,22 @@ struct CornrowsXWidget : ModuleWidget {
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, CornrowsX::SCALE_PARAM, 0.0, 1.0, 0.0));
 		addParam(createParam<sp_Trimpot>(Vec(x4, y1+2*yh), module, CornrowsX::PITCH_RANGE_PARAM,  0.0, 1.0, 0.));
 		
-		addInput(createPort<sp_Port>(Vec(x1, y1+3*yh), PortWidget::INPUT, module, CornrowsX::FM_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1+3*yh), module, CornrowsX::FM_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+3*yh), module, CornrowsX::FM_PARAM, -1.0, 1.0, 0.0));
 		addParam(createParam<sp_Trimpot>(Vec(x4, y1+3*yh), module, CornrowsX::AD_MODULATION_PARAM, 0.0, 1.0, 0.0));
 
-		addInput(createPort<sp_Port>(Vec(x1, y1+4*yh), PortWidget::INPUT, module, CornrowsX::TIMBRE_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1+4*yh), module, CornrowsX::TIMBRE_INPUT));
 		addParam(createParam<sp_Trimpot>(Vec(x2, y1+4*yh), module, CornrowsX::MODULATION_PARAM, -1.0, 1.0, 0.0));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+4*yh), module, CornrowsX::TIMBRE_PARAM, 0.0, 1.0, 0.5));
 		addParam(createParam<sp_Trimpot>(Vec(x4, y1+4*yh), module, CornrowsX::AD_TIMBRE_PARAM,	   0.0, 1.0, 0.0));
 
-		addInput(createPort<sp_Port>(Vec(x1, y1+5*yh), PortWidget::INPUT, module, CornrowsX::COLOR_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1+5*yh), module, CornrowsX::COLOR_INPUT));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+5*yh), module, CornrowsX::COLOR_PARAM, 0.0, 1.0, 0.5));
 		addParam(createParam<sp_Trimpot>(Vec(x4, y1+5*yh), module, CornrowsX::AD_COLOR_PARAM, 	   0.0, 1.0, 0.0));
 
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+5.75*yh), module, CornrowsX::BITS_PARAM,  0.0, 1.0, 1.0));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5.75*yh), module, CornrowsX::RATE_PARAM,  0.0, 1.0, 1.0));
-		addOutput(createPort<sp_Port>(Vec(x4, y1+5.75*yh), PortWidget::OUTPUT, module, CornrowsX::OUT_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x4, y1+5.75*yh), module, CornrowsX::OUT_OUTPUT));
 
 	}
 

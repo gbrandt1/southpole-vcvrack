@@ -46,11 +46,11 @@ struct FtagnWidget : ModuleWidget {
 			addChild(panel);	
 		}
 
-		addInput(createPort<sp_Port>(Vec( 6.,  380./2.-30.), PortWidget::INPUT, module, Ftagn::IN1_INPUT));
-		addInput(createPort<sp_Port>(Vec( 6.,  380./2.), PortWidget::INPUT, module, Ftagn::IN2_INPUT));
+		addInput(createInput<sp_Port>(Vec( 6.,  380./2.-30.), module, Ftagn::IN1_INPUT));
+		addInput(createInput<sp_Port>(Vec( 6.,  380./2.), module, Ftagn::IN2_INPUT));
 
-		addOutput(createPort<sp_Port>(Vec(35.,  380./2.-30.), PortWidget::OUTPUT, module, Ftagn::OUT1_OUTPUT));
-		addOutput(createPort<sp_Port>(Vec(35.,  380./2.), PortWidget::OUTPUT, module, Ftagn::OUT2_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(35.,  380./2.-30.), module, Ftagn::OUT1_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(35.,  380./2.), module, Ftagn::OUT2_OUTPUT));
 	}
 };
 

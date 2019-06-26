@@ -103,10 +103,10 @@ struct SsshWidget : ModuleWidget {
 
 		for (unsigned int i=0; i<4; i++)
 		{
-			addInput(createPort<sp_Port>(Vec(  5, y1+i*yh), PortWidget::INPUT, module, Sssh::SH1_INPUT + i));
-			addInput(createPort<sp_Port>(Vec( 34, y1+i*yh), PortWidget::INPUT, module, Sssh::TRIG1_INPUT + i));
-			addOutput(createPort<sp_Port>(Vec(5, 35+y1+i*yh), PortWidget::OUTPUT, module, Sssh::NOISE1_OUTPUT + i));
-			addOutput(createPort<sp_Port>(Vec(34, 35+y1+i*yh), PortWidget::OUTPUT, module, Sssh::SH1_OUTPUT + i));
+			addInput(createInput<sp_Port>(Vec(  5, y1+i*yh), module, Sssh::SH1_INPUT + i));
+			addInput(createInput<sp_Port>(Vec( 34, y1+i*yh), module, Sssh::TRIG1_INPUT + i));
+			addOutput(createOutput<sp_Port>(Vec(5, 35+y1+i*yh), module, Sssh::NOISE1_OUTPUT + i));
+			addOutput(createOutput<sp_Port>(Vec(34, 35+y1+i*yh), module, Sssh::SH1_OUTPUT + i));
 
 			addChild(createLight<SmallLight<GreenRedLight>>(Vec(26, y1+i*yh-4), module, Sssh::SH_POS1_LIGHT + 2*i));
 		}

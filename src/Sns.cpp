@@ -521,25 +521,25 @@ struct SnsWidget : ModuleWidget {
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1   ), module, Sns::K_PARAM, 0., 1., .25));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1   ), module, Sns::L_PARAM, 0., 1., 1.));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1   ), module, Sns::R_PARAM, 0., 1., 0.));
-		addInput(createPort<sp_Port>(Vec(x1, y1+1*yh), PortWidget::INPUT, module, Sns::K_INPUT));
-		addInput(createPort<sp_Port>(Vec(x2, y1+1*yh), PortWidget::INPUT, module, Sns::L_INPUT));
-		addInput(createPort<sp_Port>(Vec(x3, y1+1*yh), PortWidget::INPUT, module, Sns::R_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1+1*yh), module, Sns::K_INPUT));
+		addInput(createInput<sp_Port>(Vec(x2, y1+1*yh), module, Sns::L_INPUT));
+		addInput(createInput<sp_Port>(Vec(x3, y1+1*yh), module, Sns::R_INPUT));
 
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2.5*yh), module, Sns::P_PARAM, 0., 1., 0.));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2.5*yh), module, Sns::A_PARAM, 0., 1., 0.));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2.5*yh), module, Sns::S_PARAM, 0., 1., 0.));
 
-		addInput(createPort<sp_Port>(Vec(x1, y1+3.5*yh), PortWidget::INPUT, module, Sns::P_INPUT));
-		addInput(createPort<sp_Port>(Vec(x2, y1+3.5*yh), PortWidget::INPUT, module, Sns::A_INPUT));
-		addInput(createPort<sp_Port>(Vec(x3, y1+3.5*yh), PortWidget::INPUT, module, Sns::S_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1+3.5*yh), module, Sns::P_INPUT));
+		addInput(createInput<sp_Port>(Vec(x2, y1+3.5*yh), module, Sns::A_INPUT));
+		addInput(createInput<sp_Port>(Vec(x3, y1+3.5*yh), module, Sns::S_INPUT));
 
-		addInput(createPort<sp_Port>(Vec(x1, y1+4.65*yh), PortWidget::INPUT, module, Sns::CLK_INPUT));
-		addInput(createPort<sp_Port>(Vec(x1, y1+5.4*yh), PortWidget::INPUT, module, Sns::RESET_INPUT));
-		addOutput(createPort<sp_Port>(Vec(x3, y1+4.65*yh), PortWidget::OUTPUT, module, Sns::CLK_OUTPUT));
-		addOutput(createPort<sp_Port>(Vec(x3, y1+5.4*yh), PortWidget::OUTPUT, module, Sns::RESET_OUTPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1+4.65*yh), module, Sns::CLK_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1+5.4*yh), module, Sns::RESET_INPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3, y1+4.65*yh), module, Sns::CLK_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3, y1+5.4*yh), module, Sns::RESET_OUTPUT));
 
-		addOutput(createPort<sp_Port>(Vec(x2, y1+4.65*yh), PortWidget::OUTPUT, module, Sns::GATE_OUTPUT));
-		addOutput(createPort<sp_Port>(Vec(x2, y1+5.4*yh), PortWidget::OUTPUT, module, Sns::ACCENT_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x2, y1+4.65*yh), module, Sns::GATE_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x2, y1+5.4*yh), module, Sns::ACCENT_OUTPUT));
 
 
 		//addChild(createLight<SmallLight<RedLight>>(Vec(4, 281), module, Sns::CLK_LIGHT));

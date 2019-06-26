@@ -174,20 +174,20 @@ struct AuxWidget : ModuleWidget {
 
 
 
-		addOutput(createPort<sp_Port>(Vec(x1,  y1+ 0*yh), PortWidget::OUTPUT, module, Aux::SEND1L_OUTPUT));
-		addOutput(createPort<sp_Port>(Vec(x1,  y1+ 1*yh), PortWidget::OUTPUT, module, Aux::SEND1R_OUTPUT));
-		addInput(createPort<sp_Port>(  Vec(x3,  y1+ 0*yh), PortWidget::INPUT, module, Aux::RETURN1L_INPUT));
-		addInput(createPort<sp_Port>(  Vec(x3,  y1+ 1*yh), PortWidget::INPUT, module, Aux::RETURN1R_INPUT));		
+		addOutput(createOutput<sp_Port>(Vec(x1,  y1+ 0*yh), module, Aux::SEND1L_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x1,  y1+ 1*yh), module, Aux::SEND1R_OUTPUT));
+		addInput(createInput<sp_Port>(  Vec(x3,  y1+ 0*yh), module, Aux::RETURN1L_INPUT));
+		addInput(createInput<sp_Port>(  Vec(x3,  y1+ 1*yh), module, Aux::RETURN1R_INPUT));		
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, Aux::SEND1_PARAM, 0.0, 1.0, 0.5));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+2*yh), module, Aux::RETURN1_PARAM, 0.0, 1.0, 0.5));
 
 		addParam(createParam<sp_Trimpot>(Vec(x1, y1+3.5*yh), module, Aux::FEEDBACK1_PARAM, -1.0, 1.0, 0.0));
 		addParam(createParam<sp_Trimpot>(Vec(x3, y1+3.5*yh), module, Aux::FEEDBACK2_PARAM, -1.0, 1.0, 0.0));
 
-		addOutput(createPort<sp_Port>(Vec(x1,  y1+ 5.5*yh), PortWidget::OUTPUT, module, Aux::SEND2L_OUTPUT));
-		addOutput(createPort<sp_Port>(Vec(x1,  y1+ 6.5*yh), PortWidget::OUTPUT, module, Aux::SEND2R_OUTPUT));
-		addInput(createPort<sp_Port>(  Vec(x3,  y1+ 5.5*yh), PortWidget::INPUT, module, Aux::RETURN2L_INPUT));
-		addInput(createPort<sp_Port>(  Vec(x3,  y1+ 6.5*yh), PortWidget::INPUT, module, Aux::RETURN2R_INPUT));		
+		addOutput(createOutput<sp_Port>(Vec(x1,  y1+ 5.5*yh), module, Aux::SEND2L_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x1,  y1+ 6.5*yh), module, Aux::SEND2R_OUTPUT));
+		addInput(createInput<sp_Port>(  Vec(x3,  y1+ 5.5*yh), module, Aux::RETURN2L_INPUT));
+		addInput(createInput<sp_Port>(  Vec(x3,  y1+ 6.5*yh), module, Aux::RETURN2R_INPUT));		
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+7.5*yh), module, Aux::SEND2_PARAM, 0.0, 1.0, 0.5));
 		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+7.5*yh), module, Aux::RETURN2_PARAM, 0.0, 1.0, 0.5));
 
@@ -198,11 +198,11 @@ struct AuxWidget : ModuleWidget {
 		addParam(createParam<LEDButton>            (Vec(x3,   y1+ 9*yh  ), module, Aux::BYPASS_PARAM, 0.0, 1.0, 0.0));
 		addChild(createLight<LargeLight<RedLight>>(Vec(x3+2.2, y1+ 9*yh+2), module, Aux::BYPASS_LIGHT));
 
-		addInput(createPort<sp_Port>(  Vec(x1,  y1+10*yh), PortWidget::INPUT, module, Aux::INL_INPUT));
-		addInput(createPort<sp_Port>(  Vec(x1,  y1+11*yh), PortWidget::INPUT, module, Aux::INR_INPUT));
+		addInput(createInput<sp_Port>(  Vec(x1,  y1+10*yh), module, Aux::INL_INPUT));
+		addInput(createInput<sp_Port>(  Vec(x1,  y1+11*yh), module, Aux::INR_INPUT));
 
-		addOutput(createPort<sp_Port>(Vec(x3,  y1+10*yh), PortWidget::OUTPUT, module, Aux::OUTL_OUTPUT));
-		addOutput(createPort<sp_Port>(Vec(x3,  y1+11*yh), PortWidget::OUTPUT, module, Aux::OUTR_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3,  y1+10*yh), module, Aux::OUTL_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3,  y1+11*yh), module, Aux::OUTR_OUTPUT));
 	}
 };
 

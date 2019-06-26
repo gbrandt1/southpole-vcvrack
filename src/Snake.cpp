@@ -231,8 +231,8 @@ struct SnakeWidget : ModuleWidget {
 		for (int i=0; i< NSNAKEPORTS; i++)
 		{
 			float y = y1+i*yh + floor(i/5)*yh*.4;
-			addInput(createPort<sp_Port>(	Vec( 5, y), PortWidget::INPUT, module, Snake::IN_INPUT + i));
-			addOutput(createPort<sp_Port>(Vec(34, y), PortWidget::OUTPUT, module, Snake::OUT_OUTPUT + i));
+			addInput(createInput<sp_Port>(	Vec( 5, y), module, Snake::IN_INPUT + i));
+			addOutput(createOutput<sp_Port>(Vec(34, y), module, Snake::OUT_OUTPUT + i));
 			addChild(createLight<SmallLight<GreenRedLight>>(Vec(26, y), module, Snake::LOCK_LIGHT + 2*i));
 		}
 

@@ -101,9 +101,9 @@ struct FallsWidget : ModuleWidget {
 		const float x3 = 36.;
 
 		for (int i=0; i < NUMP; i++) {
-			addInput(createPort<sp_Port>(Vec(x1,  y1+i*yh), PortWidget::INPUT, module, Falls::IN1_INPUT + i));
+			addInput(createInput<sp_Port>(Vec(x1,  y1+i*yh), module, Falls::IN1_INPUT + i));
 			addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+6,  y1+i*yh), module, Falls::OUT1_POS_LIGHT + 2*i));	
-			addOutput(createPort<sp_Port>(Vec(x3,  y1+i*yh), PortWidget::OUTPUT, module, Falls::OUT1_OUTPUT + i));
+			addOutput(createOutput<sp_Port>(Vec(x3,  y1+i*yh), module, Falls::OUT1_OUTPUT + i));
 			addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+i*yh+18), module, Falls::GAIN1_PARAM + i, -1.0, 1.0, 0.0));
 		}
 
