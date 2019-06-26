@@ -1,4 +1,4 @@
-# Southpole VCV Rack Modules 0.6.0
+# Southpole VCV Rack Modules 1.0.0
 
 ![All](./doc/sp-main-0_6_0.png)
 
@@ -20,17 +20,15 @@ A personal collection of modules I've always wanted for my workflow.
 
 ## Building
 
-Compile Rack from source, following the instructions at https://github.com/VCVRack/Rack.
+Compile Rack from source, following the instructions at https://vcvrack.com/manual/Building.html
 
-After checking out in the `plugins/` directory, get external dependencies with
+After checking out in the `/path/to/Rack/plugins/` directory, get external
+dependencies with
 
-	git submodule update --init --recursive
-
-There is a build script
-
-	./scripts/make_all.sh
-
-WARNING: Overwrites existing Southpole directories from eg. a regular download, inspect script before use		
+```bash
+git submodule update --init --recursive
+make install
+```
 
 ## Modules copied from Audible Instruments
 
