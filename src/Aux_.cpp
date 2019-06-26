@@ -83,12 +83,12 @@ struct Aux : Module {
 
 void Aux::process(const ProcessArgs &args) {
 
-	if (muteTrigger.process(params[MUTE_PARAM].value)){
+	if (muteTrigger.process(params[MUTE_PARAM].getValue())){
 		mute = !mute;
 	}
     lights[MUTE_LIGHT].value = mute ? 1.0 : 0.0;
 
-	if (bypassTrigger.process(params[BYPASS_PARAM].value)){
+	if (bypassTrigger.process(params[BYPASS_PARAM].getValue())){
 		bypass = !bypass;
 	}
     lights[BYPASS_LIGHT].value = bypass ? 1.0 : 0.0;
@@ -104,11 +104,11 @@ void Aux::process(const ProcessArgs &args) {
 	float outl = inl;
 	float outr = inr;
 
-	float sl1 = params[SEND1_PARAM].value * inl;
-	float sr1 = params[SEND1_PARAM].value * inr;
+	float sl1 = params[SEND1_PARAM].getValue() * inl;
+	float sr1 = params[SEND1_PARAM].getValue() * inr;
 
-	float sl2 = params[SEND2_PARAM].value * inl;
-	float sr2 = params[SEND2_PARAM].value * inr;
+	float sl2 = params[SEND2_PARAM].getValue() * inl;
+	float sr2 = params[SEND2_PARAM].getValue() * inr;
 
 	float rl1 = inputs[RETURN1L_INPUT].normalize(0.);
 	float rr1 = inputs[RETURN1R_INPUT].normalize(rl1);
@@ -116,8 +116,8 @@ void Aux::process(const ProcessArgs &args) {
 	float rl2 = inputs[RETURN2L_INPUT].normalize(0.);
 	float rr2 = inputs[RETURN2R_INPUT].normalize(rl2);
 
-	float fb1 = params[FEEDBACK1_PARAM].value;
-	float fb2 = params[FEEDBACK2_PARAM].value;
+	float fb1 = params[FEEDBACK1_PARAM].getValue();
+	float fb2 = params[FEEDBACK2_PARAM].getValue();
 
 	if (fb1 >= 0.) {
 		sl1 += fb1 * rl2;
@@ -135,21 +135,21 @@ void Aux::process(const ProcessArgs &args) {
 		sl2 -= fb2 * rr1;		
 	}
 
-	outputs[SEND1L_OUTPUT].value = sl1;
-	outputs[SEND1R_OUTPUT].value = sr1;
+	outputs[SEND1L_OUTPUT].setVoltage(sl1);
+	outputs[SEND1R_OUTPUT].setVoltage(sr1);
 
-	outputs[SEND2L_OUTPUT].value = sl2;
-	outputs[SEND2R_OUTPUT].value = sr2;
+	outputs[SEND2L_OUTPUT].setVoltage(sl2);
+	outputs[SEND2R_OUTPUT].setVoltage(sr2);
 
 	if (!bypass) {
-		outl += params[RETURN1_PARAM].value * rl1;
-		outr += params[RETURN1_PARAM].value * rr1;		
-		outl += params[RETURN2_PARAM].value * rl2;
-		outr += params[RETURN2_PARAM].value * rr2;		
+		outl += params[RETURN1_PARAM].getValue() * rl1;
+		outr += params[RETURN1_PARAM].getValue() * rr1;		
+		outl += params[RETURN2_PARAM].getValue() * rl2;
+		outr += params[RETURN2_PARAM].getValue() * rr2;		
 	}
 
-	outputs[OUTL_OUTPUT].value = outl;
-	outputs[OUTR_OUTPUT].value = outr;
+	outputs[OUTL_OUTPUT].setVoltage(outl);
+	outputs[OUTR_OUTPUT].setVoltage(outr);
 }
 
 struct AuxWidget : ModuleWidget { 

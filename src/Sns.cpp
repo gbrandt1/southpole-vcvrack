@@ -247,18 +247,18 @@ void Sns::process(const ProcessArgs &args) {
   	bool nextStep = false;
 
 	// reset sequence
-	if (inputs[RESET_INPUT].active) {
-		if (resetTrigger.process(inputs[RESET_INPUT].value)) {
+	if (inputs[RESET_INPUT].isConnected()) {
+		if (resetTrigger.process(inputs[RESET_INPUT].getVoltage())) {
 			currentStep = par_l + par_p;
 		}		
-	    outputs[RESET_OUTPUT].value = inputs[RESET_INPUT].value; 
+	    outputs[RESET_OUTPUT].setVoltage(inputs[RESET_INPUT].getVoltage()); 
 	}	
 
-	if (inputs[CLK_INPUT].active) {
-		if (clockTrigger.process(inputs[CLK_INPUT].value)) {
+	if (inputs[CLK_INPUT].isConnected()) {
+		if (clockTrigger.process(inputs[CLK_INPUT].getVoltage())) {
 			nextStep = true;
 		}
-	    outputs[CLK_OUTPUT].value = inputs[CLK_INPUT].value; 
+	    outputs[CLK_OUTPUT].setVoltage(inputs[CLK_INPUT].getVoltage()); 
 	}  
 
 	if (nextStep) {
@@ -301,19 +301,19 @@ void Sns::process(const ProcessArgs &args) {
 	} else {	
 		outputs[GATE_OUTPUT].value   = gateOn | gpulse ? 10.0 : 0.0;
 	}
-	outputs[ACCENT_OUTPUT].value = accOn | apulse ? 10.0 : 0.0;
+	outputs[ACCENT_OUTPUT].setVoltage(accOn | apulse ? 10.0 : 0.0);
 
-	par_l = (unsigned int) ( 1. +   15.  * clamp( params[L_PARAM].value + inputs[L_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
-	par_p = (unsigned int) (32. - par_l) * clamp( params[P_PARAM].value + inputs[P_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+	par_l = (unsigned int) ( 1. +   15.  * clamp( params[L_PARAM].getValue() + inputs[L_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
+	par_p = (unsigned int) (32. - par_l) * clamp( params[P_PARAM].getValue() + inputs[P_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
 
-	par_r = (unsigned int) (par_l + par_p - 1.) * clamp( params[R_PARAM].value + inputs[R_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
-	par_k = (unsigned int) ( 1. + (par_l-1.) * clamp( params[K_PARAM].value + inputs[K_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
+	par_r = (unsigned int) (par_l + par_p - 1.) * clamp( params[R_PARAM].getValue() + inputs[R_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+	par_k = (unsigned int) ( 1. + (par_l-1.) * clamp( params[K_PARAM].getValue() + inputs[K_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
 
-	par_a = (unsigned int) ( par_k ) * clamp( params[A_PARAM].value + inputs[A_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+	par_a = (unsigned int) ( par_k ) * clamp( params[A_PARAM].getValue() + inputs[A_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
 	if (par_a == 0) { 
 		par_s = 0; 
 	} else {
-		par_s = (unsigned int) ( par_k-1. ) * clamp( params[S_PARAM].value + inputs[S_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+		par_s = (unsigned int) ( par_k-1. ) * clamp( params[S_PARAM].getValue() + inputs[S_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
 	}
 
 	// new sequence in case of change to parameters

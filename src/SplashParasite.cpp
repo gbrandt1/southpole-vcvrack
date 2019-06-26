@@ -108,7 +108,7 @@ SplashParasite::SplashParasite() {
 
 void SplashParasite::process(const ProcessArgs &args) {
 	tides::GeneratorMode mode = generator.mode();
-	if (modeTrigger.process(params[MODE_PARAM].value)) {
+	if (modeTrigger.process(params[MODE_PARAM].getValue())) {
 		mode = (tides::GeneratorMode) (((int)mode - 1 + 3) % 3);
 		generator.set_mode(mode);
 	}
@@ -119,7 +119,7 @@ void SplashParasite::process(const ProcessArgs &args) {
 	lights[MODE_RED_LIGHT].value = (mode == 2) ? 0.0 : 1.0;
 
 	tides::GeneratorRange range = generator.range();
-	if (rangeTrigger.process(params[RANGE_PARAM].value)) {
+	if (rangeTrigger.process(params[RANGE_PARAM].getValue())) {
 		range = (tides::GeneratorRange) (((int)range - 1 + 3) % 3);
 		generator.set_range(range);
 	}
@@ -132,10 +132,10 @@ void SplashParasite::process(const ProcessArgs &args) {
 	//Buffer loop
 	if (generator.writable_block()) {
 		// Pitch
-		float pitch = params[FREQUENCY_PARAM].value;
-		pitch += 12.0 * inputs[PITCH_INPUT].value;
-		//pitch += params[FM_PARAM].value * inputs[FM_INPUT].normalize(0.1) / 5.0;
-		float fm = clamp(inputs[FM_INPUT].value /5.0 * params[FM_PARAM].value /12.0, -1.0, 1.0) * 0x600;
+		float pitch = params[FREQUENCY_PARAM].getValue();
+		pitch += 12.0 * inputs[PITCH_INPUT].getVoltage();
+		//pitch += params[FM_PARAM].getValue() * inputs[FM_INPUT].normalize(0.1) / 5.0;
+		float fm = clamp(inputs[FM_INPUT].getVoltage() /5.0 * params[FM_PARAM].getValue() /12.0, -1.0, 1.0) * 0x600;
 		
 		pitch += 60.0;
 		if (generator.feature_mode_ == tides::Generator::FEAT_MODE_HARMONIC) {
@@ -152,13 +152,13 @@ void SplashParasite::process(const ProcessArgs &args) {
 
 		if (generator.feature_mode_ == tides::Generator::FEAT_MODE_RANDOM) {
 		    //TODO: should this be inverted?
-		    generator.set_pulse_width(clamp(1.0 - params[FM_PARAM].value /12.0, 0.0, 2.0) * 0x7fff);
+		    generator.set_pulse_width(clamp(1.0 - params[FM_PARAM].getValue() /12.0, 0.0, 2.0) * 0x7fff);
 		}
 		
 		// Slope, smoothness, pitch
-		int16_t shape = clamp(params[SHAPE_PARAM].value + inputs[SHAPE_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
-		int16_t slope = clamp(params[SLOPE_PARAM].value + inputs[SLOPE_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
-		int16_t smoothness = clamp(params[SMOOTHNESS_PARAM].value + inputs[SMOOTHNESS_INPUT].value / 5.0, -1.0, 1.0) * 0x7fff;
+		int16_t shape = clamp(params[SHAPE_PARAM].getValue() + inputs[SHAPE_INPUT].getVoltage() / 5.0, -1.0, 1.0) * 0x7fff;
+		int16_t slope = clamp(params[SLOPE_PARAM].getValue() + inputs[SLOPE_INPUT].getVoltage() / 5.0, -1.0, 1.0) * 0x7fff;
+		int16_t smoothness = clamp(params[SMOOTHNESS_PARAM].getValue() + inputs[SMOOTHNESS_INPUT].getVoltage() / 5.0, -1.0, 1.0) * 0x7fff;
 		generator.set_shape(shape);
 		generator.set_slope(slope);
 		generator.set_smoothness(smoothness);
@@ -166,7 +166,7 @@ void SplashParasite::process(const ProcessArgs &args) {
 		// Sync
 		// Slight deviation from spec here.
 		// Instead of toggling sync by holding the range button, just enable it if the clock port is plugged in.
-		generator.set_sync(inputs[CLOCK_INPUT].active);	
+		generator.set_sync(inputs[CLOCK_INPUT].isConnected());	
 		generator.FillBuffer();
 #ifdef WAVETABLE_HACK
 		generator.Process(sheep);
@@ -179,11 +179,11 @@ void SplashParasite::process(const ProcessArgs &args) {
 		level = 0;
 
 	uint8_t gate = 0;
-	if (inputs[FREEZE_INPUT].value >= 0.7)
+	if (inputs[FREEZE_INPUT].getVoltage() >= 0.7)
 		gate |= tides::CONTROL_FREEZE;
-	if (inputs[TRIG_INPUT].value >= 0.7)
+	if (inputs[TRIG_INPUT].getVoltage() >= 0.7)
 		gate |= tides::CONTROL_GATE;
-	if (inputs[CLOCK_INPUT].value >= 0.7)
+	if (inputs[CLOCK_INPUT].getVoltage() >= 0.7)
 		gate |= tides::CONTROL_CLOCK;
 	if (!(lastGate & tides::CONTROL_CLOCK) && (gate & tides::CONTROL_CLOCK))
 		gate |= tides::CONTROL_GATE_RISING;
@@ -203,10 +203,10 @@ void SplashParasite::process(const ProcessArgs &args) {
 	float unif = (float) uni / 0xffff;
 	float bif = (float) bi / 0x8000;
 
-	outputs[HIGH_OUTPUT].value = sample.flags & tides::FLAG_END_OF_ATTACK ? 0.0 : 5.0;
-	outputs[LOW_OUTPUT].value = sample.flags & tides::FLAG_END_OF_RELEASE ? 0.0 : 5.0;
-	outputs[UNI_OUTPUT].value = unif * 8.0;
-	outputs[BI_OUTPUT].value = bif * 5.0;
+	outputs[HIGH_OUTPUT].setVoltage(sample.flags & tides::FLAG_END_OF_ATTACK ? 0.0 : 5.0);
+	outputs[LOW_OUTPUT].setVoltage(sample.flags & tides::FLAG_END_OF_RELEASE ? 0.0 : 5.0);
+	outputs[UNI_OUTPUT].setVoltage(unif * 8.0);
+	outputs[BI_OUTPUT].setVoltage(bif * 5.0);
 
 	if (sample.flags & tides::FLAG_END_OF_ATTACK)
 		unif *= -1.0;

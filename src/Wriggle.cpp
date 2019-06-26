@@ -44,23 +44,23 @@ void Wriggle::process(const ProcessArgs &args) {
 
 	float dt = 1./args.sampleRate;
 
-	float tens 	 = clamp(params[TENS_PARAM].value + inputs[TENS_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
-	float damp 	 = clamp(params[DAMP_PARAM].value + inputs[DAMP_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
-	float scale	 = clamp(params[SCALE_PARAM].value + inputs[SCALE_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
-	float offset = clamp(params[OFFSET_PARAM].value + inputs[OFFSET_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+	float tens 	 = clamp(params[TENS_PARAM].getValue() + inputs[TENS_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+	float damp 	 = clamp(params[DAMP_PARAM].getValue() + inputs[DAMP_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+	float scale	 = clamp(params[SCALE_PARAM].getValue() + inputs[SCALE_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+	float offset = clamp(params[OFFSET_PARAM].getValue() + inputs[OFFSET_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
 
 	// semi-parametric Euler... (i know ...)
 
 	//float m  = 1000.*pow(2., 6.*mass);
 	float k   = pow(2.,18.*tens);
 	float b   = pow(2.,10.*damp-3.);
-	float xin = inputs[IN_INPUT].value; 
+	float xin = inputs[IN_INPUT].getVoltage(); 
 
 	v0 = v0 + dt*a0; // - v0 / m;
 	x0 = x0 + dt*v0; 
 	a0 = - k * (x0-xin) - b * v0; //) / m;
 
-	outputs[OUT_OUTPUT].value = clamp( (10. * offset - 5.) + scale * x0, -10.0f, 10.0f );
+	outputs[OUT_OUTPUT].setVoltage(clamp( (10. * offset - 5.) + scale * x0, -10.0f, 10.0f ));
 }
 
 struct WriggleWidget : ModuleWidget { 

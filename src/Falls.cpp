@@ -58,22 +58,22 @@ struct Falls : Module {
 
 void Falls::process(const ProcessArgs &args) {
 
-	float range = params[RANGE_PARAM].value > 0.5 ? 10. : 1.;
+	float range = params[RANGE_PARAM].getValue() > 0.5 ? 10. : 1.;
 
 	float out = 0.0;
 
 	for (int i = 0; i < NUMP; i++) {
-		float g = params[GAIN1_PARAM + i].value*range;
+		float g = params[GAIN1_PARAM + i].getValue()*range;
 		g = clamp(g, -range, range);
-		//if (inputs[IN1_INPUT + i].active) {
+		//if (inputs[IN1_INPUT + i].isConnected()) {
     		out += g * inputs[IN1_INPUT + i].normalize(1.);
         //} else {
         //    out += g;      
         //}
 		lights[OUT1_POS_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, out / 5.0));
 		lights[OUT1_NEG_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, -out / 5.0));
-		if (outputs[OUT1_OUTPUT + i].active) {
-			outputs[OUT1_OUTPUT + i].value = out;
+		if (outputs[OUT1_OUTPUT + i].isConnected()) {
+			outputs[OUT1_OUTPUT + i].setVoltage(out);
 			out = 0.0;
 		}
 	}

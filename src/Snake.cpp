@@ -84,7 +84,7 @@ struct Snake : Module {
 		for (int i=0; i< NSNAKEPORTS; i++) {
 			printf("%d, ", lockid[buss][i]);
 		}
-		printf(" ] %f %f\n",	params[PLUS_PARAM].value, params[MINUS_PARAM].value);
+		printf(" ] %f %f\n",	params[PLUS_PARAM].getValue(), params[MINUS_PARAM].getValue());
 	}
 
 };
@@ -96,7 +96,7 @@ int   Snake::lockid[NSNAKEBUSS][NSNAKEPORTS];
 void Snake::process(const ProcessArgs &args) {
 
 	// change buss on trigger
-    if (plusTrigger.process(params[PLUS_PARAM].value)) {
+    if (plusTrigger.process(params[PLUS_PARAM].getValue())) {
 		if (buss < NSNAKEBUSS-1) {			
 			// free and clean up current buss
 			for (int i=0; i < NSNAKEPORTS; i++) {
@@ -110,7 +110,7 @@ void Snake::process(const ProcessArgs &args) {
 	    } 
     }
 
-    if (minusTrigger.process(params[MINUS_PARAM].value)) {
+    if (minusTrigger.process(params[MINUS_PARAM].getValue())) {
 		if (buss > 0) {
 			// free and clean up current buss
 			for (int i=0; i < NSNAKEPORTS; i++) {
@@ -127,14 +127,14 @@ void Snake::process(const ProcessArgs &args) {
 	for (int i=0; i < NSNAKEPORTS; i++) {
 
 		// if active try to lock input
-		if ( inputs[IN_INPUT+i].active ) {
+		if ( inputs[IN_INPUT+i].isConnected() ) {
 			if ( lockid[buss][i] == 0 ) {
 				lockid[buss][i] = id;
 				//dump("lock");
 			}
 
 			if ( lockid[buss][i] == id ) {
-				cable[buss][i] = inputs[IN_INPUT+i].value;
+				cable[buss][i] = inputs[IN_INPUT+i].getVoltage();
 			}
 		} else if ( lockid[buss][i] == id ) {
 			lockid[buss][i] = 0;
@@ -155,7 +155,7 @@ void Snake::process(const ProcessArgs &args) {
 		}
 
 		// set output
-		outputs[OUT_OUTPUT+i].value = cable[buss][i];
+		outputs[OUT_OUTPUT+i].setVoltage(cable[buss][i]);
 	}
 
 }

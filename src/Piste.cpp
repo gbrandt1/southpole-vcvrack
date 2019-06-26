@@ -70,24 +70,24 @@ struct Piste : Module {
 
 void Piste::process(const ProcessArgs &args) {
     
-	float drive = clamp(params[DRIVE_PARAM].value, 0.0f, 1.0f);
+	float drive = clamp(params[DRIVE_PARAM].getValue(), 0.0f, 1.0f);
 
-	float freq = clamp(params[FREQ_PARAM].value, -1.0f, 1.0f);
-    float reso = clamp(params[RESO_PARAM].value, 0.0f, 1.0f);
+	float freq = clamp(params[FREQ_PARAM].getValue(), -1.0f, 1.0f);
+    float reso = clamp(params[RESO_PARAM].getValue(), 0.0f, 1.0f);
 
-	float decay1 = 			clamp(params[DECAY1_PARAM].value + inputs[DECAY1_INPUT].value / 10.0f, 0.0f, 1.0f);
-	float decay2 = decay1 * clamp(params[DECAY2_PARAM].value + inputs[DECAY2_INPUT].value / 10.0f, 0.0f, 1.0f);
+	float decay1 = 			clamp(params[DECAY1_PARAM].getValue() + inputs[DECAY1_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
+	float decay2 = decay1 * clamp(params[DECAY2_PARAM].getValue() + inputs[DECAY2_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 
-	float scale1 = 			clamp(params[SCALE1_PARAM].value, 0.0, 1.0);
-	float scale2 = scale1 * clamp(params[SCALE2_PARAM].value, 0.0, 1.0);
+	float scale1 = 			clamp(params[SCALE1_PARAM].getValue(), 0.0, 1.0);
+	float scale2 = scale1 * clamp(params[SCALE2_PARAM].getValue(), 0.0, 1.0);
 
 	bool muted = inputs[MUTE_INPUT].normalize(0.) >= 1.0;
 	
 	if (!muted) { 
-		if (trigger1.process(inputs[TRIG1_INPUT].value)) {
+		if (trigger1.process(inputs[TRIG1_INPUT].getVoltage())) {
 			env1 = 1.;
 		}
-		if (trigger2.process(inputs[TRIG2_INPUT].value)) {
+		if (trigger2.process(inputs[TRIG2_INPUT].getVoltage())) {
 			env2 = 1.;
 		}
 	}
@@ -104,10 +104,10 @@ void Piste::process(const ProcessArgs &args) {
 		env2 += powf(base, 1. - decay2) / maxTime * ( - env2) / args.sampleRate;
 	}
 
-	outputs[ENV1_OUTPUT].value = 10.*scale1 * env1;
-	outputs[ENV2_OUTPUT].value = 10.*scale2 * env2;
+	outputs[ENV1_OUTPUT].setVoltage(10.*scale1 * env1);
+	outputs[ENV2_OUTPUT].setVoltage(10.*scale2 * env2);
 
-	float v = inputs[IN_INPUT].value;
+	float v = inputs[IN_INPUT].getVoltage();
 	 
 	// DRIVE
 	v = (1.-drive)*v + drive * 10.*tanhf(10.*drive*v);
@@ -138,7 +138,7 @@ void Piste::process(const ProcessArgs &args) {
 	// VCA	
 	v = fout * 10.*scale1 * env1 * (1. + 10* scale2 * env2);
 
-	outputs[OUT_OUTPUT].value = v;
+	outputs[OUT_OUTPUT].setVoltage(v);
 
 	// Lights
 	lights[DECAY1_LIGHT].value = env1;

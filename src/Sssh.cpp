@@ -79,8 +79,8 @@ void Sssh::process(const ProcessArgs &args) {
 		lights[SH_NEG1_LIGHT+2*i].setBrightness(fmaxf(0.0, -sample[i] / 5.0));
 
 		// outputs
-		outputs[NOISE1_OUTPUT+i].value = noise;
-		outputs[SH1_OUTPUT+i].value = sample[i];
+		outputs[NOISE1_OUTPUT+i].setVoltage(noise);
+		outputs[SH1_OUTPUT+i].setVoltage(sample[i]);
 	}
 }
 

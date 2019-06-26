@@ -96,19 +96,19 @@ struct Etagere : Module {
 void Etagere::process(const ProcessArgs &args) {
 
 		float g_gain   = clamp(inputs[GAIN5_INPUT].normalize(0.), -1.0, 1.0);
-        float gain1 = clamp(g_gain + params[GAIN1_PARAM].value + inputs[GAIN1_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
-        float gain2 = clamp(g_gain + params[GAIN2_PARAM].value + inputs[GAIN2_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
-        float gain3 = clamp(g_gain + params[GAIN3_PARAM].value + inputs[GAIN3_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
-        float gain4 = clamp(g_gain + params[GAIN4_PARAM].value + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
+        float gain1 = clamp(g_gain + params[GAIN1_PARAM].getValue() + inputs[GAIN1_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
+        float gain2 = clamp(g_gain + params[GAIN2_PARAM].getValue() + inputs[GAIN2_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
+        float gain3 = clamp(g_gain + params[GAIN3_PARAM].getValue() + inputs[GAIN3_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
+        float gain4 = clamp(g_gain + params[GAIN4_PARAM].getValue() + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
 
 		float g_cutoff = clamp(inputs[FREQ5_INPUT].normalize(0.), -4.0, 6.0);
-        float freq1 = clamp(g_cutoff + params[FREQ1_PARAM].value + inputs[FREQ1_INPUT].normalize(0.), -4.0f, 6.0f);
-        float freq2 = clamp(g_cutoff + params[FREQ2_PARAM].value + inputs[FREQ2_INPUT].normalize(0.), -4.0f, 6.0f);
-        float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].value + inputs[FREQ3_INPUT].normalize(0.), -4.0f, 6.0f);
-        float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].value + inputs[FREQ4_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq1 = clamp(g_cutoff + params[FREQ1_PARAM].getValue() + inputs[FREQ1_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq2 = clamp(g_cutoff + params[FREQ2_PARAM].getValue() + inputs[FREQ2_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].getValue() + inputs[FREQ3_INPUT].normalize(0.), -4.0f, 6.0f);
+        float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].getValue() + inputs[FREQ4_INPUT].normalize(0.), -4.0f, 6.0f);
 
-        float reso2 = clamp(g_cutoff + params[Q2_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
-        float reso3 = clamp(g_cutoff + params[Q3_PARAM].value + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+        float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+        float reso3 = clamp(g_cutoff + params[Q3_PARAM].getValue() + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
 
         lpFilter.setQ(.5); //Resonance(.5);
         hpFilter.setQ(.5); //Resonance(.5);
@@ -126,7 +126,7 @@ void Etagere::process(const ProcessArgs &args) {
         // Cut/boost CV scale: 3dB/V.
         // Parametric correction Q: 0.5 to 20 (up to 1000 with external CV offset).
 
-        float dry = inputs[IN_INPUT].value;
+        float dry = inputs[IN_INPUT].getVoltage();
 
         //const float fmin = 16.4;
         const float f0 = 261.626;
@@ -141,7 +141,7 @@ void Etagere::process(const ProcessArgs &args) {
         float hp_cutoff  = f0 * powf(2.f, freq4);
 
         lpFilter.setCutoffFreq(lp_cutoff);
-        //lpFilter.setResonance( params[Q2_PARAM].value );
+        //lpFilter.setResonance( params[Q2_PARAM].getValue() );
 
         bp2Filter.setCutoffFreq(bp2_cutoff);
         bp2Filter.setResonance( rmax*reso2 );
@@ -150,7 +150,7 @@ void Etagere::process(const ProcessArgs &args) {
         bp3Filter.setResonance( rmax*reso3 );
 
         hpFilter.setCutoffFreq(hp_cutoff);
-        //hpFilter.setResonance( params[Q3_PARAM].value );
+        //hpFilter.setResonance( params[Q3_PARAM].getValue() );
 
         float lpout  = lpFilter.processAudioSample(dry, 1);
         float bp2out = bp2Filter.processAudioSample(dry, 1);
@@ -170,13 +170,13 @@ void Etagere::process(const ProcessArgs &args) {
 		float hpgain  = pow(20.,-gain4);
 
         outputs[LP_OUTPUT].value  = lpout*lpgain;
-        outputs[BP2_OUTPUT].value = bp2out*bp2gain;
-        outputs[BP3_OUTPUT].value = bp3out*bp3gain;
+        outputs[BP2_OUTPUT].setVoltage(bp2out*bp2gain);
+        outputs[BP3_OUTPUT].setVoltage(bp3out*bp3gain);
         outputs[HP_OUTPUT].value  = hpout*hpgain;
 		 
         float sumout = lpout*lpgain + hpout*hpgain +  bp2out*bp2gain + bp3out*bp3gain;
 
-        outputs[OUT_OUTPUT].value = sumout;
+        outputs[OUT_OUTPUT].setVoltage(sumout);
  
 	// Lights
     lights[CLIP5_LIGHT].setBrightnessSmooth( fabs(sumout) > 10. ? 1. : 0. );    

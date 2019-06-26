@@ -120,28 +120,28 @@ void Abr::process(const ProcessArgs &args)
     float out  = 0.;
     for(int i = 0; i < 8; i++)
     {
-        swState[i] = params[SWITCH1_PARAM + i].value > 0.5;
+        swState[i] = params[SWITCH1_PARAM + i].getValue() > 0.5;
         if ( !swState[i] ) {
-            if(inputs[INA1_INPUT + i].active)
+            if(inputs[INA1_INPUT + i].isConnected())
             {
-                float ina = inputs[INA1_INPUT + i].value;
-                outputs[OUT1_OUTPUT + i].value = ina;
+                float ina = inputs[INA1_INPUT + i].getVoltage();
+                outputs[OUT1_OUTPUT + i].setVoltage(ina);
                 outa += ina;
                 out += ina; 
             }
         } else {
-            if(inputs[INB1_INPUT + i].active)
+            if(inputs[INB1_INPUT + i].isConnected())
             {
-                float inb = inputs[INB1_INPUT + i].value;
-                outputs[OUT1_OUTPUT + i].value = inb;
+                float inb = inputs[INB1_INPUT + i].getVoltage();
+                outputs[OUT1_OUTPUT + i].setVoltage(inb);
                 outb += inb;
                 out += inb; 
             }
         } 
     }
-    outputs[SUMA_OUTPUT].value = outa;
-    outputs[SUMB_OUTPUT].value = outb;
-    outputs[SUM_OUTPUT].value = out;
+    outputs[SUMA_OUTPUT].setVoltage(outa);
+    outputs[SUMB_OUTPUT].setVoltage(outb);
+    outputs[SUM_OUTPUT].setVoltage(out);
 }
 
 struct AbrWidget : ModuleWidget { 

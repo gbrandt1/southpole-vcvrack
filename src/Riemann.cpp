@@ -158,10 +158,10 @@ void Riemann::process(const ProcessArgs &args) {
 	x0 = inputs[X_INPUT].normalize(0.)+6;
 	y0 = inputs[Y_INPUT].normalize(0.)+1;
 
-	//parts   = clamp( inputs[PARTS_INPUT].value/10. + params[PARTS_PARAM].value, 0., 1.)*(MAXPARTS-3.)+3.;
-	parts   = clamp( params[PARTS_PARAM].value, 0.f, 1.f)*(MAXPARTS-3.)+3.;
-	voicing = clamp( inputs[VOICING_INPUT].value/10. + params[VOICING_PARAM].value, -1.f, 1.f)*4.*parts;
-	transp  = clamp( inputs[TRANSP_INPUT].value/10. + params[TRANSP_PARAM].value, 0.f, 1.f)*11.;
+	//parts   = clamp( inputs[PARTS_INPUT].getVoltage()/10. + params[PARTS_PARAM].getValue(), 0., 1.)*(MAXPARTS-3.)+3.;
+	parts   = clamp( params[PARTS_PARAM].getValue(), 0.f, 1.f)*(MAXPARTS-3.)+3.;
+	voicing = clamp( inputs[VOICING_INPUT].getVoltage()/10. + params[VOICING_PARAM].getValue(), -1.f, 1.f)*4.*parts;
+	transp  = clamp( inputs[TRANSP_INPUT].getVoltage()/10. + params[TRANSP_PARAM].getValue(), 0.f, 1.f)*11.;
 
 	while (x0 <   0.) { x0 += 12.; }
 	while (x0 >= 12.) { x0 -= 12.; }
@@ -173,7 +173,7 @@ void Riemann::process(const ProcessArgs &args) {
 	nx = floor(x0);
 	ny = floor(y0);
 
-	if ( params[GROUP_PARAM].value > 0. ) {
+	if ( params[GROUP_PARAM].getValue() > 0. ) {
 		if ( y0-ny > x0-nx  ) {
 			chord_type = MAJ_CHORD;
 		} else {
@@ -190,7 +190,7 @@ void Riemann::process(const ProcessArgs &args) {
 	// (m/M) (M/A) (A/M) (M/m) (m/d) (d/m)
 
 	//type = DIM_CHORD;
-    if ( params[SUS_PARAM].value > 0.5 && fabs(y0-ny) < 0.3 ) {
+    if ( params[SUS_PARAM].getValue() > 0.5 && fabs(y0-ny) < 0.3 ) {
 		chord_type = SUS_CHORD;
 	}
 
@@ -266,13 +266,13 @@ void Riemann::process(const ProcessArgs &args) {
 	}	 
 
 	// tonic
-	outputs[N0_OUTPUT].value = octave[0]+transp/12.;
+	outputs[N0_OUTPUT].setVoltage(octave[0]+transp/12.);
 	// chord
 	for (int i=0; i<parts; i++) { 
-		outputs[N0_OUTPUT+i+1].value = octave[i]+(transp + chord[i]->pc)%12/12.;
+		outputs[N0_OUTPUT+i+1].setVoltage(octave[i]+(transp + chord[i]->pc)%12/12.);
 	}	
 	for (int i=parts; i< MAXPARTS; i++) { 
-		outputs[N0_OUTPUT+i+1].value = octave[0]+(transp + chord[0]->pc)%12/12.;
+		outputs[N0_OUTPUT+i+1].setVoltage(octave[0]+(transp + chord[0]->pc)%12/12.);
 	}	
 }
 

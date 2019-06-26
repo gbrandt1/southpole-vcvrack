@@ -28,8 +28,8 @@ struct Ftagn : Module {
 
 void Ftagn::process(const ProcessArgs &args) {
 
-	outputs[OUT1_OUTPUT].value = 0.0;
-	outputs[OUT2_OUTPUT].value = 0.0;
+	outputs[OUT1_OUTPUT].setVoltage(0.0);
+	outputs[OUT2_OUTPUT].setVoltage(0.0);
 }
 
 struct FtagnWidget : ModuleWidget { 

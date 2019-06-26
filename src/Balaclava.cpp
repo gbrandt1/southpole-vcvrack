@@ -53,19 +53,19 @@ void Balaclava::process(const ProcessArgs &args) {
 	float out = 0.0;
 
 	for (int i = 0; i < 4; i++) {
-		float in = inputs[IN1_INPUT + i].value * params[GAIN1_PARAM + i].value;
-		if (inputs[CV1_INPUT + i].active) {
-			float linear = fmaxf(inputs[CV1_INPUT + i].value / 5.0, 0.0);
+		float in = inputs[IN1_INPUT + i].getVoltage() * params[GAIN1_PARAM + i].getValue();
+		if (inputs[CV1_INPUT + i].isConnected()) {
+			float linear = fmaxf(inputs[CV1_INPUT + i].getVoltage() / 5.0, 0.0);
 			linear = clamp(linear, 0.0, 2.0);
 			const float base = 200.0;
 			float exponential = rescale(powf(base, linear / 2.0), 1.0, base, 0.0, 10.0);
-			in *= crossfade(exponential, linear, params[RESPONSE1_PARAM + i].value);
+			in *= crossfade(exponential, linear, params[RESPONSE1_PARAM + i].getValue());
 		}
 		out += in;
 		lights[OUT1_POS_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, out / 5.0));
 		lights[OUT1_NEG_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, -out / 5.0));
-		if (outputs[OUT1_OUTPUT + i].active) {
-			outputs[OUT1_OUTPUT + i].value = out;
+		if (outputs[OUT1_OUTPUT + i].isConnected()) {
+			outputs[OUT1_OUTPUT + i].setVoltage(out);
 			out = 0.0;
 		}
 	}

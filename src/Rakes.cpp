@@ -101,9 +101,9 @@ struct Rakes : Module {
 
 void Rakes::process(const ProcessArgs &args) {
 
-	//float mix  = clamp(params[MIX_PARAM].value + inputs[MIX_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
-	float mix    = params[MIX_PARAM].value;
-	float rate   = clamp(params[DECAY_PARAM].value + inputs[DECAY_INPUT].normalize(0.) / 10.0, 0.0f, .99f);
+	//float mix  = clamp(params[MIX_PARAM].getValue() + inputs[MIX_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
+	float mix    = params[MIX_PARAM].getValue();
+	float rate   = clamp(params[DECAY_PARAM].getValue() + inputs[DECAY_INPUT].normalize(0.) / 10.0, 0.0f, .99f);
 
 	const float f0 = 261.626;
 	float inl  = inputs[INL_INPUT].normalize(0.);
@@ -114,15 +114,15 @@ void Rakes::process(const ProcessArgs &args) {
 	float sumgain = 1.;
 
 	for (int j=0; j < NBUF; j++) {
-		//float gain = clamp(params[GAIN1_PARAM + j].value + inputs[GAIN1_INPUT + j].normalize(0.) / 10.0, 0.0, 1.0);
-		float gain = params[GAIN1_PARAM + j].value;
+		//float gain = clamp(params[GAIN1_PARAM + j].getValue() + inputs[GAIN1_INPUT + j].normalize(0.) / 10.0, 0.0, 1.0);
+		float gain = params[GAIN1_PARAM + j].getValue();
 		if (gain < 1e-3) continue;
 		sumgain += gain;
 
-		float tune = clamp(params[TUNE1_PARAM + j].value + inputs[TUNE1_INPUT + j].normalize(0.), -5.0, 5.5);
-		float fine = clamp(params[FINE1_PARAM + j].value, -1.0, 1.0);
+		float tune = clamp(params[TUNE1_PARAM + j].getValue() + inputs[TUNE1_INPUT + j].normalize(0.), -5.0, 5.5);
+		float fine = clamp(params[FINE1_PARAM + j].getValue(), -1.0, 1.0);
 
-		if ( params[QUANT_PARAM].value > 0.5 ) {
+		if ( params[QUANT_PARAM].getValue() > 0.5 ) {
 			tune = round(12.*tune)/12.;
 		}
 
@@ -170,8 +170,8 @@ void Rakes::process(const ProcessArgs &args) {
 	sumoutl = clamp( dcblock(sumoutl) / sumgain, -10., 10.); //in + gain*out;
 	sumoutr = clamp( dcblock(sumoutr) / sumgain, -10., 10.); //in + gain*out;
 
-	outputs[OUTL_OUTPUT].value = crossfade(inl,sumoutl,mix);
-	outputs[OUTR_OUTPUT].value = crossfade(inr,sumoutr,mix);
+	outputs[OUTL_OUTPUT].setVoltage(crossfade(inl,sumoutl,mix));
+	outputs[OUTR_OUTPUT].setVoltage(crossfade(inr,sumoutr,mix));
 }
 
 struct RakesWidget : ModuleWidget { 

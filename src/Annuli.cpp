@@ -126,22 +126,22 @@ void Annuli::process(const ProcessArgs &args) {
 	// Get input
 	if (!inputBuffer.full()) {
 		Frame<1> f;
-		f.samples[0] = inputs[IN_INPUT].value / 5.0;
+		f.samples[0] = inputs[IN_INPUT].getVoltage() / 5.0;
 		inputBuffer.push(f);
 	}
 
 	if (!strum) {
-		strum = inputs[STRUM_INPUT].value >= 1.0;
+		strum = inputs[STRUM_INPUT].getVoltage() >= 1.0;
 	}
 
 	// Polyphony / model
-	if (polyphonyTrigger.process(params[POLYPHONY_PARAM].value)) {
+	if (polyphonyTrigger.process(params[POLYPHONY_PARAM].getValue())) {
 		polyphonyMode = (polyphonyMode + 1) % 3;
 	}
 	lights[POLYPHONY_GREEN_LIGHT].value = (polyphonyMode == 0 || polyphonyMode == 1) ? 1.0 : 0.0;
 	lights[POLYPHONY_RED_LIGHT].value = (polyphonyMode == 1 || polyphonyMode == 2) ? 1.0 : 0.0;
 
-	if (modelTrigger.process(params[RESONATOR_PARAM].value)) {
+	if (modelTrigger.process(params[RESONATOR_PARAM].getValue())) {
 		model = (rings::ResonatorModel) ((model + 1) % 3);
 	}
 	int modelColor = model % 3;
@@ -172,26 +172,26 @@ void Annuli::process(const ProcessArgs &args) {
 
 		// Patch
 		rings::Patch patch;
-		float structure 	= params[STRUCTURE_PARAM].value + 3.3*quadraticBipolar(params[STRUCTURE_MOD_PARAM].value)*inputs[STRUCTURE_MOD_INPUT].value/5.0;
+		float structure 	= params[STRUCTURE_PARAM].getValue() + 3.3*quadraticBipolar(params[STRUCTURE_MOD_PARAM].getValue())*inputs[STRUCTURE_MOD_INPUT].getVoltage()/5.0;
 		patch.structure 	= clamp(structure, 0.0f, 0.9995f);
-		patch.brightness 	= clamp(params[BRIGHTNESS_PARAM].value + 3.3*quadraticBipolar(params[BRIGHTNESS_MOD_PARAM].value)*inputs[BRIGHTNESS_MOD_INPUT].value/5.0, 0.0f, 1.0f);
-		patch.damping 		= clamp(params[DAMPING_PARAM].value + 3.3*quadraticBipolar(params[DAMPING_MOD_PARAM].value)*inputs[DAMPING_MOD_INPUT].value/5.0, 0.0f, 0.9995f);
-		patch.position	 	= clamp(params[POSITION_PARAM].value + 3.3*quadraticBipolar(params[POSITION_MOD_PARAM].value)*inputs[POSITION_MOD_INPUT].value/5.0, 0.0f, 0.9995f);
+		patch.brightness 	= clamp(params[BRIGHTNESS_PARAM].getValue() + 3.3*quadraticBipolar(params[BRIGHTNESS_MOD_PARAM].getValue())*inputs[BRIGHTNESS_MOD_INPUT].getVoltage()/5.0, 0.0f, 1.0f);
+		patch.damping 		= clamp(params[DAMPING_PARAM].getValue() + 3.3*quadraticBipolar(params[DAMPING_MOD_PARAM].getValue())*inputs[DAMPING_MOD_INPUT].getVoltage()/5.0, 0.0f, 0.9995f);
+		patch.position	 	= clamp(params[POSITION_PARAM].getValue() + 3.3*quadraticBipolar(params[POSITION_MOD_PARAM].getValue())*inputs[POSITION_MOD_INPUT].getVoltage()/5.0, 0.0f, 0.9995f);
 
 		// Performance
 		rings::PerformanceState performance_state;
 		performance_state.note = 12.0*inputs[PITCH_INPUT].normalize(1/12.0);
-		float transpose = params[FREQUENCY_PARAM].value;
+		float transpose = params[FREQUENCY_PARAM].getValue();
 		// Quantize transpose if pitch input is connected
-		if (inputs[PITCH_INPUT].active) {
+		if (inputs[PITCH_INPUT].isConnected()) {
 			transpose = roundf(transpose);
 		}
 		performance_state.tonic = 12.0 + clamp(transpose, 0.0f, 60.0f);
-		performance_state.fm = clamp(48.0 * 3.3*quarticBipolar(params[FREQUENCY_MOD_PARAM].value) * inputs[FREQUENCY_MOD_INPUT].normalize(1.0)/5.0, -48.0f, 48.0f);
+		performance_state.fm = clamp(48.0 * 3.3*quarticBipolar(params[FREQUENCY_MOD_PARAM].getValue()) * inputs[FREQUENCY_MOD_INPUT].normalize(1.0)/5.0, -48.0f, 48.0f);
 
-		performance_state.internal_exciter = !inputs[IN_INPUT].active;
-		performance_state.internal_strum = !inputs[STRUM_INPUT].active;
-		performance_state.internal_note = !inputs[PITCH_INPUT].active;
+		performance_state.internal_exciter = !inputs[IN_INPUT].isConnected();
+		performance_state.internal_strum = !inputs[STRUM_INPUT].isConnected();
+		performance_state.internal_note = !inputs[PITCH_INPUT].isConnected();
 
 		// TODO
 		// "Normalized to a step detector on the V/OCT input and a transient detector on the IN input."
@@ -233,14 +233,14 @@ void Annuli::process(const ProcessArgs &args) {
 	if (!outputBuffer.empty()) {
 		Frame<2> outputFrame = outputBuffer.shift();
 		// "Note that you need to insert a jack into each output to split the signals: when only one jack is inserted, both signals are mixed together."
-		if (outputs[ODD_OUTPUT].active && outputs[EVEN_OUTPUT].active) {
-			outputs[ODD_OUTPUT].value = clamp(outputFrame.samples[0], -1.0f, 1.0f)*5.0;
-			outputs[EVEN_OUTPUT].value = clamp(outputFrame.samples[1], -1.0f, 1.0f)*5.0;
+		if (outputs[ODD_OUTPUT].isConnected() && outputs[EVEN_OUTPUT].isConnected()) {
+			outputs[ODD_OUTPUT].setVoltage(clamp(outputFrame.samples[0], -1.0f, 1.0f)*5.0);
+			outputs[EVEN_OUTPUT].setVoltage(clamp(outputFrame.samples[1], -1.0f, 1.0f)*5.0);
 		}
 		else {
 			float v = clamp(outputFrame.samples[0] + outputFrame.samples[1], -1.0f, 1.0f)*5.0;
-			outputs[ODD_OUTPUT].value = v;
-			outputs[EVEN_OUTPUT].value = v;
+			outputs[ODD_OUTPUT].setVoltage(v);
+			outputs[EVEN_OUTPUT].setVoltage(v);
 		}
 	}
 }

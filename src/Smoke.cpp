@@ -153,13 +153,13 @@ void Smoke::process(const ProcessArgs &args) {
   // Get input
   if (!inputBuffer.full()) {
     //Frame<2> inputFrame;
-    inputFrame.samples[0] = inputs[IN_L_INPUT].value * params[IN_GAIN_PARAM].value / 5.0;
-    inputFrame.samples[1] = inputs[IN_R_INPUT].active ? inputs[IN_R_INPUT].value * params[IN_GAIN_PARAM].value / 5.0 : inputFrame.samples[0];
+    inputFrame.samples[0] = inputs[IN_L_INPUT].getVoltage() * params[IN_GAIN_PARAM].getValue() / 5.0;
+    inputFrame.samples[1] = inputs[IN_R_INPUT].isConnected() ? inputs[IN_R_INPUT].getVoltage() * params[IN_GAIN_PARAM].getValue() / 5.0 : inputFrame.samples[0];
     inputBuffer.push(inputFrame);
   }
 
   // Trigger
-  if (inputs[TRIG_INPUT].value >= 1.0) {
+  if (inputs[TRIG_INPUT].getVoltage() >= 1.0) {
     triggered = true;
   }
 
@@ -202,7 +202,7 @@ void Smoke::process(const ProcessArgs &args) {
     processor->Prepare();
 
     
-    if (freezeTrigger.process(params[FREEZE_PARAM].value)) {
+    if (freezeTrigger.process(params[FREEZE_PARAM].getValue())) {
        freeze = !freeze;
     } 
     
@@ -211,17 +211,17 @@ void Smoke::process(const ProcessArgs &args) {
     clouds::Parameters* p = processor->mutable_parameters();
     p->trigger = triggered;
     p->gate = triggered;
-    p->freeze = (inputs[FREEZE_INPUT].value >= 1.0 || freeze);
-    p->position = clamp(params[POSITION_PARAM].value + inputs[POSITION_INPUT].value / 5.0, 0.0f, 1.0f);
-    p->size = clamp(params[SIZE_PARAM].value + inputs[SIZE_INPUT].value / 5.0, 0.0f, 1.0f);
-    p->pitch = clamp((params[PITCH_PARAM].value + inputs[PITCH_INPUT].value) * 12.0, -48.0f, 48.0f);
-    p->density = clamp(params[DENSITY_PARAM].value + inputs[DENSITY_INPUT].value / 5.0, 0.0f, 1.0f);
-    p->texture = clamp(params[TEXTURE_PARAM].value + inputs[TEXTURE_INPUT].value / 5.0, 0.0f, 1.0f);
-    float blend = clamp(params[BLEND_PARAM].value + inputs[BLEND_INPUT].value / 5.0, 0.0f, 1.0f);
+    p->freeze = (inputs[FREEZE_INPUT].getVoltage() >= 1.0 || freeze);
+    p->position = clamp(params[POSITION_PARAM].getValue() + inputs[POSITION_INPUT].getVoltage() / 5.0, 0.0f, 1.0f);
+    p->size = clamp(params[SIZE_PARAM].getValue() + inputs[SIZE_INPUT].getVoltage() / 5.0, 0.0f, 1.0f);
+    p->pitch = clamp((params[PITCH_PARAM].getValue() + inputs[PITCH_INPUT].getVoltage()) * 12.0, -48.0f, 48.0f);
+    p->density = clamp(params[DENSITY_PARAM].getValue() + inputs[DENSITY_INPUT].getVoltage() / 5.0, 0.0f, 1.0f);
+    p->texture = clamp(params[TEXTURE_PARAM].getValue() + inputs[TEXTURE_INPUT].getVoltage() / 5.0, 0.0f, 1.0f);
+    float blend = clamp(params[BLEND_PARAM].getValue() + inputs[BLEND_INPUT].getVoltage() / 5.0, 0.0f, 1.0f);
     p->dry_wet = blend;
-    p->stereo_spread =  clamp(params[SPREAD_PARAM].value + inputs[SPREAD_INPUT].value / 5.0, 0.0f, 1.0f);;
-    p->feedback =  clamp(params[FEEDBACK_PARAM].value + inputs[FEEDBACK_INPUT].value / 5.0, 0.0f, 1.0f);;
-    p->reverb =  clamp(params[REVERB_PARAM].value + inputs[REVERB_INPUT].value / 5.0, 0.0f, 1.0f);;
+    p->stereo_spread =  clamp(params[SPREAD_PARAM].getValue() + inputs[SPREAD_INPUT].getVoltage() / 5.0, 0.0f, 1.0f);;
+    p->feedback =  clamp(params[FEEDBACK_PARAM].getValue() + inputs[FEEDBACK_INPUT].getVoltage() / 5.0, 0.0f, 1.0f);;
+    p->reverb =  clamp(params[REVERB_PARAM].getValue() + inputs[REVERB_INPUT].getVoltage() / 5.0, 0.0f, 1.0f);;
 
     clouds::ShortFrame output[32];
     processor->Process(input, output, 32);
@@ -250,8 +250,8 @@ void Smoke::process(const ProcessArgs &args) {
   Frame<2> outputFrame;
   if (!outputBuffer.empty()) {
     outputFrame = outputBuffer.shift();
-    outputs[OUT_L_OUTPUT].value = 5.0 * outputFrame.samples[0];
-    outputs[OUT_R_OUTPUT].value = 5.0 * outputFrame.samples[1];
+    outputs[OUT_L_OUTPUT].setVoltage(5.0 * outputFrame.samples[0]);
+    outputs[OUT_R_OUTPUT].setVoltage(5.0 * outputFrame.samples[1]);
   }
 
 	// Lights

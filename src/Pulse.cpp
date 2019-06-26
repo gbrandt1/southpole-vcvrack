@@ -80,11 +80,11 @@ void Pulse::process(const ProcessArgs &args) {
 
 	bool triggered = false;
 
-	reset  = params[RESET_PARAM].value;
-	repeat = params[REPEAT_PARAM].value;
-	range  = params[RANGE_PARAM].value;
+	reset  = params[RESET_PARAM].getValue();
+	repeat = params[REPEAT_PARAM].getValue();
+	range  = params[RANGE_PARAM].getValue();
 
-    if (triggerBtn.process(params[TRIG_PARAM].value)) {
+    if (triggerBtn.process(params[TRIG_PARAM].getValue())) {
 		triggered = true;	
 	}
 
@@ -103,15 +103,15 @@ void Pulse::process(const ProcessArgs &args) {
 	float dt = 1e-3*args.sampleRate;
 	float sr = args.sampleRate;
 
-	amp  = clamp(params[AMP_PARAM].value + inputs[AMP_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
-	slew = clamp(params[SLEW_PARAM].value + inputs[SLEW_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
+	amp  = clamp(params[AMP_PARAM].getValue() + inputs[AMP_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
+	slew = clamp(params[SLEW_PARAM].getValue() + inputs[SLEW_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
 	slew = pow(2.,(1.-slew)*log2(sr))/sr;
 	if (range) slew *= .1;
 
-	float delayTarget_ = clamp(params[DELAY_PARAM].value + inputs[DELAY_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
-	float gateTarget_  = clamp(params[TIME_PARAM].value + inputs[TIME_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
+	float delayTarget_ = clamp(params[DELAY_PARAM].getValue() + inputs[DELAY_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
+	float gateTarget_  = clamp(params[TIME_PARAM].getValue() + inputs[TIME_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
 
-	if (inputs[CLOCK_INPUT].active) {
+	if (inputs[CLOCK_INPUT].isConnected()) {
 		clockt++;
 
 		delayTarget = clockp*durations[int((ndurations-1)*delayTarget_)];
@@ -162,7 +162,7 @@ void Pulse::process(const ProcessArgs &args) {
 		if (level < 0.)	level = 0.;
 	}
 
-	outputs[CLOCK_OUTPUT].value = 10.*clkPulse.process(1.0 / args.sampleRate);
+	outputs[CLOCK_OUTPUT].setVoltage(10.*clkPulse.process(1.0 / args.sampleRate));
 	outputs[EOC_OUTPUT].value   = 10.*eocPulse.process(1.0 / args.sampleRate);
 	outputs[GATE_OUTPUT].value  = clamp( 10.f * level * amp, -10.f, 10.f );
 

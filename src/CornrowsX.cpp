@@ -152,18 +152,18 @@ CornrowsX::CornrowsX() {
 
 void CornrowsX::process(const ProcessArgs &args) {
 
-	settings.quantizer_scale = params[SCALE_PARAM].value * 48.; //sizeof(quantization_values);
-	settings.quantizer_root  = params[ROOT_PARAM].value * 11.;
-	settings.pitch_range = params[PITCH_RANGE_PARAM].value*4.;
-	settings.pitch_octave = params[PITCH_OCTAVE_PARAM].value*4.;
-	settings.trig_delay  = params[TRIG_DELAY_PARAM].value*6.;
-	settings.sample_rate = params[RATE_PARAM].value*6.;
-	settings.resolution  = params[BITS_PARAM].value*6.;
-	settings.ad_attack 	= params[ATT_PARAM].value*15.;
-	settings.ad_decay  	= params[DEC_PARAM].value*15.;
-	settings.ad_timbre 	= params[AD_TIMBRE_PARAM].value*15.;
-	settings.ad_fm	   	= params[AD_MODULATION_PARAM].value*15.;
-	settings.ad_color  	= params[AD_COLOR_PARAM].value*15.;
+	settings.quantizer_scale = params[SCALE_PARAM].getValue() * 48.; //sizeof(quantization_values);
+	settings.quantizer_root  = params[ROOT_PARAM].getValue() * 11.;
+	settings.pitch_range = params[PITCH_RANGE_PARAM].getValue()*4.;
+	settings.pitch_octave = params[PITCH_OCTAVE_PARAM].getValue()*4.;
+	settings.trig_delay  = params[TRIG_DELAY_PARAM].getValue()*6.;
+	settings.sample_rate = params[RATE_PARAM].getValue()*6.;
+	settings.resolution  = params[BITS_PARAM].getValue()*6.;
+	settings.ad_attack 	= params[ATT_PARAM].getValue()*15.;
+	settings.ad_decay  	= params[DEC_PARAM].getValue()*15.;
+	settings.ad_timbre 	= params[AD_TIMBRE_PARAM].getValue()*15.;
+	settings.ad_fm	   	= params[AD_MODULATION_PARAM].getValue()*15.;
+	settings.ad_color  	= params[AD_COLOR_PARAM].getValue()*15.;
 
 	// Display - return to SHAPE after 2s
 	if (last_setting_changed != braids::SETTING_OSCILLATOR_SHAPE) {
@@ -184,7 +184,7 @@ void CornrowsX::process(const ProcessArgs &args) {
 	}	
 
 	// Trigger
-	bool trig = inputs[TRIG_INPUT].value >= 1.0;
+	bool trig = inputs[TRIG_INPUT].getVoltage() >= 1.0;
 	if (!lastTrig && trig) {
 		trigger_detected_flag = trig;
 	}
@@ -215,13 +215,13 @@ void CornrowsX::process(const ProcessArgs &args) {
 		envelope.Update( settings.ad_attack*8, settings.ad_decay*8 );
 	  	uint32_t ad_value = envelope.Render();
 
-		float fm = params[FM_PARAM].value * inputs[FM_INPUT].value;
+		float fm = params[FM_PARAM].getValue() * inputs[FM_INPUT].getVoltage();
 
 		// Set shape
 		if (paques) {
 			osc.set_shape(braids::MACRO_OSC_SHAPE_QUESTION_MARK);	
 		} else {
-			int shape = roundf(params[SHAPE_PARAM].value * braids::MACRO_OSC_SHAPE_LAST_ACCESSIBLE_FROM_META);
+			int shape = roundf(params[SHAPE_PARAM].getValue() * braids::MACRO_OSC_SHAPE_LAST_ACCESSIBLE_FROM_META);
 			if (settings.meta_modulation) {
 				shape += roundf(fm / 10.0 * braids::MACRO_OSC_SHAPE_LAST_ACCESSIBLE_FROM_META);
 			}
@@ -232,8 +232,8 @@ void CornrowsX::process(const ProcessArgs &args) {
 		}
 
 		// Set timbre/modulation
-		float timbre = params[TIMBRE_PARAM].value + params[MODULATION_PARAM].value * inputs[TIMBRE_INPUT].value / 5.0;
-		float modulation = params[COLOR_PARAM].value + inputs[COLOR_INPUT].value / 5.0;
+		float timbre = params[TIMBRE_PARAM].getValue() + params[MODULATION_PARAM].getValue() * inputs[TIMBRE_INPUT].getVoltage() / 5.0;
+		float modulation = params[COLOR_PARAM].getValue() + inputs[COLOR_INPUT].getVoltage() / 5.0;
 
 	    timbre += ad_value/65535. * settings.ad_timbre / 16.;
 	    modulation += ad_value/65535. * settings.ad_color / 16.;
@@ -243,7 +243,7 @@ void CornrowsX::process(const ProcessArgs &args) {
 		osc.set_parameters(param1, param2);
 
 		// Set pitch
-		float pitchV = inputs[PITCH_INPUT].value + params[COARSE_PARAM].value + params[FINE_PARAM].value / 12.0;
+		float pitchV = inputs[PITCH_INPUT].getVoltage() + params[COARSE_PARAM].getValue() + params[FINE_PARAM].getValue() / 12.0;
 		if (!settings.meta_modulation)
 			pitchV += fm;
 		if (lowCpu)
@@ -343,7 +343,7 @@ void CornrowsX::process(const ProcessArgs &args) {
 	// Output
 	if (!outputBuffer.empty()) {
 		Frame<1> f = outputBuffer.shift();
-		outputs[OUT_OUTPUT].value = 5.0 * f.samples[0];
+		outputs[OUT_OUTPUT].setVoltage(5.0 * f.samples[0]);
 	}
 }
 

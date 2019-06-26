@@ -242,11 +242,11 @@ void Gnome::process(const ProcessArgs &args) {
 
 	// LFO
 
-	lfo.setPitch(params[LFOPITCH_PARAM].value  + params[LFOFM_PARAM].value * inputs[LFOFM_INPUT].value);
+	lfo.setPitch(params[LFOPITCH_PARAM].getValue()  + params[LFOFM_PARAM].getValue() * inputs[LFOFM_INPUT].getVoltage());
 	lfo.step(1.0 / args.sampleRate);
-	//lfo.setReset(inputs[RESET_INPUT].value);
+	//lfo.setReset(inputs[RESET_INPUT].getVoltage());
 
-	float wave = params[LFOWAVE_PARAM].value; // + inputs[WAVE_INPUT].value;
+	float wave = params[LFOWAVE_PARAM].getValue(); // + inputs[WAVE_INPUT].getVoltage();
 	//wave = clamp(wave, 0.0, 3.0);
 	float interp;
 	if (wave < 1.0)	 	 interp = crossfade(.5-lfo.saw(), lfo.tri(), wave);
@@ -254,22 +254,22 @@ void Gnome::process(const ProcessArgs &args) {
 	else if (wave < 3.0) interp = crossfade(lfo.saw(), lfo.sqr(), wave - 2.0);
 	else				 interp = crossfade(lfo.sqr(), lfo.sh(), wave - 3.0);
 
-	outputs[LFO_OUTPUT].value = 5.0 * interp;
+	outputs[LFO_OUTPUT].setVoltage(5.0 * interp);
 	
 	//lights[LFO_LIGHT].value = interp;
 
 	// ADSR
 
-	float attack  = params[ATTACK_PARAM].value;
-	float decay   = params[DECAY_PARAM].value;
-	float sustain = params[SUSTAIN_PARAM].value;
-	float release = params[RELEASE_PARAM].value;
+	float attack  = params[ATTACK_PARAM].getValue();
+	float decay   = params[DECAY_PARAM].getValue();
+	float sustain = params[SUSTAIN_PARAM].getValue();
+	float release = params[RELEASE_PARAM].getValue();
 
 	//adsr1.process(attack,decay,sustain,release);
 
 	// Gate and trigger
-	bool gated = (params[GATE_PARAM].value + inputs[GATE_INPUT].value) >= 1.0;
-	//if (envtrigger.process(inputs[GATE_INPUT].value))
+	bool gated = (params[GATE_PARAM].getValue() + inputs[GATE_INPUT].getVoltage()) >= 1.0;
+	//if (envtrigger.process(inputs[GATE_INPUT].getVoltage()))
 	//	decaying = false;
 
 	const float base = 20000.0;
@@ -299,7 +299,7 @@ void Gnome::process(const ProcessArgs &args) {
 		decaying = false;
 	}
 
-	outputs[ENVELOPE_OUTPUT].value = 10.*env;
+	outputs[ENVELOPE_OUTPUT].setVoltage(10.*env);
 	
 	lights[ENV_LIGHT].value = env;
 
@@ -307,9 +307,9 @@ void Gnome::process(const ProcessArgs &args) {
 	// VCO
 
 	float pitchCv = 12.0 * inputs[PITCH_INPUT].normalize(0.);
-	float fm = 10. * params[FM_PARAM].value * outputs[LFO_OUTPUT].value;
-	oscillator.setPitch(params[PITCH_PARAM].value, pitchCv + fm);
-	oscillator.setPulseWidth(params[PW_PARAM].value + (5.0+inputs[PW_INPUT].normalize(0.)) / 10.0);
+	float fm = 10. * params[FM_PARAM].getValue() * outputs[LFO_OUTPUT].value;
+	oscillator.setPitch(params[PITCH_PARAM].getValue(), pitchCv + fm);
+	oscillator.setPulseWidth(params[PW_PARAM].getValue() + (5.0+inputs[PW_INPUT].normalize(0.)) / 10.0);
 
 	oscillator.process(1.0 / args.sampleRate);
 
@@ -318,7 +318,7 @@ void Gnome::process(const ProcessArgs &args) {
 	float sqr = 5.0 * oscillator.sqr();
 
 	// Set output
-	float oscwave = params[OSC_PARAM].value + inputs[OSC_INPUT].normalize(0.)/10.;
+	float oscwave = params[OSC_PARAM].getValue() + inputs[OSC_INPUT].normalize(0.)/10.;
 	//wave = clamp(wave, 0.0, 3.0);
 	float osc = 0.;
 	if (oscwave < 1.0)  osc = crossfade(tri, saw, oscwave);
@@ -330,20 +330,20 @@ void Gnome::process(const ProcessArgs &args) {
 	float noise = 2.3548 * random::normal();
 
 	float sub =	0; 
-	float subwave = params[SUBWAVE_PARAM].value;
+	float subwave = params[SUBWAVE_PARAM].getValue();
 	if    (subwave < 1.0) sub = crossfade(sub1, sub2, subwave);
 	else  sub = crossfade(sub2, noise, subwave - 1.0);
 
-	float submix = params[Gnome::SUB_PARAM].value;
-	float extmix = params[Gnome::EXT_PARAM].value;
+	float submix = params[Gnome::SUB_PARAM].getValue();
+	float extmix = params[Gnome::EXT_PARAM].getValue();
 
-	float ext = inputs[EXT_INPUT].value;
+	float ext = inputs[EXT_INPUT].getVoltage();
 
 	osc = crossfade( osc, sub, submix );
 
 	float vco_out = crossfade( osc, ext, extmix );
 
-	outputs[VCO_OUTPUT].value = vco_out;
+	outputs[VCO_OUTPUT].setVoltage(vco_out);
 
 
 	// VCF
@@ -355,11 +355,11 @@ void Gnome::process(const ProcessArgs &args) {
 
 	float freq = clamp(
 	  inputs[VCFFREQ_INPUT].normalize(0.)
-	+ params[VCFPITCH_PARAM].value 
-	+ params[VCFENV_PARAM].value * 11.*env
-	+ params[VCFLFO_PARAM].value * 11.*interp
+	+ params[VCFPITCH_PARAM].getValue() 
+	+ params[VCFENV_PARAM].getValue() * 11.*env
+	+ params[VCFLFO_PARAM].getValue() * 11.*interp
 	, -4.0f, 6.0f);
-	float reso = params[VCFQ_PARAM].value;
+	float reso = params[VCFQ_PARAM].getValue();
 
   	const float f0 = 261.626;
     float cutoff  = f0 * powf(2.f, freq);
@@ -379,7 +379,7 @@ void Gnome::process(const ProcessArgs &args) {
     float hpout  = hpfilter.processAudioSample( vco_out, 1);
     float ntout  = ntfilter.processAudioSample( vco_out, 1);
 
-	float ftyp = params[VCFTYPE_PARAM].value;
+	float ftyp = params[VCFTYPE_PARAM].getValue();
 	float fout;
 	if (ftyp < 1.0)	 	 fout = crossfade(lpout, bpout, ftyp);
 	else if (ftyp < 2.0) fout = crossfade(bpout, hpout, ftyp - 1.0);
@@ -387,11 +387,11 @@ void Gnome::process(const ProcessArgs &args) {
 
 	fout = fout - 0.8*reso*fout;
 
-	outputs[VCF_OUTPUT].value = fout;
+	outputs[VCF_OUTPUT].setVoltage(fout);
 
 	// VCA
 
-	outputs[AUDIO_OUTPUT].value = fout * env;
+	outputs[AUDIO_OUTPUT].setVoltage(fout * env);
 
 	lights[PHASE_POS_LIGHT].setBrightnessSmooth(fmaxf(0.0, lfo.light()));
 	lights[PHASE_NEG_LIGHT].setBrightnessSmooth(fmaxf(0.0,-lfo.light()));

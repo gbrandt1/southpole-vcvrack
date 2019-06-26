@@ -130,25 +130,25 @@ void But::process(const ProcessArgs &args)
     float outb = 0.;
     for(int i = 0; i < 8; i++)
     {
-        swState[i] = params[SWITCH1_PARAM + i].value > 0.5;
+        swState[i] = params[SWITCH1_PARAM + i].getValue() > 0.5;
         float in = 0.;
-        if(inputs[IN1_INPUT + i].active)
+        if(inputs[IN1_INPUT + i].isConnected())
         {
-            in = inputs[IN1_INPUT + i].value;
+            in = inputs[IN1_INPUT + i].getVoltage();
         }
         if ( !swState[i] ) {
-            outputs[OUTA1_OUTPUT + i].value = in;
+            outputs[OUTA1_OUTPUT + i].setVoltage(in);
             outa += in;
         } else {
-           outputs[OUTB1_OUTPUT + i].value = in;
+           outputs[OUTB1_OUTPUT + i].setVoltage(in);
            outb += in; 
         } 
     //    lights[SWITCH1_LIGHT + i].setBrightness(swState[i] ? 0.9 : 0.0);
     }
-    outputs[SUMA1_OUTPUT].value = outa;
-    outputs[SUMA2_OUTPUT].value = outa;
-    outputs[SUMB1_OUTPUT].value = outb;
-    outputs[SUMB2_OUTPUT].value = outb;
+    outputs[SUMA1_OUTPUT].setVoltage(outa);
+    outputs[SUMA2_OUTPUT].setVoltage(outa);
+    outputs[SUMB1_OUTPUT].setVoltage(outb);
+    outputs[SUMB2_OUTPUT].setVoltage(outb);
 }
 
 struct ButWidget : ModuleWidget { 

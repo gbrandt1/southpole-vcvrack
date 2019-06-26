@@ -78,8 +78,8 @@ void Fuse::process(const ProcessArgs &args) {
 
   	bool nextStep = false;
 
-	if (inputs[RESET_INPUT].active) {
-		if (resetTrigger.process(inputs[RESET_INPUT].value)) {
+	if (inputs[RESET_INPUT].isConnected()) {
+		if (resetTrigger.process(inputs[RESET_INPUT].getVoltage())) {
 			curstep = maxsteps;
 			for (unsigned int i=0; i<4; i++) {
 				armTrigger[i].reset();
@@ -89,8 +89,8 @@ void Fuse::process(const ProcessArgs &args) {
 		}
 	}
 
-	if (inputs[CLK_INPUT].active) {
-		if (clockTrigger.process(inputs[CLK_INPUT].value)) {
+	if (inputs[CLK_INPUT].isConnected()) {
+		if (clockTrigger.process(inputs[CLK_INPUT].getVoltage())) {
 			nextStep = true;
 		}
 	}
@@ -114,7 +114,7 @@ void Fuse::process(const ProcessArgs &args) {
 
 	for (unsigned int i=0; i<4; i++) {
 
-		if ( params[SWITCH1_PARAM + i].value > 0. ) armed[i] = true;
+		if ( params[SWITCH1_PARAM + i].getValue() > 0. ) armed[i] = true;
 		if ( armTrigger[i].process(inputs[ARM1_INPUT + i].normalize(0.))) armed[i] = true;
 		
 		lights[ARM1_LIGHT + i].setBrightness( armed[i] ? 1.0 : 0.0 );
@@ -123,7 +123,7 @@ void Fuse::process(const ProcessArgs &args) {
 
 		if (gateOn[i]) p = true;
 		
-		outputs[OUT1_OUTPUT + i].value =  p ? 10.0 : 0.0;
+		outputs[OUT1_OUTPUT + i].setVoltage( p ? 10.0 : 0.0);
 		
 	}
 };
