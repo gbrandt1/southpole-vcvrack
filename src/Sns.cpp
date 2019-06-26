@@ -293,8 +293,8 @@ void Sns::process(const ProcessArgs &args) {
 		}
 	}
 
-	bool gpulse = gatePulse.process(1.0 / engineGetSampleRate());
-	bool apulse = accentPulse.process(1.0 / engineGetSampleRate());
+	bool gpulse = gatePulse.process(1.0 / args.sampleRate);
+	bool apulse = accentPulse.process(1.0 / args.sampleRate);
 
 	if ( gateMode == TURING_MODE ) { 
 		outputs[GATE_OUTPUT].value   = 10.0*(turing / pow(2.,par_l) - 1.);

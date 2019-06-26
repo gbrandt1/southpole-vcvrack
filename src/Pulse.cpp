@@ -100,8 +100,8 @@ void Pulse::process(const ProcessArgs &args) {
 		clockt = 0;
 	}
 
-	float dt = 1e-3*engineGetSampleRate();
-	float sr = engineGetSampleRate();
+	float dt = 1e-3*args.sampleRate;
+	float sr = args.sampleRate;
 
 	amp  = clamp(params[AMP_PARAM].value + inputs[AMP_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
 	slew = clamp(params[SLEW_PARAM].value + inputs[SLEW_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
@@ -162,8 +162,8 @@ void Pulse::process(const ProcessArgs &args) {
 		if (level < 0.)	level = 0.;
 	}
 
-	outputs[CLOCK_OUTPUT].value = 10.*clkPulse.process(1.0 / engineGetSampleRate());
-	outputs[EOC_OUTPUT].value   = 10.*eocPulse.process(1.0 / engineGetSampleRate());
+	outputs[CLOCK_OUTPUT].value = 10.*clkPulse.process(1.0 / args.sampleRate);
+	outputs[EOC_OUTPUT].value   = 10.*eocPulse.process(1.0 / args.sampleRate);
 	outputs[GATE_OUTPUT].value  = clamp( 10.f * level * amp, -10.f, 10.f );
 
 	lights[EOC_LIGHT].setBrightnessSmooth( outputs[EOC_OUTPUT].value );

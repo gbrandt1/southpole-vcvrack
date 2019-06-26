@@ -48,7 +48,7 @@ struct VoltageControlledOscillator {
 		// Adjust pitch slew
 		if (++pitchSlewIndex > 32) {
 			const float pitchSlewTau = 100.0; // Time constant for leaky integrator in seconds
-			pitchSlew += (randomNormal() - pitchSlew / pitchSlewTau) / engineGetSampleRate();
+			pitchSlew += (randomNormal() - pitchSlew / pitchSlewTau) / args.sampleRate;
 			pitchSlewIndex = 0;
 		}
 
@@ -243,7 +243,7 @@ void Gnome::process(const ProcessArgs &args) {
 	// LFO
 
 	lfo.setPitch(params[LFOPITCH_PARAM].value  + params[LFOFM_PARAM].value * inputs[LFOFM_INPUT].value);
-	lfo.step(1.0 / engineGetSampleRate());
+	lfo.step(1.0 / args.sampleRate);
 	//lfo.setReset(inputs[RESET_INPUT].value);
 
 	float wave = params[LFOWAVE_PARAM].value; // + inputs[WAVE_INPUT].value;
@@ -278,13 +278,13 @@ void Gnome::process(const ProcessArgs &args) {
 		if (decaying) {
 			// Decay
 			if (decay < 1e-4) {	env = sustain;
-			}	else {	env += powf(base, 1 - decay) / maxTime * (sustain - env) / engineGetSampleRate();
+			}	else {	env += powf(base, 1 - decay) / maxTime * (sustain - env) / args.sampleRate;
 			}
 		} else {
 			// Attack
 			// Skip ahead if attack is all the way down (infinitely fast)
 			if (attack < 1e-4) { env = 1.0; }
-			else {	env += powf(base, 1 - attack) / maxTime * (1.01 - env) / engineGetSampleRate();
+			else {	env += powf(base, 1 - attack) / maxTime * (1.01 - env) / args.sampleRate;
 			} if (env >= 1.0) {
 				env = 1.0;
 				decaying = true;
@@ -294,7 +294,7 @@ void Gnome::process(const ProcessArgs &args) {
 	else {
 		// Release
 		if (release < 1e-4) { env = 0.0; }
-		else {	env += powf(base, 1 - release) / maxTime * (0.0 - env) / engineGetSampleRate();
+		else {	env += powf(base, 1 - release) / maxTime * (0.0 - env) / args.sampleRate;
 		}
 		decaying = false;
 	}
@@ -311,7 +311,7 @@ void Gnome::process(const ProcessArgs &args) {
 	oscillator.setPitch(params[PITCH_PARAM].value, pitchCv + fm);
 	oscillator.setPulseWidth(params[PW_PARAM].value + (5.0+inputs[PW_INPUT].normalize(0.)) / 10.0);
 
-	oscillator.process(1.0 / engineGetSampleRate());
+	oscillator.process(1.0 / args.sampleRate);
 
 	float tri = 5.0 * oscillator.tri();
 	float saw = 5.0 * oscillator.saw();
@@ -348,10 +348,10 @@ void Gnome::process(const ProcessArgs &args) {
 
 	// VCF
 
-    lpfilter.setSampleRate(engineGetSampleRate());
-    bpfilter.setSampleRate(engineGetSampleRate());
-    hpfilter.setSampleRate(engineGetSampleRate());
-    ntfilter.setSampleRate(engineGetSampleRate());
+    lpfilter.setSampleRate(args.sampleRate);
+    bpfilter.setSampleRate(args.sampleRate);
+    hpfilter.setSampleRate(args.sampleRate);
+    ntfilter.setSampleRate(args.sampleRate);
 
 	float freq = clamp(
 	  inputs[VCFFREQ_INPUT].normalize(0.)

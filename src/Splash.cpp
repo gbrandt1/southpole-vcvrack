@@ -139,7 +139,7 @@ void Splash::process(const ProcessArgs &args) {
 		pitch += params[FM_PARAM].value * inputs[FM_INPUT].normalize(0.1) / 5.0;
 		pitch += 60.0;
 		// Scale to the global sample rate
-		pitch += log2f(48000.0 / engineGetSampleRate()) * 12.0;
+		pitch += log2f(48000.0 / args.sampleRate) * 12.0;
 		generator.set_pitch(clamp(int(pitch) * 0x80, -0x8000, 0x7fff));
 
 		// Slope, smoothness, pitch

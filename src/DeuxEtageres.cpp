@@ -120,10 +120,10 @@ void DeuxEtageres::process(const ProcessArgs &args) {
             lpFilter[i].setQ(.5); //Resonance(.5);
             hpFilter[i].setQ(.5); //Resonance(.5);
 
-            lpFilter[i].setSampleRate(engineGetSampleRate());
-            hpFilter[i].setSampleRate(engineGetSampleRate());
-            bp2Filter[i].setSampleRate(engineGetSampleRate());
-            bp3Filter[i].setSampleRate(engineGetSampleRate());
+            lpFilter[i].setSampleRate(args.sampleRate);
+            hpFilter[i].setSampleRate(args.sampleRate);
+            bp2Filter[i].setSampleRate(args.sampleRate);
+            bp3Filter[i].setSampleRate(args.sampleRate);
 
             float dry = inputs[INL_INPUT + i].value;
 

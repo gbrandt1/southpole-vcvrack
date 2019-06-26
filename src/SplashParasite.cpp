@@ -142,11 +142,11 @@ void SplashParasite::process(const ProcessArgs &args) {
 		    //this is probably not original but seems useful
 		    pitch -= 12;
 		    // Scale to the global sample rate
-		    pitch += log2f(48000.0 / engineGetSampleRate()) * 12.0;
+		    pitch += log2f(48000.0 / args.sampleRate) * 12.0;
 		    generator.set_pitch_high_range(clamp(pitch * 0x80, -0x8000, 0x7fff), fm);
 		}
 		else {
-		    pitch += log2f(48000.0 / engineGetSampleRate()) * 12.0;
+		    pitch += log2f(48000.0 / args.sampleRate) * 12.0;
 		    generator.set_pitch(clamp(pitch * 0x80, -0x8000, 0x7fff),fm);
 		}
 

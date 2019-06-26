@@ -70,7 +70,7 @@ struct Rakes : Module {
 	Rakes() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);	
 
-		maxsize = engineGetSampleRate();
+		maxsize = args.sampleRate;
 
 		for (int j=0; j < NBUF; j++) {
   			bufl[j] = new float [maxsize];

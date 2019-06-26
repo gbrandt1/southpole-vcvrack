@@ -42,7 +42,7 @@ struct Wriggle : Module {
 
 void Wriggle::process(const ProcessArgs &args) {
 
-	float dt = 1./engineGetSampleRate();
+	float dt = 1./args.sampleRate;
 
 	float tens 	 = clamp(params[TENS_PARAM].value + inputs[TENS_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
 	float damp 	 = clamp(params[DAMP_PARAM].value + inputs[DAMP_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);

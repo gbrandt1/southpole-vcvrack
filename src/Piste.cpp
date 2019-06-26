@@ -96,12 +96,12 @@ void Piste::process(const ProcessArgs &args) {
 
 	if (decay1 < 1e-4) { env1 = 0.;
 	} else {
-		env1 += powf(base, 1. - decay1) / maxTime * ( - env1) / engineGetSampleRate();
+		env1 += powf(base, 1. - decay1) / maxTime * ( - env1) / args.sampleRate;
 	}
 
 	if (decay2 < 1e-4) { env2 = 0.;
 	} else {
-		env2 += powf(base, 1. - decay2) / maxTime * ( - env2) / engineGetSampleRate();
+		env2 += powf(base, 1. - decay2) / maxTime * ( - env2) / args.sampleRate;
 	}
 
 	outputs[ENV1_OUTPUT].value = 10.*scale1 * env1;
@@ -122,7 +122,7 @@ void Piste::process(const ProcessArgs &args) {
 
 	    float lp_cutoff  = f0 * powf(2.f, 8.*(freq+1.)-4.);
 		lpFilter.setResonance(reso*rmax);
-    	lpFilter.setSampleRate(engineGetSampleRate());
+    	lpFilter.setSampleRate(args.sampleRate);
     	lpFilter.setCutoffFreq(lp_cutoff);
     	fout  = lpFilter.processAudioSample( v, 1);
 
@@ -130,7 +130,7 @@ void Piste::process(const ProcessArgs &args) {
 
 	    float hp_cutoff  = f0 * powf(2.f, 8.*freq-3.);
     	hpFilter.setResonance(reso*rmax);
-    	hpFilter.setSampleRate(engineGetSampleRate());
+    	hpFilter.setSampleRate(args.sampleRate);
     	hpFilter.setCutoffFreq(hp_cutoff);
     	fout  = hpFilter.processAudioSample( v, 1);
 	}

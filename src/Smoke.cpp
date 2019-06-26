@@ -168,7 +168,7 @@ void Smoke::process(const ProcessArgs &args) {
     clouds::ShortFrame input[32] = {};
     // Convert input buffer
     {
-      inputSrc.setRates(engineGetSampleRate(), 32000);
+      inputSrc.setRates(args.sampleRate, 32000);
       Frame<2> inputFrames[32];
       int inLen = inputBuffer.size();
       int outLen = 32;
@@ -236,7 +236,7 @@ void Smoke::process(const ProcessArgs &args) {
         outputFrames[i].samples[1] = output[i].r / 32768.0;
       }
 
-      outputSrc.setRates( 32000, engineGetSampleRate());
+      outputSrc.setRates( 32000, args.sampleRate);
       int inLen = 32;
       int outLen = outputBuffer.capacity();
       outputSrc.process(outputFrames, &inLen, outputBuffer.endData(), &outLen);

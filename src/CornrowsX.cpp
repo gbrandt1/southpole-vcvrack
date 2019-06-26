@@ -169,7 +169,7 @@ void CornrowsX::process(const ProcessArgs &args) {
 	if (last_setting_changed != braids::SETTING_OSCILLATOR_SHAPE) {
 		disp_timeout++;
 	}
-	if (disp_timeout > 1.0*engineGetSampleRate()) {
+	if (disp_timeout > 1.0*args.sampleRate) {
 		last_setting_changed = braids::SETTING_OSCILLATOR_SHAPE;
 		disp_timeout=0;
 	}
@@ -247,7 +247,7 @@ void CornrowsX::process(const ProcessArgs &args) {
 		if (!settings.meta_modulation)
 			pitchV += fm;
 		if (lowCpu)
-			pitchV += log2f(96000.0 / engineGetSampleRate());
+			pitchV += log2f(96000.0 / args.sampleRate);
 		int32_t pitch = (pitchV * 12.0 + 60) * 128;
 
 		// pitch_range
@@ -331,7 +331,7 @@ void CornrowsX::process(const ProcessArgs &args) {
 			for (int i = 0; i < 24; i++) {
 				in[i].samples[0] = render_buffer[i] / 32768.0;
 			}
-			src.setRates(96000, engineGetSampleRate());
+			src.setRates(96000, args.sampleRate);
 
 			int inLen = 24;
 			int outLen = outputBuffer.capacity();

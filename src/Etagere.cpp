@@ -113,10 +113,10 @@ void Etagere::process(const ProcessArgs &args) {
         lpFilter.setQ(.5); //Resonance(.5);
         hpFilter.setQ(.5); //Resonance(.5);
 
-        lpFilter.setSampleRate(engineGetSampleRate());
-        hpFilter.setSampleRate(engineGetSampleRate());
-        bp2Filter.setSampleRate(engineGetSampleRate());
-        bp3Filter.setSampleRate(engineGetSampleRate());
+        lpFilter.setSampleRate(args.sampleRate);
+        hpFilter.setSampleRate(args.sampleRate);
+        bp2Filter.setSampleRate(args.sampleRate);
+        bp3Filter.setSampleRate(args.sampleRate);
 
         // For reference characteristics quoted from Shelves manual:
         //
@@ -159,7 +159,7 @@ void Etagere::process(const ProcessArgs &args) {
 
 /*
         timer++;
-        if (timer > engineGetSampleRate()/2.) {
+        if (timer > args.sampleRate/2.) {
             timer = 0;
             printf("%f %f %f %f\n", lp_cutoff, bp2_cutoff, bp3_cutoff, hp_cutoff);
         }

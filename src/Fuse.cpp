@@ -119,7 +119,7 @@ void Fuse::process(const ProcessArgs &args) {
 		
 		lights[ARM1_LIGHT + i].setBrightness( armed[i] ? 1.0 : 0.0 );
 			
-		bool p = pulse[i].process(1.0 / engineGetSampleRate());		
+		bool p = pulse[i].process(1.0 / args.sampleRate);		
 
 		if (gateOn[i]) p = true;
 		

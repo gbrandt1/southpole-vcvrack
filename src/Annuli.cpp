@@ -153,7 +153,7 @@ void Annuli::process(const ProcessArgs &args) {
 		float in[24] = {};
 		// Convert input buffer
 		{
-			inputSrc.setRates(engineGetSampleRate(), 48000.0);
+			inputSrc.setRates(args.sampleRate, 48000.0);
 			int inLen = inputBuffer.size();
 			int outLen = 24;
 			inputSrc.process(inputBuffer.startData(), &inLen, (Frame<1>*) in, &outLen);
@@ -221,7 +221,7 @@ void Annuli::process(const ProcessArgs &args) {
 				outputFrames[i].samples[1] = aux[i];
 			}
 
-			outputSrc.setRates(48000.0, engineGetSampleRate());
+			outputSrc.setRates(48000.0, args.sampleRate);
 			int inLen = 24;
 			int outLen = outputBuffer.capacity();
 			outputSrc.process(outputFrames, &inLen, outputBuffer.endData(), &outLen);
