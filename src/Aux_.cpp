@@ -167,12 +167,7 @@ struct AuxWidget : ModuleWidget {
 
 		box.size = Vec(15*4, 380);
 
-		{
-			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Aux_.svg")));
-			panel->box.size = box.size;
-			addChild(panel);	
-		}
+    setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Aux_.svg")));
 
 		const float y1 = 42;
 		const float yh = 26;

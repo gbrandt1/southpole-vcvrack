@@ -48,7 +48,7 @@ struct VoltageControlledOscillator {
 		// Adjust pitch slew
 		if (++pitchSlewIndex > 32) {
 			const float pitchSlewTau = 100.0; // Time constant for leaky integrator in seconds
-			pitchSlew += (random::normal() - pitchSlew / pitchSlewTau) / args.sampleRate;
+			pitchSlew += (random::normal() - pitchSlew / pitchSlewTau) / APP->engine->getSampleRate();
 			pitchSlewIndex = 0;
 		}
 
@@ -69,7 +69,7 @@ struct VoltageControlledOscillator {
 
 			// Advance phase
 			phase += deltaPhase / OVERSAMPLE;
-			phase = eucmod(phase, 1.0f);
+			phase = math::eucMod(phase, 1.0f);
 		}
 	}
 
@@ -327,19 +327,19 @@ void Gnome::process(const ProcessArgs &args) {
 
 	// VCO
 
-	float pitchCv = 12.0 * inputs[PITCH_INPUT].normalize(0.);
+	float pitchCv = 12.0 * inputs[PITCH_INPUT].getNormalVoltage(0.);
 	float fm = 10. * params[FM_PARAM].getValue() * outputs[LFO_OUTPUT].value;
 	oscillator.setPitch(params[PITCH_PARAM].getValue(), pitchCv + fm);
-	oscillator.setPulseWidth(params[PW_PARAM].getValue() + (5.0+inputs[PW_INPUT].normalize(0.)) / 10.0);
+	oscillator.setPulseWidth(params[PW_PARAM].getValue() + (5.0+inputs[PW_INPUT].getNormalVoltage(0.)) / 10.0);
 
-	oscillator.process(1.0 / args.sampleRate);
+	oscillator.process(1.0 / APP->engine->getSampleRate());
 
 	float tri = 5.0 * oscillator.tri();
 	float saw = 5.0 * oscillator.saw();
 	float sqr = 5.0 * oscillator.sqr();
 
 	// Set output
-	float oscwave = params[OSC_PARAM].getValue() + inputs[OSC_INPUT].normalize(0.)/10.;
+	float oscwave = params[OSC_PARAM].getValue() + inputs[OSC_INPUT].getNormalVoltage(0.)/10.;
 	//wave = clamp(wave, 0.0, 3.0);
 	float osc = 0.;
 	if (oscwave < 1.0)  osc = crossfade(tri, saw, oscwave);
@@ -369,13 +369,13 @@ void Gnome::process(const ProcessArgs &args) {
 
 	// VCF
 
-    lpfilter.setSampleRate(args.sampleRate);
-    bpfilter.setSampleRate(args.sampleRate);
-    hpfilter.setSampleRate(args.sampleRate);
-    ntfilter.setSampleRate(args.sampleRate);
+    lpfilter.setSampleRate(APP->engine->getSampleRate());
+    bpfilter.setSampleRate(APP->engine->getSampleRate());
+    hpfilter.setSampleRate(APP->engine->getSampleRate());
+    ntfilter.setSampleRate(APP->engine->getSampleRate());
 
 	float freq = clamp(
-	  inputs[VCFFREQ_INPUT].normalize(0.)
+	  inputs[VCFFREQ_INPUT].getNormalVoltage(0.)
 	+ params[VCFPITCH_PARAM].getValue() 
 	+ params[VCFENV_PARAM].getValue() * 11.*env
 	+ params[VCFLFO_PARAM].getValue() * 11.*interp
@@ -425,12 +425,7 @@ struct GnomeWidget : ModuleWidget {
 
 		box.size = Vec(15*10, 380);
 
-		{
-			SVGPanel *panel = new SVGPanel();
-			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Gnome.svg")));
-			addChild(panel);
-		}
+    setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Gnome.svg")));
 
 		float y1 = 10;
 		float yh = 40;

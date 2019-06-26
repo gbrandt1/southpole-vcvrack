@@ -53,7 +53,7 @@ struct Falls : Module {
   Falls() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-    configParam(Falls::GAIN1_PARAM + i, -1.0, 1.0, 0.0, "");
+    configParam(Falls::GAIN1_PARAM, -1.0, 1.0, 0.0, "");
     configParam(Falls::RANGE_PARAM, 0.0, 1.0, 0.0, "");
   }
 	void process(const ProcessArgs &args) override;
@@ -72,7 +72,7 @@ void Falls::process(const ProcessArgs &args) {
 		//if (inputs[IN1_INPUT + i].isConnected()) {
     		out += g * inputs[IN1_INPUT + i].normalize(1.);
         //} else {
-        //    out += g;      
+        //    out += g;
         //}
 		lights[OUT1_POS_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, out / 5.0));
 		lights[OUT1_NEG_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, -out / 5.0));
@@ -83,19 +83,14 @@ void Falls::process(const ProcessArgs &args) {
 	}
 }
 
-struct FallsWidget : ModuleWidget { 
-	
+struct FallsWidget : ModuleWidget {
+
 	FallsWidget(Falls *module)  {
-		setModule(module);	
+		setModule(module);
 
 		box.size = Vec(15*4, 380);
 
-		{
-			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Falls.svg")));
-			panel->box.size = box.size;
-			addChild(panel);	
-		}
+    setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Falls.svg")));
 
 		const float y1 = 32;
 		const float yh = 49;
@@ -106,7 +101,7 @@ struct FallsWidget : ModuleWidget {
 
 		for (int i=0; i < NUMP; i++) {
 			addInput(createInput<sp_Port>(Vec(x1,  y1+i*yh), module, Falls::IN1_INPUT + i));
-			addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+6,  y1+i*yh), module, Falls::OUT1_POS_LIGHT + 2*i));	
+			addChild(createLight<MediumLight<GreenRedLight>>(Vec(x2+6,  y1+i*yh), module, Falls::OUT1_POS_LIGHT + 2*i));
 			addOutput(createOutput<sp_Port>(Vec(x3,  y1+i*yh), module, Falls::OUT1_OUTPUT + i));
 			addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+i*yh+18), module, Falls::GAIN1_PARAM + i));
 		}

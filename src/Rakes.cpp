@@ -70,7 +70,7 @@ struct Rakes : Module {
   Rakes() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);	
 
-    maxsize = args.sampleRate;
+    maxsize = APP->engine->getSampleRate();
 
     for (int j=0; j < NBUF; j++) {
       bufl[j] = new float [maxsize];
@@ -84,10 +84,10 @@ struct Rakes : Module {
     }
 
     configParam(Rakes::DECAY_PARAM, 0.0, 1.0, 0.0, "");
-    configParam(Rakes::FOLLOW_PARAM, 0.0, 1.0, 0.0, "");
-    configParam(Rakes::TUNE1_PARAM + j,  -5.0, 5.5, 0.0, "");
-    configParam(Rakes::FINE1_PARAM + j,  -1.0, 1.0, 0.0, "");
-    configParam(Rakes::GAIN1_PARAM + j,  0.0, 1.0, 0.0, "");
+//    configParam(Rakes::FOLLOW_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Rakes::TUNE1_PARAM,  -5.0, 5.5, 0.0, "");
+    configParam(Rakes::FINE1_PARAM,  -1.0, 1.0, 0.0, "");
+    configParam(Rakes::GAIN1_PARAM,  0.0, 1.0, 0.0, "");
     configParam(Rakes::QUANT_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Rakes::MIX_PARAM, 0.0, 1.0, 0.5, "");
   }
@@ -111,11 +111,11 @@ void Rakes::process(const ProcessArgs &args) {
 
 	//float mix  = clamp(params[MIX_PARAM].getValue() + inputs[MIX_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
 	float mix    = params[MIX_PARAM].getValue();
-	float rate   = clamp(params[DECAY_PARAM].getValue() + inputs[DECAY_INPUT].normalize(0.) / 10.0, 0.0f, .99f);
+	float rate   = clamp(params[DECAY_PARAM].getValue() + inputs[DECAY_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, .99f);
 
 	const float f0 = 261.626;
-	float inl  = inputs[INL_INPUT].normalize(0.);
-	float inr  = inputs[INR_INPUT].normalize(inl);
+	float inl  = inputs[INL_INPUT].getNormalVoltage(0.);
+	float inr  = inputs[INR_INPUT].getNormalVoltage(inl);
 
 	float sumoutl  = 0;
 	float sumoutr  = 0;
@@ -127,7 +127,7 @@ void Rakes::process(const ProcessArgs &args) {
 		if (gain < 1e-3) continue;
 		sumgain += gain;
 
-		float tune = clamp(params[TUNE1_PARAM + j].getValue() + inputs[TUNE1_INPUT + j].normalize(0.), -5.0, 5.5);
+		float tune = clamp(params[TUNE1_PARAM + j].getValue() + inputs[TUNE1_INPUT + j].getNormalVoltage(0.), -5.0, 5.5);
 		float fine = clamp(params[FINE1_PARAM + j].getValue(), -1.0, 1.0);
 
 		if ( params[QUANT_PARAM].getValue() > 0.5 ) {
@@ -189,12 +189,7 @@ struct RakesWidget : ModuleWidget {
 	
 		box.size = Vec(15*8, 380);
 
-		{
-			SVGPanel *panel = new SVGPanel();
-			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Rakes.svg")));
-			addChild(panel);
-		}
+    setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Rakes.svg")));
 
 		const float x1 = 5.;
 		const float x2 = 35.;

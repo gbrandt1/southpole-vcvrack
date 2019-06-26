@@ -45,7 +45,7 @@ struct Fuse : Module {
     outputs.resize(NUM_OUTPUTS);
     lights.resize(NUM_LIGHTS);
 
-    configParam(Fuse::SWITCH1_PARAM + 3 - i, 0.0, 1.0, 0.0, "");
+    configParam(Fuse::SWITCH1_PARAM, 0.0, 1.0, 0.0, "");
   }
 
 	void process(const ProcessArgs &args) override;
@@ -141,24 +141,24 @@ struct FuseDisplay : TransparentWidget {
     // Background
     NVGcolor backgroundColor = nvgRGB(0x30, 0x00, 0x10);
     NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
-    nvgBeginPath(args.args.vg);
-    nvgRoundedRect(args.args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
-    nvgFillColor(args.args.vg, backgroundColor);
-    nvgFill(args.args.vg);
-    nvgStrokeWidth(args.args.vg, 1.5);
-    nvgStrokeColor(args.args.vg, borderColor);
-    nvgStroke(args.args.vg);
+    nvgBeginPath(args.vg);
+    nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+    nvgFillColor(args.vg, backgroundColor);
+    nvgFill(args.vg);
+    nvgStrokeWidth(args.vg, 1.5);
+    nvgStrokeColor(args.vg, borderColor);
+    nvgStroke(args.vg);
 
     // Lights
-    nvgStrokeColor(args.args.vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
-    nvgFillColor(args.args.vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
+    nvgStrokeColor(args.vg, nvgRGBA(0x7f, 0x00, 0x00, 0xff));
+    nvgFillColor(args.vg, nvgRGBA(0xff, 0x00, 0x00, 0xff));
     for ( unsigned y_ = 0; y_ < 16; y_++ ) {
       unsigned y = 15 - y_;
-      nvgBeginPath(args.args.vg);
-      nvgStrokeWidth(args.args.vg, 1.);
-        nvgRect(args.args.vg, 3., y*box.size.y/18.+7.*floor(y/4.)+9., box.size.x-6., box.size.y/18.-6.);
-      if (module && (y_ <= module->curstep)) nvgFill(args.args.vg);
-      nvgStroke(args.args.vg);
+      nvgBeginPath(args.vg);
+      nvgStrokeWidth(args.vg, 1.);
+        nvgRect(args.vg, 3., y*box.size.y/18.+7.*floor(y/4.)+9., box.size.x-6., box.size.y/18.-6.);
+      if (module && (y_ <= module->curstep)) nvgFill(args.vg);
+      nvgStroke(args.vg);
     }
 
   } 
@@ -169,12 +169,8 @@ struct FuseWidget : ModuleWidget {
 		setModule(module);
 
 		box.size = Vec(4 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-		{
-			SVGPanel *panel = new SVGPanel();
-			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Fuse.svg")));
-			addChild(panel);
-		}
+
+    setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Fuse.svg")));
 
 		{
 			FuseDisplay *display = new FuseDisplay();
@@ -211,7 +207,7 @@ struct FuseWidget : ModuleWidget {
         void onAction(const event::Action &e) override {
             fuse->gateMode = gateMode;
         }
-        void process(const ProcessArgs &args) override {
+        void step() override {
             rightText = (fuse->gateMode == gateMode) ? "✔" : "";
             MenuItem::step();
         }

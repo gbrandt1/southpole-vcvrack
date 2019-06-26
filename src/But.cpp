@@ -75,7 +75,7 @@ struct But : Module
     But() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
       reset();
 
-      configParam(But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0, "");
+      configParam(But::SWITCH1_PARAM, 0.0, 1.0, 0.0, "");
     }
 
     void process(const ProcessArgs &args) override;

@@ -65,6 +65,16 @@ struct Annuli : Module {
 	bool easterEgg = false;
 
   Annuli() {
+
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+    memset(&strummer, 0, sizeof(strummer));
+    memset(&part, 0, sizeof(part));
+    memset(&string_synth, 0, sizeof(string_synth));
+
+    strummer.Init(0.01, 44100.0 / 24);
+    part.Init(reverb_buffer);
+    string_synth.Init(reverb_buffer);
+
     configParam(Annuli::POLYPHONY_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Annuli::RESONATOR_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Annuli::FREQUENCY_PARAM, 0.0, 60.0, 30.0, "");
@@ -118,20 +128,6 @@ struct Annuli : Module {
 	}
 };
 
-
-Annuli::Annuli() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	memset(&strummer, 0, sizeof(strummer));
-	memset(&part, 0, sizeof(part));
-	memset(&string_synth, 0, sizeof(string_synth));
-
-	strummer.Init(0.01, 44100.0 / 24);
-	part.Init(reverb_buffer);
-	string_synth.Init(reverb_buffer);
-
-	//polyphonyTrigger.setThresholds(0.0, 1.0);
-	//modelTrigger.setThresholds(0.0, 1.0);
-}
 
 void Annuli::process(const ProcessArgs &args) {
 	// TODO
@@ -328,7 +324,7 @@ struct AnnuliWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         rings->model = model;
       }
-      void process(const ProcessArgs &args) override {
+      void step() override {
         rightText = (rings->model == model) ? "✔" : "";
         MenuItem::step();
       }
@@ -339,7 +335,7 @@ struct AnnuliWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         rings->easterEgg = !rings->easterEgg;
       }
-      void process(const ProcessArgs &args) override {
+      void step() override {
         rightText = (rings->easterEgg) ? "✔" : "";
         MenuItem::step();
       }
@@ -358,7 +354,7 @@ struct AnnuliWidget : ModuleWidget {
     menu->addChild(construct<AnnuliEasterEggItem>(&MenuItem::text, "Disastrous Peace", &AnnuliEasterEggItem::rings, rings));
   }
 
-  void process(const ProcessArgs &args) override {
+  void step() override {
     Annuli *annuli = dynamic_cast<Annuli*>(module);
 
     if (annuli) {

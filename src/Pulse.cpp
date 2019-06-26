@@ -78,7 +78,6 @@ struct Pulse : Module {
     configParam(Pulse::TIME_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Pulse::DELAY_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Pulse::AMP_PARAM, 0.0, 1.0, 1.0, "");
-    configParam(Pulse::OFFSET_PARAM, -1.0, 1.0, 0., "");
     configParam(Pulse::SLEW_PARAM, 0.0, 1.0, 0., "");
   }
 
@@ -99,12 +98,12 @@ void Pulse::process(const ProcessArgs &args) {
 		triggered = true;	
 	}
 
-	if (trigger.process(inputs[TRIG_INPUT].normalize(0.))) {
+	if (trigger.process(inputs[TRIG_INPUT].getNormalVoltage(0.))) {
 		triggered = true;
 		//printf("%lu\n", gateTarget);
 	}
 
-	if (clock.process(inputs[CLOCK_INPUT].normalize(0.))) {
+	if (clock.process(inputs[CLOCK_INPUT].getNormalVoltage(0.))) {
 		triggered = true;
 		clkPulse.trigger(1e-3);
 		clockp = clockt;
@@ -114,13 +113,13 @@ void Pulse::process(const ProcessArgs &args) {
 	float dt = 1e-3*args.sampleRate;
 	float sr = args.sampleRate;
 
-	amp  = clamp(params[AMP_PARAM].getValue() + inputs[AMP_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
-	slew = clamp(params[SLEW_PARAM].getValue() + inputs[SLEW_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
+	amp  = clamp(params[AMP_PARAM].getValue() + inputs[AMP_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
+	slew = clamp(params[SLEW_PARAM].getValue() + inputs[SLEW_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
 	slew = pow(2.,(1.-slew)*log2(sr))/sr;
 	if (range) slew *= .1;
 
-	float delayTarget_ = clamp(params[DELAY_PARAM].getValue() + inputs[DELAY_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
-	float gateTarget_  = clamp(params[TIME_PARAM].getValue() + inputs[TIME_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
+	float delayTarget_ = clamp(params[DELAY_PARAM].getValue() + inputs[DELAY_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
+	float gateTarget_  = clamp(params[TIME_PARAM].getValue() + inputs[TIME_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
 
 	if (inputs[CLOCK_INPUT].isConnected()) {
 		clockt++;
@@ -189,12 +188,7 @@ struct PulseWidget : ModuleWidget {
 	
 		box.size = Vec(15*4, 380);
 
-		{
-			SVGPanel *panel = new SVGPanel();
-			panel->box.size = box.size;
-			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Pulse.svg")));
-			addChild(panel);
-		}
+    setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Pulse.svg")));
 
 		const float x1 = 5.;
 		const float x2 = 35.;

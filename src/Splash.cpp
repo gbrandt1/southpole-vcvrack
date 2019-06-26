@@ -54,6 +54,13 @@ struct Splash : Module {
 	dsp::SchmittTrigger rangeTrigger;
 
   Splash() {
+
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+    memset(&generator, 0, sizeof(generator));
+    generator.Init();
+    generator.set_sync(false);
+    reset();
+
     configParam(Splash::MODE_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Splash::RANGE_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Splash::FREQUENCY_PARAM, -48.0, 48.0, 0.0, "");
@@ -105,13 +112,6 @@ struct Splash : Module {
 };
 
 
-Splash::Splash() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-	memset(&generator, 0, sizeof(generator));
-	generator.Init();
-	generator.set_sync(false);
-	reset();
-}
 
 void Splash::process(const ProcessArgs &args) {
 
@@ -144,7 +144,7 @@ void Splash::process(const ProcessArgs &args) {
 		// Pitch
 		float pitch = params[FREQUENCY_PARAM].getValue();
 		pitch += 12.0 * inputs[PITCH_INPUT].getVoltage();
-		pitch += params[FM_PARAM].getValue() * inputs[FM_INPUT].normalize(0.1) / 5.0;
+		pitch += params[FM_PARAM].getValue() * inputs[FM_INPUT].getNormalVoltage(0.1) / 5.0;
 		pitch += 60.0;
 		// Scale to the global sample rate
 		pitch += log2f(48000.0 / args.sampleRate) * 12.0;
@@ -168,7 +168,7 @@ void Splash::process(const ProcessArgs &args) {
 	}
 
 	// Level
-	uint16_t level = clamp(inputs[LEVEL_INPUT].normalize(8.0) / 8.0, 0.0f, 1.0f) * 0xffff;
+	uint16_t level = clamp(inputs[LEVEL_INPUT].getNormalVoltage(8.0) / 8.0, 0.0f, 1.0f) * 0xffff;
 	if (level < 32)
 		level = 0;
 
@@ -281,7 +281,7 @@ struct SplashWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         tides->sheep ^= true;
       }
-      void process(const ProcessArgs &args) override {
+      void step() override {
         rightText = (tides->sheep) ? "✔" : "";
         MenuItem::step();
       }
@@ -292,7 +292,7 @@ struct SplashWidget : ModuleWidget {
 
   }
 
-  void process(const ProcessArgs &args) override {
+  void step() override {
     Splash *tides = dynamic_cast<Splash*>(module);
 
     if (tides) {

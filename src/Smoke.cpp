@@ -81,8 +81,26 @@ struct Smoke : Module {
   dsp::SchmittTrigger freezeTrigger;
 
   Smoke() {
+
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+    const int memLen = 118784;
+    const int ccmLen = 65536 - 128;
+    block_mem = new uint8_t[memLen]();
+    block_ccm = new uint8_t[ccmLen]();
+    processor = new clouds::GranularProcessor();
+    memset(processor, 0, sizeof(*processor));
+
+#ifdef PARASITES
+    reverseTrigger.setThresholds(0.0, 1.0);   
+#endif  
+    processor->Init(block_mem, memLen, block_ccm, ccmLen);
+
     configParam(Smoke::FREEZE_PARAM, 0.0, 1.0, 0.0, "");
+
+#ifdef PARASITES
     configParam(Smoke::REVERSE_PARAM, 0.0, 1.0, 0.0, "");
+#endif
+
     configParam(Smoke::POSITION_PARAM, 0.0, 1.0, 0.5, "");
     configParam(Smoke::SIZE_PARAM, 0.0, 1.0, 0.5, "");
     configParam(Smoke::PITCH_PARAM, -2.0, 2.0, 0.0, "");
@@ -94,6 +112,13 @@ struct Smoke : Module {
     configParam(Smoke::REVERB_PARAM, 0.0, 1.0, 0.5, "");
     configParam(Smoke::IN_GAIN_PARAM, 0.0, 1.0, 0.5, "");
   }
+
+  ~Smoke() {
+    delete processor;
+    delete[] block_mem;
+    delete[] block_ccm;
+  }
+
 
   void process(const ProcessArgs &args) override;
   
@@ -137,28 +162,6 @@ struct Smoke : Module {
   
 };
 
-
-Smoke::Smoke() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-  const int memLen = 118784;
-  const int ccmLen = 65536 - 128;
-  block_mem = new uint8_t[memLen]();
-  block_ccm = new uint8_t[ccmLen]();
-  processor = new clouds::GranularProcessor();
-  memset(processor, 0, sizeof(*processor));
-
-  //freezeTrigger.setThresholds(0.0, 1.0);
-#ifdef PARASITES
-  reverseTrigger.setThresholds(0.0, 1.0);   
-#endif  
-  processor->Init(block_mem, memLen, block_ccm, ccmLen);
-}
-
-Smoke::~Smoke() {
-  delete processor;
-  delete[] block_mem;
-  delete[] block_ccm;
-}
 
 void Smoke::process(const ProcessArgs &args) {
 
@@ -375,7 +378,7 @@ struct SmokeWidget : ModuleWidget {
     struct FreezeLight : GreenLight {
       FreezeLight() {
         box.size = Vec(28-16, 28-16);
-        bgColor = COLOR_BLACK_TRANSPARENT;
+        bgColor = componentlibrary::SCHEME_BLACK_TRANSPARENT;
       } 
     };
 
@@ -438,7 +441,7 @@ struct SmokeWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         clouds->playbackmode = mode;
       }
-      void process(const ProcessArgs &args) override {
+      void step() override {
         rightText = (clouds->playbackmode == mode) ? "✔" : "";
         MenuItem::step();
       }
@@ -451,7 +454,7 @@ struct SmokeWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         clouds->mono = setting;
       }
-      void process(const ProcessArgs &args) override {
+      void step() override {
         rightText = (clouds->mono == setting) ? "✔" : "";
         MenuItem::step();
       }
@@ -464,7 +467,7 @@ struct SmokeWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         clouds->lofi = setting;
       }
-      void process(const ProcessArgs &args) override {
+      void step() override {
         rightText = (clouds->lofi == setting) ? "✔" : "";
         MenuItem::step();
       }
@@ -478,7 +481,7 @@ struct SmokeWidget : ModuleWidget {
       void onAction(const event::Action &e) override {
         clouds->buffersize = setting;
       }
-      void process(const ProcessArgs &args) override {
+      void step() override {
         rightText = (clouds->buffersize == setting) ? "✔" : "";
         MenuItem::step();
       }
@@ -514,7 +517,7 @@ struct SmokeWidget : ModuleWidget {
 
   }
 
-  void process(const ProcessArgs &args) override {
+  void step() override {
     Smoke *smoke = dynamic_cast<Smoke*>(module);
 
     if (smoke) {

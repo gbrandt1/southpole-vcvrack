@@ -65,6 +65,13 @@ struct DeuxEtageres : Module {
         bp3Filter[i].setFilterType(SVFBandpass);
       }
 
+
+      const float vfmin = -4.;
+      const float vfmax =  6.;
+
+      const float gmax = -1.;
+      const float gmin =  1.;
+
       configParam(DeuxEtageres::FREQ4_PARAM, vfmin, vfmax, 0., "");
       configParam(DeuxEtageres::GAIN4_PARAM,  gmin,  gmax, 0., "");
       configParam(DeuxEtageres::FREQ2_PARAM, vfmin, vfmax, 0., "");
@@ -195,12 +202,6 @@ struct DeuxEtageresWidget : ModuleWidget {
         
         const float y1 = 5.;
         const float yh = 25.;
-
-        const float vfmin = -4.;
-        const float vfmax =  6.;
-
-        const float gmax = -1.;
-        const float gmin =  1.;
 
         // TO DO possible default freqs: 880, 5000
 

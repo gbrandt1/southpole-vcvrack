@@ -61,10 +61,12 @@ struct Abr : Module
 
     bool swState[8] = {};
     
-    Abr() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+    Abr() {
+
+      config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
       reset();
 
-      configParam(Abr::SWITCH1_PARAM + i, 0.0, 1.0, 0.0, "");
+      configParam(Abr::SWITCH1_PARAM, 0.0, 1.0, 0.0, "");
     }
 
     void process(const ProcessArgs &args) override;
@@ -146,16 +148,13 @@ void Abr::process(const ProcessArgs &args)
 }
 
 struct AbrWidget : ModuleWidget { 
-    AbrWidget(Abr *module) : ModuleWidget(module) 
-    {
+    AbrWidget(Abr *module) {
+
+        setModule(module);
+
         box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
-        {
-            auto *panel = new SVGPanel();
-            panel->box.size = box.size;
-            panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Abr.svg")));
-            addChild(panel);
-        }
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Abr.svg")));
 
         const float x1 = 3.;
         const float x2 = 4.+20.;

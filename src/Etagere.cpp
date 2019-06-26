@@ -75,6 +75,12 @@ struct Etagere : Module {
 
       blanc = true;   
 
+      const float vfmin = -4.;
+      const float vfmax =  6.;
+
+      const float gmax = -1.;
+      const float gmin =  1.;
+
       configParam(Etagere::FREQ4_PARAM, vfmin, vfmax, 0., "");
       configParam(Etagere::GAIN4_PARAM,  gmin,  gmax, 0., "");
       configParam(Etagere::FREQ2_PARAM, vfmin, vfmax, 0., "");
@@ -207,13 +213,13 @@ struct EtagereWidget : ModuleWidget {
             noirPanel = new SVGPanel();
             noirPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Etagere.svg")));
             noirPanel->box.size = box.size;
-            addChild(noirPanel);	
+            addChild(noirPanel);
         }
         {
             blancPanel = new SVGPanel();
             blancPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Etagere_blanc.svg")));
             blancPanel->box.size = box.size;
-            addChild(blancPanel);	
+            addChild(blancPanel);
         }
 
         const float x1 = 8;
@@ -222,12 +228,6 @@ struct EtagereWidget : ModuleWidget {
         
         const float y1 = 5.;
         const float yh = 25.;
-
-        const float vfmin = -4.;
-        const float vfmax =  6.;
-
-        const float gmax = -1.;
-        const float gmin =  1.;
 
         // TO DO possible default freqs: 880, 5000
 
@@ -280,7 +280,7 @@ struct EtagereWidget : ModuleWidget {
                 etagere->blanc ^= true;
             }
 
-            void process(const ProcessArgs &args) override {
+            void step() override {
                 rightText = (!etagere->blanc) ?  "✔" : "";
                 MenuItem::step();
             }
@@ -290,7 +290,7 @@ struct EtagereWidget : ModuleWidget {
         menu->addChild(construct<EtagereBlancItem>(&MenuItem::text, "blanc", &EtagereBlancItem::etagere, etagere));
     }
 
-    void process(const ProcessArgs &args) override {
+    void step() override {
       Etagere *etagere = dynamic_cast<Etagere*>(module);
       if (etagere) {
         blancPanel->visible = !etagere->blanc;
