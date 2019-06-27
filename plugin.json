@@ -1,0 +1,269 @@
+{
+  "slug": "southpole",
+  "name": "southpole",
+  "version": "1.0.0",
+  "license": "MIT",
+  "brand": "southpole",
+  "author": "gbrandt1",
+  "authorEmail": "",
+  "authorUrl": "",
+  "pluginUrl": "https://github.com/gbrandt1/southpole-vcvrack",
+  "manualUrl": "",
+  "sourceUrl": "https://github.com/gbrandt1/southpole-vcvrack",
+  "donateUrl": "",
+  "modules": [
+    {
+      "slug": "Abr",
+      "name": "Abr",
+      "description": "A/B switch",
+      "tags": [
+        "Switch",
+        "Mixer"
+      ]
+    },
+    {
+      "slug": "Annuli",
+      "name": "Annuli",
+      "description": "Resonator",
+      "tags": [
+        "Synth voice",
+        "VCO"
+      ]
+    },
+    {
+      "slug": "Aux",
+      "name": "Aux",
+      "description": "Effect loop",
+      "tags": [
+        "VCA",
+        "Mixer"
+      ]
+    },
+    {
+      "slug": "Balaclava",
+      "name": "Balaclava",
+      "description": "Quad VCA",
+      "tags": [
+        "VCA",
+        "Mixer",
+        "Attenuator"
+      ]
+    },
+    {
+      "slug": "Bandana",
+      "name": "Bandana",
+      "description": "Quad polarizer",
+      "tags": [
+        "VCA",
+        "Mixer",
+        "Attenuator"
+      ]
+    },
+    {
+      "slug": "Blank16HP",
+      "name": "Blank16HP",
+      "description": "Blank 16 HP",
+      "tags": [
+        "Blank"
+      ]
+    },
+    {
+      "slug": "Blank1HP",
+      "name": "Blank1HP",
+      "description": "Blank 1 HP",
+      "tags": [
+        "Blank"
+      ]
+    },
+    {
+      "slug": "Blank2HP",
+      "name": "Blank2HP",
+      "description": "Blank 2 HP",
+      "tags": [
+        "Blank"
+      ]
+    },
+    {
+      "slug": "Blank42HP",
+      "name": "Blank42HP",
+      "description": "",
+      "tags": [
+        "Blank"
+      ]
+    },
+    {
+      "slug": "Blank4HP",
+      "name": "Blank4HP",
+      "description": "",
+      "tags": [
+        "Blank"
+      ]
+    },
+    {
+      "slug": "Blank8HP",
+      "name": "Blank8HP",
+      "description": "",
+      "tags": [
+        "Blank"
+      ]
+    },
+    {
+      "slug": "But",
+      "name": "But",
+      "description": "A/B buss",
+      "tags": [
+        "Switch",
+        "Mixer"
+      ]
+    },
+    {
+      "slug": "CornrowsX",
+      "name": "CornrowsX",
+      "description": "Macro oscillator",
+      "tags": [
+        "VCO",
+        "Waveshaper"
+      ]
+    },
+    {
+      "slug": "DeuxEtageres",
+      "name": "DeuxEtageres",
+      "description": "Stereo EQ",
+      "tags": []
+    },
+    {
+      "slug": "Etagere",
+      "name": "Etagere",
+      "description": "EQ",
+      "tags": [
+        "Equalizer"
+      ]
+    },
+    {
+      "slug": "Falls",
+      "name": "Falls",
+      "description": "Attenumixverter",
+      "tags": [
+        "VCA",
+        "Mixer",
+        "Attenuator"
+      ]
+    },
+    {
+      "slug": "Ftagn",
+      "name": "Ftagn",
+      "description": "No filter",
+      "tags": [
+        "VCF"
+      ]
+    },
+    {
+      "slug": "Fuse",
+      "name": "Next pattern",
+      "description": "Sequencer",
+      "tags": [
+        "Sequencer"
+      ]
+    },
+    {
+      "slug": "Gnome",
+      "name": "Gnome",
+      "description": "Synth voice",
+      "tags": [
+        "Synth voice",
+        "VCO",
+        "LFO",
+        "VCF",
+        "VCA",
+        "Mixer"
+      ]
+    },
+    {
+      "slug": "Piste",
+      "name": "Piste",
+      "description": "Drum processor",
+      "tags": [
+        "Envelope generator",
+        "Effect"
+      ]
+    },
+    {
+      "slug": "Pulse",
+      "name": "Pulse",
+      "description": "Pulse generator",
+      "tags": [
+        "Envelope generator"
+      ]
+    },
+    {
+      "slug": "Rakes",
+      "name": "Rakes",
+      "description": "Resonator bank",
+      "tags": [
+        "VCF"
+      ]
+    },
+    {
+      "slug": "Riemann",
+      "name": "Riemann",
+      "description": "Chord generator",
+      "tags": [
+        "Sequencer"
+      ]
+    },
+    {
+      "slug": "Smoke",
+      "name": "Smoke",
+      "description": "Texture synth",
+      "tags": [
+        "Granular",
+        "Reverb"
+      ]
+    },
+    {
+      "slug": "Snake",
+      "name": "Snake",
+      "description": "Multicore",
+      "tags": [
+        "Utility"
+      ]
+    },
+    {
+      "slug": "SNS",
+      "name": "SNS",
+      "description": "Euclidean sequencer",
+      "tags": [
+        "Sequencer"
+      ]
+    },
+    {
+      "slug": "Splash",
+      "name": "Splash",
+      "description": "Tidal modulator",
+      "tags": [
+        "LFO",
+        "VCO",
+        "Waveshaper",
+        "Function generator"
+      ]
+    },
+    {
+      "slug": "Sssh",
+      "name": "Sssh",
+      "description": "Noise and S+H",
+      "tags": [
+        "Noise",
+        "Sample and hold"
+      ]
+    },
+    {
+      "slug": "Wriggle",
+      "name": "Wriggle",
+      "description": "Spring model",
+      "tags": [
+        "LFO",
+        "Function generator"
+      ]
+    }
+  ]
+}

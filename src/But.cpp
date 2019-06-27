@@ -72,29 +72,30 @@ struct But : Module
 
     bool swState[8] = {};
     
-	But() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
-	{
-		reset();
-	}
+    But() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+      reset();
 
-    void step() override;
+      configParam(But::SWITCH1_PARAM, 0.0, 1.0, 0.0, "");
+    }
 
-    void reset() override 
+    void process(const ProcessArgs &args) override;
+
+    void reset()
     {
         for (int i = 0; i < 8; i++) 
         {
             swState[i] = false;
 		}
 	}
-    void randomize() override 
+    void randomize()
     {
         for (int i = 0; i < 8; i++) 
         {
-            swState[i] = (randomUniform() < 0.5);
+            swState[i] = (random::uniform() < 0.5);
 		}
     }
     
-    json_t *toJson() override 
+    json_t *dataToJson() override 
     {
 		json_t *rootJ = json_object();
         json_t *swStatesJ = json_array();
@@ -107,7 +108,7 @@ struct But : Module
 		return rootJ;
 	}
 
-    void fromJson(json_t *rootJ) override 
+    void dataFromJson(json_t *rootJ) override 
     {
         json_t *swStatesJ = json_object_get(rootJ, "swStates");
         if (swStatesJ) 
@@ -124,31 +125,31 @@ struct But : Module
 };
 
 
-void But::step() 
+void But::process(const ProcessArgs &args) 
 {
     float outa = 0.;
     float outb = 0.;
     for(int i = 0; i < 8; i++)
     {
-        swState[i] = params[SWITCH1_PARAM + i].value > 0.5;
+        swState[i] = params[SWITCH1_PARAM + i].getValue() > 0.5;
         float in = 0.;
-        if(inputs[IN1_INPUT + i].active)
+        if(inputs[IN1_INPUT + i].isConnected())
         {
-            in = inputs[IN1_INPUT + i].value;
+            in = inputs[IN1_INPUT + i].getVoltage();
         }
         if ( !swState[i] ) {
-            outputs[OUTA1_OUTPUT + i].value = in;
+            outputs[OUTA1_OUTPUT + i].setVoltage(in);
             outa += in;
         } else {
-           outputs[OUTB1_OUTPUT + i].value = in;
+           outputs[OUTB1_OUTPUT + i].setVoltage(in);
            outb += in; 
         } 
     //    lights[SWITCH1_LIGHT + i].setBrightness(swState[i] ? 0.9 : 0.0);
     }
-    outputs[SUMA1_OUTPUT].value = outa;
-    outputs[SUMA2_OUTPUT].value = outa;
-    outputs[SUMB1_OUTPUT].value = outb;
-    outputs[SUMB2_OUTPUT].value = outb;
+    outputs[SUMA1_OUTPUT].setVoltage(outa);
+    outputs[SUMA2_OUTPUT].setVoltage(outa);
+    outputs[SUMB1_OUTPUT].setVoltage(outb);
+    outputs[SUMB2_OUTPUT].setVoltage(outb);
 }
 
 struct ButWidget : ModuleWidget { 
@@ -160,7 +161,7 @@ struct ButWidget : ModuleWidget {
         {
             auto *panel = new SVGPanel();
             panel->box.size = box.size;
-            panel->setBackground(SVG::load(assetPlugin(plugin, "res/But.svg")));
+            panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/But.svg")));
             addChild(panel);
         }
 
@@ -175,22 +176,22 @@ struct ButWidget : ModuleWidget {
         {
             yPos += 32.;
 
-            addInput(Port::create<sp_Port>(Vec(x1, yPos), Port::INPUT, module, But::IN1_INPUT + i));
-            addOutput(Port::create<sp_Port>(Vec(x2, yPos), Port::OUTPUT, module, But::OUTA1_OUTPUT + i));
-            addParam(ParamWidget::create<sp_Switch>(Vec(x3+1, 3 + yPos), module, But::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
-            addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, But::OUTB1_OUTPUT + i));
+            addInput(createInput<sp_Port>(Vec(x1, yPos), module, But::IN1_INPUT + i));
+            addOutput(createOutput<sp_Port>(Vec(x2, yPos), module, But::OUTA1_OUTPUT + i));
+            addParam(createParam<sp_Switch>(Vec(x3+1, 3 + yPos), module, But::SWITCH1_PARAM + i));
+            addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, But::OUTB1_OUTPUT + i));
         }
 
         yPos += 48.;
-        addOutput(Port::create<sp_Port>(Vec(x1, yPos), Port::OUTPUT, module, But::SUMA1_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x2, yPos), Port::OUTPUT, module, But::SUMA2_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x3+3, yPos), Port::OUTPUT, module, But::SUMB1_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, But::SUMB2_OUTPUT));
+        addOutput(createOutput<sp_Port>(Vec(x1, yPos), module, But::SUMA1_OUTPUT));
+        addOutput(createOutput<sp_Port>(Vec(x2, yPos), module, But::SUMA2_OUTPUT));
+        addOutput(createOutput<sp_Port>(Vec(x3+3, yPos), module, But::SUMB1_OUTPUT));
+        addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, But::SUMB2_OUTPUT));
     }
 
 };
 
-Model *modelBut 	= Model::create<But,ButWidget>(		 "Southpole", "But", 		"But - A/B buss", SWITCH_TAG, MIXER_TAG);
+Model *modelBut 	= createModel<But,ButWidget>("But");
 
 
 

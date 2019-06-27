@@ -1,5 +1,4 @@
 #include "Southpole.hpp"
-#include "dsp/digital.hpp"
 
 struct Pulse : Module {
 	enum ParamIds {
@@ -38,11 +37,11 @@ struct Pulse : Module {
 		NUM_LIGHTS
 	};
 
-	SchmittTrigger clock;
-	SchmittTrigger trigger;
-	SchmittTrigger triggerBtn;
-	PulseGenerator clkPulse;
-	PulseGenerator eocPulse;
+	dsp::SchmittTrigger clock;
+	dsp::SchmittTrigger trigger;
+	dsp::SchmittTrigger triggerBtn;
+	dsp::PulseGenerator clkPulse;
+	dsp::PulseGenerator eocPulse;
 
 	unsigned long delayt = 0;
 	unsigned long gatet = 0;
@@ -69,49 +68,60 @@ struct Pulse : Module {
 	 	//,2.,3.,4. //,5.,6.,7.,8.,12.,16.
 	};
 
-	Pulse() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {	}
+  Pulse() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-	void step() override;
+    configParam(Pulse::TRIG_PARAM, 0.0, 1.0, 0., "");
+    configParam(Pulse::RESET_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::REPEAT_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::RANGE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::TIME_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::DELAY_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Pulse::AMP_PARAM, 0.0, 1.0, 1.0, "");
+    configParam(Pulse::SLEW_PARAM, 0.0, 1.0, 0., "");
+  }
+
+	void process(const ProcessArgs &args) override;
 };
 
 
 
-void Pulse::step() {
+void Pulse::process(const ProcessArgs &args) {
 
 	bool triggered = false;
 
-	reset  = params[RESET_PARAM].value;
-	repeat = params[REPEAT_PARAM].value;
-	range  = params[RANGE_PARAM].value;
+	reset  = params[RESET_PARAM].getValue();
+	repeat = params[REPEAT_PARAM].getValue();
+	range  = params[RANGE_PARAM].getValue();
 
-    if (triggerBtn.process(params[TRIG_PARAM].value)) {
+    if (triggerBtn.process(params[TRIG_PARAM].getValue())) {
 		triggered = true;	
 	}
 
-	if (trigger.process(inputs[TRIG_INPUT].normalize(0.))) {
+	if (trigger.process(inputs[TRIG_INPUT].getNormalVoltage(0.))) {
 		triggered = true;
 		//printf("%lu\n", gateTarget);
 	}
 
-	if (clock.process(inputs[CLOCK_INPUT].normalize(0.))) {
+	if (clock.process(inputs[CLOCK_INPUT].getNormalVoltage(0.))) {
 		triggered = true;
 		clkPulse.trigger(1e-3);
 		clockp = clockt;
 		clockt = 0;
 	}
 
-	float dt = 1e-3*engineGetSampleRate();
-	float sr = engineGetSampleRate();
+	float dt = 1e-3*args.sampleRate;
+	float sr = args.sampleRate;
 
-	amp  = clamp(params[AMP_PARAM].value + inputs[AMP_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
-	slew = clamp(params[SLEW_PARAM].value + inputs[SLEW_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
+	amp  = clamp(params[AMP_PARAM].getValue() + inputs[AMP_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
+	slew = clamp(params[SLEW_PARAM].getValue() + inputs[SLEW_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
 	slew = pow(2.,(1.-slew)*log2(sr))/sr;
 	if (range) slew *= .1;
 
-	float delayTarget_ = clamp(params[DELAY_PARAM].value + inputs[DELAY_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
-	float gateTarget_  = clamp(params[TIME_PARAM].value + inputs[TIME_INPUT].normalize(0.) / 10.0f, 0.0f, 1.0f);
+	float delayTarget_ = clamp(params[DELAY_PARAM].getValue() + inputs[DELAY_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
+	float gateTarget_  = clamp(params[TIME_PARAM].getValue() + inputs[TIME_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
 
-	if (inputs[CLOCK_INPUT].active) {
+	if (inputs[CLOCK_INPUT].isConnected()) {
 		clockt++;
 
 		delayTarget = clockp*durations[int((ndurations-1)*delayTarget_)];
@@ -162,8 +172,8 @@ void Pulse::step() {
 		if (level < 0.)	level = 0.;
 	}
 
-	outputs[CLOCK_OUTPUT].value = 10.*clkPulse.process(1.0 / engineGetSampleRate());
-	outputs[EOC_OUTPUT].value   = 10.*eocPulse.process(1.0 / engineGetSampleRate());
+	outputs[CLOCK_OUTPUT].setVoltage(10.*clkPulse.process(1.0 / args.sampleRate));
+	outputs[EOC_OUTPUT].value   = 10.*eocPulse.process(1.0 / args.sampleRate);
 	outputs[GATE_OUTPUT].value  = clamp( 10.f * level * amp, -10.f, 10.f );
 
 	lights[EOC_LIGHT].setBrightnessSmooth( outputs[EOC_OUTPUT].value );
@@ -173,53 +183,49 @@ void Pulse::step() {
 
 struct PulseWidget : ModuleWidget {	
 	
-	PulseWidget(Module *module)  : ModuleWidget(module) {
+	PulseWidget(Module *module)  {
+		setModule(module);
 	
 		box.size = Vec(15*4, 380);
 
-		{
-			SVGPanel *panel = new SVGPanel();
-			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Pulse.svg")));
-			addChild(panel);
-		}
+    setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Pulse.svg")));
 
 		const float x1 = 5.;
 		const float x2 = 35.;
 		const float y1 = 40.;
 		const float yh = 35.;
 		
-		addInput(Port::create<sp_Port>(Vec(x1, y1+0*yh), Port::INPUT, module, Pulse::CLOCK_INPUT));
-		addOutput(Port::create<sp_Port>(Vec(x2, y1+0*yh), Port::OUTPUT, module, Pulse::CLOCK_OUTPUT));
+		addInput(createInput<sp_Port>(Vec(x1, y1+0*yh), module, Pulse::CLOCK_INPUT));
+		addOutput(createOutput<sp_Port>(Vec(x2, y1+0*yh), module, Pulse::CLOCK_OUTPUT));
 		
-		addInput(Port::create<sp_Port>(Vec(x1, y1+1*yh), Port::INPUT, module, Pulse::TRIG_INPUT));
-		addParam(ParamWidget::create<TL1105>(Vec(x2, y1+1*yh), module, Pulse::TRIG_PARAM, 0.0, 1.0, 0.));
+		addInput(createInput<sp_Port>(Vec(x1, y1+1*yh), module, Pulse::TRIG_INPUT));
+		addParam(createParam<TL1105>(Vec(x2, y1+1*yh), module, Pulse::TRIG_PARAM));
 
-		addParam(ParamWidget::create<sp_Switch>(Vec(x1, y1+1.75*yh), module, Pulse::RESET_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_Switch>(Vec(x1, y1+2.25*yh), module, Pulse::REPEAT_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_Switch>(Vec(x1, y1+2.75*yh), module, Pulse::RANGE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_Switch>(Vec(x1, y1+1.75*yh), module, Pulse::RESET_PARAM));
+		addParam(createParam<sp_Switch>(Vec(x1, y1+2.25*yh), module, Pulse::REPEAT_PARAM));
+		addParam(createParam<sp_Switch>(Vec(x1, y1+2.75*yh), module, Pulse::RANGE_PARAM));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+4*yh), Port::INPUT, module, Pulse::TIME_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Pulse::TIME_PARAM, 0.0, 1.0, 0.0));
+		addInput(createInput<sp_Port>(Vec(x1, y1+4*yh), module, Pulse::TIME_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+4*yh), module, Pulse::TIME_PARAM));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+5*yh), Port::INPUT, module, Pulse::DELAY_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Pulse::DELAY_PARAM, 0.0, 1.0, 0.0));
+		addInput(createInput<sp_Port>(Vec(x1, y1+5*yh), module, Pulse::DELAY_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5*yh), module, Pulse::DELAY_PARAM));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+6*yh), Port::INPUT, module, Pulse::AMP_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Pulse::AMP_PARAM, 0.0, 1.0, 1.0));
+		addInput(createInput<sp_Port>(Vec(x1, y1+6*yh), module, Pulse::AMP_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+6*yh), module, Pulse::AMP_PARAM));
 
-		//addInput(Port::create<sp_Port>		   (Vec(x1, y1+7*yh), module, Pulse::OFFSET_INPUT));
-		//addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::OFFSET_PARAM, -1.0, 1.0, 0.));
+		//addInput(createInput<sp_Port>		   (Vec(x1, y1+7*yh), module, Pulse::OFFSET_INPUT));
+		//addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::OFFSET_PARAM));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+7*yh), Port::INPUT, module, Pulse::SLEW_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::SLEW_PARAM, 0.0, 1.0, 0.));
+		addInput(createInput<sp_Port>(Vec(x1, y1+7*yh), module, Pulse::SLEW_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+7*yh), module, Pulse::SLEW_PARAM));
 
-		addOutput(Port::create<sp_Port>(Vec(x1, y1+8.25*yh), Port::OUTPUT, module, Pulse::EOC_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x2, y1+8.25*yh), Port::OUTPUT, module, Pulse::GATE_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x1, y1+8.25*yh), module, Pulse::EOC_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x2, y1+8.25*yh), module, Pulse::GATE_OUTPUT));
 
-		addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x1+7, y1+7.65*yh), module, Pulse::EOC_LIGHT));
-		addChild(ModuleLightWidget::create<SmallLight<RedLight>>(Vec(x2+7, y1+7.65*yh), module, Pulse::GATE_LIGHT));
+		addChild(createLight<SmallLight<RedLight>>(Vec(x1+7, y1+7.65*yh), module, Pulse::EOC_LIGHT));
+		addChild(createLight<SmallLight<RedLight>>(Vec(x2+7, y1+7.65*yh), module, Pulse::GATE_LIGHT));
 	}
 };
 
-Model *modelPulse	= Model::create<Pulse,PulseWidget>(	 "Southpole", "Pulse", 		"Pulse - pulse generator", ENVELOPE_GENERATOR_TAG);
+Model *modelPulse	= createModel<Pulse,PulseWidget>("Pulse");

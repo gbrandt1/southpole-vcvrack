@@ -10,8 +10,6 @@
 #include "Southpole.hpp"
 #include "CornrowsSettings.h"
 
-#include "dsp/samplerate.hpp"
-#include "dsp/ringbuffer.hpp"
 #include "braids/macro_oscillator.h"
 #include "braids/vco_jitter_source.h"
 #include "braids/signature_waveshaper.h"
@@ -74,8 +72,8 @@ struct CornrowsX : Module {
 	uint16_t gain_lp;
     int16_t previous_pitch = 0;
 
-	SampleRateConverter<1> src;
-	DoubleRingBuffer<Frame<1>, 256> outputBuffer;
+	dsp::SampleRateConverter<1> src;
+	dsp::DoubleRingBuffer<dsp::Frame<1>, 256> outputBuffer;
 	bool lastTrig = false;
 	bool lowCpu = false;
 	bool paques = false;
@@ -96,11 +94,45 @@ struct CornrowsX : Module {
 	braids::Setting last_setting_changed;
 	uint32_t disp_timeout = 0;
 
-	CornrowsX();
-	void step() override;
+  CornrowsX() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
+    memset(&osc, 0, sizeof(osc));
+    osc.Init();
+    memset(&quantizer, 0, sizeof(quantizer));
+    quantizer.Init();
+    memset(&envelope, 0, sizeof(envelope));
+    envelope.Init();
+
+    memset(&jitter_source, 0, sizeof(jitter_source));
+    jitter_source.Init();
+    memset(&ws, 0, sizeof(ws));
+    ws.Init(0x0000);
+    memset(&settings, 0, sizeof(settings));
+
+    configParam(CornrowsX::SHAPE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(CornrowsX::TRIG_DELAY_PARAM,  0.0, 1.0, 0.0, "");
+    configParam(CornrowsX::ATT_PARAM,   0.0, 1.0, 0.0, "");
+    configParam(CornrowsX::DEC_PARAM,   0.0, 1.0, 0.5, "");
+    configParam(CornrowsX::FINE_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(CornrowsX::COARSE_PARAM, -2.0, 2.0, 0.0, "");
+    configParam(CornrowsX::PITCH_OCTAVE_PARAM,  0.0, 1.0, 0.5, "");
+    configParam(CornrowsX::ROOT_PARAM,  0.0, 1.0, 0.0, "");
+    configParam(CornrowsX::SCALE_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(CornrowsX::PITCH_RANGE_PARAM,  0.0, 1.0, 0., "");
+    configParam(CornrowsX::FM_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(CornrowsX::AD_MODULATION_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(CornrowsX::MODULATION_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(CornrowsX::TIMBRE_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(CornrowsX::AD_TIMBRE_PARAM,    0.0, 1.0, 0.0, "");
+    configParam(CornrowsX::COLOR_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(CornrowsX::AD_COLOR_PARAM,     0.0, 1.0, 0.0, "");
+    configParam(CornrowsX::BITS_PARAM,  0.0, 1.0, 1.0, "");
+    configParam(CornrowsX::RATE_PARAM,  0.0, 1.0, 1.0, "");
+  }
+	void process(const ProcessArgs &args) override;
 	void setShape(int shape);
 
-	json_t *toJson() override {
+	json_t *dataToJson() override {
 		json_t *rootJ = json_object();
 		json_t *settingsJ = json_array();
 		uint8_t *settingsArray = &settings.shape;
@@ -116,7 +148,7 @@ struct CornrowsX : Module {
 		return rootJ;
 	}
 
-	void fromJson(json_t *rootJ) override {
+	void dataFromJson(json_t *rootJ) override {
 		json_t *settingsJ = json_object_get(rootJ, "settings");
 		if (settingsJ) {
 			uint8_t *settingsArray = &settings.shape;
@@ -134,43 +166,26 @@ struct CornrowsX : Module {
 	}
 };
 
+void CornrowsX::process(const ProcessArgs &args) {
 
-CornrowsX::CornrowsX() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {
-	memset(&osc, 0, sizeof(osc));
-	osc.Init();
-	memset(&quantizer, 0, sizeof(quantizer));
-	quantizer.Init();
-	memset(&envelope, 0, sizeof(envelope));
-	envelope.Init();
-
-	memset(&jitter_source, 0, sizeof(jitter_source));
-	jitter_source.Init();
-	memset(&ws, 0, sizeof(ws));
-	ws.Init(0x0000);
-	memset(&settings, 0, sizeof(settings));
-
-}
-
-void CornrowsX::step() {
-
-	settings.quantizer_scale = params[SCALE_PARAM].value * 48.; //sizeof(quantization_values);
-	settings.quantizer_root  = params[ROOT_PARAM].value * 11.;
-	settings.pitch_range = params[PITCH_RANGE_PARAM].value*4.;
-	settings.pitch_octave = params[PITCH_OCTAVE_PARAM].value*4.;
-	settings.trig_delay  = params[TRIG_DELAY_PARAM].value*6.;
-	settings.sample_rate = params[RATE_PARAM].value*6.;
-	settings.resolution  = params[BITS_PARAM].value*6.;
-	settings.ad_attack 	= params[ATT_PARAM].value*15.;
-	settings.ad_decay  	= params[DEC_PARAM].value*15.;
-	settings.ad_timbre 	= params[AD_TIMBRE_PARAM].value*15.;
-	settings.ad_fm	   	= params[AD_MODULATION_PARAM].value*15.;
-	settings.ad_color  	= params[AD_COLOR_PARAM].value*15.;
+	settings.quantizer_scale = params[SCALE_PARAM].getValue() * 48.; //sizeof(quantization_values);
+	settings.quantizer_root  = params[ROOT_PARAM].getValue() * 11.;
+	settings.pitch_range = params[PITCH_RANGE_PARAM].getValue()*4.;
+	settings.pitch_octave = params[PITCH_OCTAVE_PARAM].getValue()*4.;
+	settings.trig_delay  = params[TRIG_DELAY_PARAM].getValue()*6.;
+	settings.sample_rate = params[RATE_PARAM].getValue()*6.;
+	settings.resolution  = params[BITS_PARAM].getValue()*6.;
+	settings.ad_attack 	= params[ATT_PARAM].getValue()*15.;
+	settings.ad_decay  	= params[DEC_PARAM].getValue()*15.;
+	settings.ad_timbre 	= params[AD_TIMBRE_PARAM].getValue()*15.;
+	settings.ad_fm	   	= params[AD_MODULATION_PARAM].getValue()*15.;
+	settings.ad_color  	= params[AD_COLOR_PARAM].getValue()*15.;
 
 	// Display - return to SHAPE after 2s
 	if (last_setting_changed != braids::SETTING_OSCILLATOR_SHAPE) {
 		disp_timeout++;
 	}
-	if (disp_timeout > 1.0*engineGetSampleRate()) {
+	if (disp_timeout > 1.0*args.sampleRate) {
 		last_setting_changed = braids::SETTING_OSCILLATOR_SHAPE;
 		disp_timeout=0;
 	}
@@ -185,7 +200,7 @@ void CornrowsX::step() {
 	}	
 
 	// Trigger
-	bool trig = inputs[TRIG_INPUT].value >= 1.0;
+	bool trig = inputs[TRIG_INPUT].getVoltage() >= 1.0;
 	if (!lastTrig && trig) {
 		trigger_detected_flag = trig;
 	}
@@ -216,13 +231,13 @@ void CornrowsX::step() {
 		envelope.Update( settings.ad_attack*8, settings.ad_decay*8 );
 	  	uint32_t ad_value = envelope.Render();
 
-		float fm = params[FM_PARAM].value * inputs[FM_INPUT].value;
+		float fm = params[FM_PARAM].getValue() * inputs[FM_INPUT].getVoltage();
 
 		// Set shape
 		if (paques) {
 			osc.set_shape(braids::MACRO_OSC_SHAPE_QUESTION_MARK);	
 		} else {
-			int shape = roundf(params[SHAPE_PARAM].value * braids::MACRO_OSC_SHAPE_LAST_ACCESSIBLE_FROM_META);
+			int shape = roundf(params[SHAPE_PARAM].getValue() * braids::MACRO_OSC_SHAPE_LAST_ACCESSIBLE_FROM_META);
 			if (settings.meta_modulation) {
 				shape += roundf(fm / 10.0 * braids::MACRO_OSC_SHAPE_LAST_ACCESSIBLE_FROM_META);
 			}
@@ -233,8 +248,8 @@ void CornrowsX::step() {
 		}
 
 		// Set timbre/modulation
-		float timbre = params[TIMBRE_PARAM].value + params[MODULATION_PARAM].value * inputs[TIMBRE_INPUT].value / 5.0;
-		float modulation = params[COLOR_PARAM].value + inputs[COLOR_INPUT].value / 5.0;
+		float timbre = params[TIMBRE_PARAM].getValue() + params[MODULATION_PARAM].getValue() * inputs[TIMBRE_INPUT].getVoltage() / 5.0;
+		float modulation = params[COLOR_PARAM].getValue() + inputs[COLOR_INPUT].getVoltage() / 5.0;
 
 	    timbre += ad_value/65535. * settings.ad_timbre / 16.;
 	    modulation += ad_value/65535. * settings.ad_color / 16.;
@@ -244,11 +259,11 @@ void CornrowsX::step() {
 		osc.set_parameters(param1, param2);
 
 		// Set pitch
-		float pitchV = inputs[PITCH_INPUT].value + params[COARSE_PARAM].value + params[FINE_PARAM].value / 12.0;
+		float pitchV = inputs[PITCH_INPUT].getVoltage() + params[COARSE_PARAM].getValue() + params[FINE_PARAM].getValue() / 12.0;
 		if (!settings.meta_modulation)
 			pitchV += fm;
 		if (lowCpu)
-			pitchV += log2f(96000.0 / engineGetSampleRate());
+			pitchV += log2f(96000.0 / args.sampleRate);
 		int32_t pitch = (pitchV * 12.0 + 60) * 128;
 
 		// pitch_range
@@ -321,18 +336,18 @@ void CornrowsX::step() {
 
 		if (lowCpu) {
 			for (int i = 0; i < 24; i++) {
-				Frame<1> f;
+				dsp::Frame<1> f;
 				f.samples[0] = render_buffer[i] / 32768.0;
 				outputBuffer.push(f);
 			}
 		}
 		else {
 			// Sample rate convert
-			Frame<1> in[24];
+			dsp::Frame<1> in[24];
 			for (int i = 0; i < 24; i++) {
 				in[i].samples[0] = render_buffer[i] / 32768.0;
 			}
-			src.setRates(96000, engineGetSampleRate());
+			src.setRates(96000, args.sampleRate);
 
 			int inLen = 24;
 			int outLen = outputBuffer.capacity();
@@ -343,8 +358,8 @@ void CornrowsX::step() {
 
 	// Output
 	if (!outputBuffer.empty()) {
-		Frame<1> f = outputBuffer.shift();
-		outputs[OUT_OUTPUT].value = 5.0 * f.samples[0];
+		dsp::Frame<1> f = outputBuffer.shift();
+		outputs[OUT_OUTPUT].setVoltage(5.0 * f.samples[0]);
 	}
 }
 
@@ -354,131 +369,129 @@ struct CornrowsXDisplay : TransparentWidget {
 	std::shared_ptr<Font> font;
 
 	CornrowsXDisplay() {
-		font = Font::load(assetPlugin(plugin, "res/hdad-segment14-1.002/Segment14.ttf"));
+		font = APP->window->loadFont(asset::plugin(pluginInstance, "res/hdad-segment14-1.002/Segment14.ttf"));
 	}
 
-	void draw(NVGcontext *vg) override {
-		int shape=0;
-		const char *text="";
+  void draw(const DrawArgs &args) override {
+    int shape = module ? module->settings.shape : 0;
+    const char *text="";
 
-		// Background
-		NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
-		NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
-		nvgFillColor(vg, backgroundColor);
-		nvgFill(vg);
-		nvgStrokeWidth(vg, 1.5);
-		nvgStrokeColor(vg, borderColor);
-		nvgStroke(vg);
+    // Background
+    NVGcolor backgroundColor = nvgRGB(0x30, 0x10, 0x10);
+    NVGcolor borderColor = nvgRGB(0xd0, 0xd0, 0xd0);
+    nvgBeginPath(args.vg);
+    nvgRoundedRect(args.vg, 0.0, 0.0, box.size.x, box.size.y, 5.0);
+    nvgFillColor(args.vg, backgroundColor);
+    nvgFill(args.vg);
+    nvgStrokeWidth(args.vg, 1.5);
+    nvgStrokeColor(args.vg, borderColor);
+    nvgStroke(args.vg);
 
-		nvgFontSize(vg, 20.);
-		nvgFontFaceId(vg, font->handle);
-		nvgTextLetterSpacing(vg, 2.);
+    nvgFontSize(args.vg, 20.);
+    nvgFontFaceId(args.vg, font->handle);
+    nvgTextLetterSpacing(args.vg, 2.);
 
-		Vec textPos = Vec(5, 28);
-		NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
-		nvgFillColor(vg, nvgTransRGBA(textColor, 16));
-		nvgText(vg, textPos.x, textPos.y, "~~~~", NULL);
-		nvgFillColor(vg, textColor);
-		//blink
-		if ( module->disp_timeout & 0x1000 ) return;
-		if (module->last_setting_changed == braids::SETTING_OSCILLATOR_SHAPE) {
-			shape = module->settings.shape;
-			if (module->paques) {
-			  text = "  49"; 		
-			} else {
-			  text = algo_values[shape];
-			}
-		}
-		if (module->last_setting_changed == braids::SETTING_META_MODULATION) {
-		    shape = module->settings.ad_timbre;
-		 	text = "META";
-		}
-		if (module->last_setting_changed == braids::SETTING_RESOLUTION) {
-		    shape = module->settings.resolution;
-		 	text = bits_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_SAMPLE_RATE) {
-		    shape = module->settings.sample_rate;
-		 	text = rates_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_TRIG_SOURCE) {
-		    shape = module->settings.ad_timbre;
-		 	text = "AUTO";
-		}
-		if (module->last_setting_changed == braids::SETTING_TRIG_DELAY) {
-		    shape = module->settings.trig_delay;
-		 	text = trig_delay_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_ATTACK) {
-		    shape = module->settings.ad_attack;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_DECAY) {
-		    shape = module->settings.ad_decay;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_FM) {
-		    shape = module->settings.ad_fm;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_TIMBRE) {
-		    shape = module->settings.ad_color;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_COLOR) {
-		    shape = module->settings.ad_color;
-		 	text = zero_to_fifteen_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_AD_VCA) {
-		    shape = module->settings.ad_color;
-		 	text = "\\VCA";
-		}
-		if (module->last_setting_changed == braids::SETTING_PITCH_RANGE) {
-		    shape = module->settings.pitch_range;
-		 	text = pitch_range_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_PITCH_OCTAVE) {
-		    shape = module->settings.pitch_octave;
-		 	text = octave_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_QUANTIZER_SCALE) {
-		    shape = module->settings.quantizer_scale;
-		 	text = quantization_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_QUANTIZER_ROOT) {
-		    shape = module->settings.quantizer_root;
-		 	text = note_values[shape];
-		}
-		if (module->last_setting_changed == braids::SETTING_VCO_FLATTEN) {
-		    shape = module->settings.quantizer_scale;
-		 	text = "FLAT";
-		}
-		if (module->last_setting_changed == braids::SETTING_VCO_DRIFT) {
-		    shape = module->settings.quantizer_scale;
-		 	text = "DRFT";
-		}
-		if (module->last_setting_changed == braids::SETTING_SIGNATURE) {
-		    shape = module->settings.quantizer_scale;
-		 	text = "SIGN";
-		}
-		nvgText(vg, textPos.x, textPos.y, text, NULL);
-		//nvgText(vg, textPos.x, textPos.y, algo_values[shape], NULL);
-	}
+    Vec textPos = Vec(5, 28);
+    NVGcolor textColor = nvgRGB(0xff, 0x00, 0x00);
+    nvgFillColor(args.vg, nvgTransRGBA(textColor, 16));
+    nvgText(args.vg, textPos.x, textPos.y, "~~~~", NULL);
+    nvgFillColor(args.vg, textColor);
+    //blink
+    if (module && module->disp_timeout & 0x1000 ) return;
+    if (module && module->last_setting_changed == braids::SETTING_OSCILLATOR_SHAPE) {
+      shape = module->settings.shape;
+      if (module->paques) {
+        text = "  49";    
+      } else {
+        text = algo_values[shape];
+      }
+    }
+    if (module && module->last_setting_changed == braids::SETTING_META_MODULATION) {
+        shape = module->settings.ad_timbre;
+      text = "META";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_RESOLUTION) {
+        shape = module->settings.resolution;
+      text = bits_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_SAMPLE_RATE) {
+        shape = module->settings.sample_rate;
+      text = rates_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_TRIG_SOURCE) {
+        shape = module->settings.ad_timbre;
+      text = "AUTO";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_TRIG_DELAY) {
+        shape = module->settings.trig_delay;
+      text = trig_delay_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_ATTACK) {
+        shape = module->settings.ad_attack;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_DECAY) {
+        shape = module->settings.ad_decay;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_FM) {
+        shape = module->settings.ad_fm;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_TIMBRE) {
+        shape = module->settings.ad_color;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_COLOR) {
+        shape = module->settings.ad_color;
+      text = zero_to_fifteen_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_AD_VCA) {
+        shape = module->settings.ad_color;
+      text = "\\VCA";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_PITCH_RANGE) {
+        shape = module->settings.pitch_range;
+      text = pitch_range_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_PITCH_OCTAVE) {
+        shape = module->settings.pitch_octave;
+      text = octave_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_QUANTIZER_SCALE) {
+        shape = module->settings.quantizer_scale;
+      text = quantization_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_QUANTIZER_ROOT) {
+        shape = module->settings.quantizer_root;
+      text = note_values[shape];
+    }
+    if (module && module->last_setting_changed == braids::SETTING_VCO_FLATTEN) {
+        shape = module->settings.quantizer_scale;
+      text = "FLAT";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_VCO_DRIFT) {
+        shape = module->settings.quantizer_scale;
+      text = "DRFT";
+    }
+    if (module && module->last_setting_changed == braids::SETTING_SIGNATURE) {
+        shape = module->settings.quantizer_scale;
+      text = "SIGN";
+    }
+    nvgText(args.vg, textPos.x, textPos.y, text, NULL);
+  }
 };
 
 struct CornrowsXWidget : ModuleWidget {
 
-	Menu *createContextMenu() override;
-
-	CornrowsXWidget(CornrowsX *module)  : ModuleWidget(module) {
+	CornrowsXWidget(CornrowsX *module)  {
+		setModule(module);
 
 		box.size = Vec( 8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT );
 
 		{
 			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Cornrows.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Cornrows.svg")));
 			panel->box.size = box.size;
 			addChild(panel);	
 		}
@@ -502,97 +515,94 @@ struct CornrowsXWidget : ModuleWidget {
 		const float y1 = 115;	
 		const float yh = 36.;
 
-		addParam(ParamWidget::create<sp_Encoder>(Vec(x3+4, 78), module, CornrowsX::SHAPE_PARAM, 0.0, 1.0, 0.0));
+		addParam(createParam<sp_Encoder>(Vec(x3+4, 78), module, CornrowsX::SHAPE_PARAM));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1-1*yh), Port::INPUT, module, CornrowsX::TRIG_INPUT));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1-1*yh), module, CornrowsX::TRIG_DELAY_PARAM,  0.0, 1.0, 0.0));
+		addInput(createInput<sp_Port>(Vec(x1, y1-1*yh), module, CornrowsX::TRIG_INPUT));
+		addParam(createParam<sp_Trimpot>(Vec(x2, y1-1*yh), module, CornrowsX::TRIG_DELAY_PARAM));
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+0*yh), module, CornrowsX::ATT_PARAM,   0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+0*yh), module, CornrowsX::DEC_PARAM,   0.0, 1.0, 0.5));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+0*yh), module, CornrowsX::ATT_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+0*yh), module, CornrowsX::DEC_PARAM));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+yh), Port::INPUT, module, CornrowsX::PITCH_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+yh), module, CornrowsX::FINE_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+yh), module, CornrowsX::COARSE_PARAM, -2.0, 2.0, 0.0));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+yh), module, CornrowsX::PITCH_OCTAVE_PARAM,  0.0, 1.0, 0.5));
+		addInput(createInput<sp_Port>(Vec(x1, y1+yh), module, CornrowsX::PITCH_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+yh), module, CornrowsX::FINE_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+yh), module, CornrowsX::COARSE_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x4, y1+yh), module, CornrowsX::PITCH_OCTAVE_PARAM));
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, CornrowsX::ROOT_PARAM,  0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, CornrowsX::SCALE_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+2*yh), module, CornrowsX::PITCH_RANGE_PARAM,  0.0, 1.0, 0.));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+2*yh), module, CornrowsX::ROOT_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+2*yh), module, CornrowsX::SCALE_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x4, y1+2*yh), module, CornrowsX::PITCH_RANGE_PARAM));
 		
-		addInput(Port::create<sp_Port>(Vec(x1, y1+3*yh), Port::INPUT, module, CornrowsX::FM_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+3*yh), module, CornrowsX::FM_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+3*yh), module, CornrowsX::AD_MODULATION_PARAM, 0.0, 1.0, 0.0));
+		addInput(createInput<sp_Port>(Vec(x1, y1+3*yh), module, CornrowsX::FM_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+3*yh), module, CornrowsX::FM_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x4, y1+3*yh), module, CornrowsX::AD_MODULATION_PARAM));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+4*yh), Port::INPUT, module, CornrowsX::TIMBRE_INPUT));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x2, y1+4*yh), module, CornrowsX::MODULATION_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+4*yh), module, CornrowsX::TIMBRE_PARAM, 0.0, 1.0, 0.5));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+4*yh), module, CornrowsX::AD_TIMBRE_PARAM,	   0.0, 1.0, 0.0));
+		addInput(createInput<sp_Port>(Vec(x1, y1+4*yh), module, CornrowsX::TIMBRE_INPUT));
+		addParam(createParam<sp_Trimpot>(Vec(x2, y1+4*yh), module, CornrowsX::MODULATION_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+4*yh), module, CornrowsX::TIMBRE_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x4, y1+4*yh), module, CornrowsX::AD_TIMBRE_PARAM));
 
-		addInput(Port::create<sp_Port>(Vec(x1, y1+5*yh), Port::INPUT, module, CornrowsX::COLOR_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+5*yh), module, CornrowsX::COLOR_PARAM, 0.0, 1.0, 0.5));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x4, y1+5*yh), module, CornrowsX::AD_COLOR_PARAM, 	   0.0, 1.0, 0.0));
+		addInput(createInput<sp_Port>(Vec(x1, y1+5*yh), module, CornrowsX::COLOR_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+5*yh), module, CornrowsX::COLOR_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x4, y1+5*yh), module, CornrowsX::AD_COLOR_PARAM));
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x1, y1+5.75*yh), module, CornrowsX::BITS_PARAM,  0.0, 1.0, 1.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, y1+5.75*yh), module, CornrowsX::RATE_PARAM,  0.0, 1.0, 1.0));
-		addOutput(Port::create<sp_Port>(Vec(x4, y1+5.75*yh), Port::OUTPUT, module, CornrowsX::OUT_OUTPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x1, y1+5.75*yh), module, CornrowsX::BITS_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, y1+5.75*yh), module, CornrowsX::RATE_PARAM));
+		addOutput(createOutput<sp_Port>(Vec(x4, y1+5.75*yh), module, CornrowsX::OUT_OUTPUT));
 
 	}
+
+  void appendContextMenu(Menu *menu) override {
+    CornrowsX *braids = dynamic_cast<CornrowsX*>(model);
+    assert(braids);
+
+    struct CornrowsXSettingItem : MenuItem {
+      CornrowsX *braids;
+      uint8_t *setting = NULL;
+      uint8_t offValue = 0;
+      uint8_t onValue = 1;
+      void onAction(const event::Action &e) override {
+        // Toggle setting
+        *setting = (*setting == onValue) ? offValue : onValue;
+      }
+      void step() override {
+        rightText = (*setting == onValue) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    struct CornrowsXLowCpuItem : MenuItem {
+      CornrowsX *braids;
+      void onAction(const event::Action &e) override {
+        braids->lowCpu = !braids->lowCpu;
+      }
+      void step() override {
+        rightText = (braids->lowCpu) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    struct CornrowsXPaquesItem : MenuItem {
+      CornrowsX *braids;
+      void onAction(const event::Action &e) override {
+        braids->paques = !braids->paques;
+      }
+      void step() override {
+        rightText = (braids->paques) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    menu->addChild(construct<MenuLabel>());
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Options"));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "META", &CornrowsXSettingItem::setting, &braids->settings.meta_modulation));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "AUTO", &CornrowsXSettingItem::setting, &braids->settings.auto_trig));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "|\\VCA", &CornrowsXSettingItem::setting, &braids->settings.ad_vca));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "FLAT", &CornrowsXSettingItem::setting, &braids->settings.vco_flatten, &CornrowsXSettingItem::onValue, 4));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "DRFT", &CornrowsXSettingItem::setting, &braids->settings.vco_drift, &CornrowsXSettingItem::onValue, 4));
+    menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "SIGN", &CornrowsXSettingItem::setting, &braids->settings.signature, &CornrowsXSettingItem::onValue, 4));
+    menu->addChild(construct<CornrowsXLowCpuItem>(&MenuItem::text, "Low CPU", &CornrowsXLowCpuItem::braids, braids));
+    menu->addChild(construct<CornrowsXPaquesItem>(&MenuItem::text, "Paques",  &CornrowsXPaquesItem::braids, braids));
+  }
 };
 
-struct CornrowsXSettingItem : MenuItem {
-	uint8_t *setting = NULL;
-	uint8_t offValue = 0;
-	uint8_t onValue = 1;
-	void onAction(EventAction &e) override {
-		// Toggle setting
-		*setting = (*setting == onValue) ? offValue : onValue;
-	}
-	void step() override {
-		rightText = (*setting == onValue) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-struct CornrowsXLowCpuItem : MenuItem {
-	CornrowsX *braids;
-	void onAction(EventAction &e) override {
-		braids->lowCpu = !braids->lowCpu;
-	}
-	void step() override {
-		rightText = (braids->lowCpu) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-struct CornrowsXPaquesItem : MenuItem {
-	CornrowsX *braids;
-	void onAction(EventAction &e) override {
-		braids->paques = !braids->paques;
-	}
-	void step() override {
-		rightText = (braids->paques) ? "✔" : "";
-		MenuItem::step();
-	}
-};
-
-Menu *CornrowsXWidget::createContextMenu() {
-	Menu *menu = ModuleWidget::createContextMenu();
-
-	CornrowsX *braids = dynamic_cast<CornrowsX*>(module);
-	assert(braids);
-
-	menu->addChild(construct<MenuLabel>());
-	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Options"));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "META", &CornrowsXSettingItem::setting, &braids->settings.meta_modulation));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "AUTO", &CornrowsXSettingItem::setting, &braids->settings.auto_trig));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "|\\VCA", &CornrowsXSettingItem::setting, &braids->settings.ad_vca));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "FLAT", &CornrowsXSettingItem::setting, &braids->settings.vco_flatten, &CornrowsXSettingItem::onValue, 4));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "DRFT", &CornrowsXSettingItem::setting, &braids->settings.vco_drift, &CornrowsXSettingItem::onValue, 4));
-	menu->addChild(construct<CornrowsXSettingItem>(&MenuItem::text, "SIGN", &CornrowsXSettingItem::setting, &braids->settings.signature, &CornrowsXSettingItem::onValue, 4));
-	menu->addChild(construct<CornrowsXLowCpuItem>(&MenuItem::text, "Low CPU", &CornrowsXLowCpuItem::braids, braids));
-	menu->addChild(construct<CornrowsXPaquesItem>(&MenuItem::text, "Paques",  &CornrowsXPaquesItem::braids, braids));
-
-	return menu;
-}
-
-Model *modelCornrowsX = Model::create<CornrowsX,CornrowsXWidget>("Southpole", "CornrowsX", 	"CornrowsX - macro osc", OSCILLATOR_TAG, WAVESHAPER_TAG);
+Model *modelCornrowsX = createModel<CornrowsX,CornrowsXWidget>("CornrowsX");

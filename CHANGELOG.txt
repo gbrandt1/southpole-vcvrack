@@ -1,5 +1,9 @@
 
 
+-- 1.0.0 ----
+
+- Migrated to the `v1` Rack API.
+
 -- 0.5.4 ----
 
 - Cornrows X

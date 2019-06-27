@@ -1,5 +1,4 @@
 #include "Southpole.hpp"
-#include "dsp/digital.hpp"
 
 #define NBUF 6 
 
@@ -53,7 +52,7 @@ struct Rakes : Module {
 		NUM_LIGHTS
 	};
 
-	//SchmittTrigger clock;
+	//dsp::SchmittTrigger clock;
 
 	float *bufl[NBUF];
 	float *bufr[NBUF];
@@ -68,21 +67,30 @@ struct Rakes : Module {
 	int lastsizel[NBUF];
 	int lastsizer[NBUF];
 
-	Rakes() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {	
+  Rakes() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);	
 
-		maxsize = engineGetSampleRate();
+    maxsize = APP->engine->getSampleRate();
 
-		for (int j=0; j < NBUF; j++) {
-  			bufl[j] = new float [maxsize];
-  			bufr[j] = new float [maxsize];
-			for (int i=0; i < maxsize; i++) {
-				bufl[j][i] = 0;		
-				bufr[j][i] = 0;		
-			}
-			headl[j] = 0;
-			headr[j] = 0;
-		}
-	}
+    for (int j=0; j < NBUF; j++) {
+      bufl[j] = new float [maxsize];
+      bufr[j] = new float [maxsize];
+      for (int i=0; i < maxsize; i++) {
+        bufl[j][i] = 0;		
+        bufr[j][i] = 0;		
+      }
+      headl[j] = 0;
+      headr[j] = 0;
+    }
+
+    configParam(Rakes::DECAY_PARAM, 0.0, 1.0, 0.0, "");
+//    configParam(Rakes::FOLLOW_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Rakes::TUNE1_PARAM,  -5.0, 5.5, 0.0, "");
+    configParam(Rakes::FINE1_PARAM,  -1.0, 1.0, 0.0, "");
+    configParam(Rakes::GAIN1_PARAM,  0.0, 1.0, 0.0, "");
+    configParam(Rakes::QUANT_PARAM, 0.0, 1.0, 0.0, "");
+    configParam(Rakes::MIX_PARAM, 0.0, 1.0, 0.5, "");
+  }
 
 	float xm1 = 0;
 	float ym1 = 0;
@@ -94,35 +102,35 @@ struct Rakes : Module {
 		return y;
 	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
 
-void Rakes::step() {
+void Rakes::process(const ProcessArgs &args) {
 
-	//float mix  = clamp(params[MIX_PARAM].value + inputs[MIX_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
-	float mix    = params[MIX_PARAM].value;
-	float rate   = clamp(params[DECAY_PARAM].value + inputs[DECAY_INPUT].normalize(0.) / 10.0, 0.0f, .99f);
+	//float mix  = clamp(params[MIX_PARAM].getValue() + inputs[MIX_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
+	float mix    = params[MIX_PARAM].getValue();
+	float rate   = clamp(params[DECAY_PARAM].getValue() + inputs[DECAY_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, .99f);
 
 	const float f0 = 261.626;
-	float inl  = inputs[INL_INPUT].normalize(0.);
-	float inr  = inputs[INR_INPUT].normalize(inl);
+	float inl  = inputs[INL_INPUT].getNormalVoltage(0.);
+	float inr  = inputs[INR_INPUT].getNormalVoltage(inl);
 
 	float sumoutl  = 0;
 	float sumoutr  = 0;
 	float sumgain = 1.;
 
 	for (int j=0; j < NBUF; j++) {
-		//float gain = clamp(params[GAIN1_PARAM + j].value + inputs[GAIN1_INPUT + j].normalize(0.) / 10.0, 0.0, 1.0);
-		float gain = params[GAIN1_PARAM + j].value;
+		//float gain = clamp(params[GAIN1_PARAM + j].getValue() + inputs[GAIN1_INPUT + j].normalize(0.) / 10.0, 0.0, 1.0);
+		float gain = params[GAIN1_PARAM + j].getValue();
 		if (gain < 1e-3) continue;
 		sumgain += gain;
 
-		float tune = clamp(params[TUNE1_PARAM + j].value + inputs[TUNE1_INPUT + j].normalize(0.), -5.0, 5.5);
-		float fine = clamp(params[FINE1_PARAM + j].value, -1.0, 1.0);
+		float tune = clamp(params[TUNE1_PARAM + j].getValue() + inputs[TUNE1_INPUT + j].getNormalVoltage(0.), -5.0, 5.5);
+		float fine = clamp(params[FINE1_PARAM + j].getValue(), -1.0, 1.0);
 
-		if ( params[QUANT_PARAM].value > 0.5 ) {
+		if ( params[QUANT_PARAM].getValue() > 0.5 ) {
 			tune = round(12.*tune)/12.;
 		}
 
@@ -170,22 +178,18 @@ void Rakes::step() {
 	sumoutl = clamp( dcblock(sumoutl) / sumgain, -10., 10.); //in + gain*out;
 	sumoutr = clamp( dcblock(sumoutr) / sumgain, -10., 10.); //in + gain*out;
 
-	outputs[OUTL_OUTPUT].value = crossfade(inl,sumoutl,mix);
-	outputs[OUTR_OUTPUT].value = crossfade(inr,sumoutr,mix);
+	outputs[OUTL_OUTPUT].setVoltage(crossfade(inl,sumoutl,mix));
+	outputs[OUTR_OUTPUT].setVoltage(crossfade(inr,sumoutr,mix));
 }
 
 struct RakesWidget : ModuleWidget { 
 	
-	RakesWidget(Rakes *module) : ModuleWidget(module) {
+	RakesWidget(Rakes *module) {
+		setModule(module);
 	
 		box.size = Vec(15*8, 380);
 
-		{
-			SVGPanel *panel = new SVGPanel();
-			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Rakes.svg")));
-			addChild(panel);
-		}
+    setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Rakes.svg")));
 
 		const float x1 = 5.;
 		const float x2 = 35.;
@@ -194,28 +198,28 @@ struct RakesWidget : ModuleWidget {
 		const float y1 = 40.;
 		const float yh = 32.;
 		
-		addInput(Port::create<sp_Port>(Vec(x2, y1+0*yh), Port::INPUT, module, Rakes::DECAY_INPUT));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x3, y1+0*yh), module, Rakes::DECAY_PARAM, 0.0, 1.0, 0.0));
-		//addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec(x3, y1+0*yh), module, Rakes::FOLLOW_PARAM, 0.0, 1.0, 0.0));
+		addInput(createInput<sp_Port>(Vec(x2, y1+0*yh), module, Rakes::DECAY_INPUT));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1+0*yh), module, Rakes::DECAY_PARAM));
+		//addParam(createParam<sp_SmallBlackKnob>	(Vec(x3, y1+0*yh), module, Rakes::FOLLOW_PARAM));
 
 		for (int j=0; j < NBUF; j++) {
-			addInput(Port::create<sp_Port>			(Vec(x1, y1+(j+1.5)*yh), Port::INPUT, module, Rakes::TUNE1_INPUT + j));
-			addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec(x2, y1+(j+1.5)*yh), module, Rakes::TUNE1_PARAM + j,  -5.0, 5.5, 0.0));
-			addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec(x3, y1+(j+1.5)*yh), module, Rakes::FINE1_PARAM + j,  -1.0, 1.0, 0.0));
-			addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec(x4, y1+(j+1.5)*yh), module, Rakes::GAIN1_PARAM + j,  0.0, 1.0, 0.0));
+			addInput(createInput<sp_Port>			(Vec(x1, y1+(j+1.5)*yh), module, Rakes::TUNE1_INPUT + j));
+			addParam(createParam<sp_SmallBlackKnob>	(Vec(x2, y1+(j+1.5)*yh), module, Rakes::TUNE1_PARAM + j));
+			addParam(createParam<sp_SmallBlackKnob>	(Vec(x3, y1+(j+1.5)*yh), module, Rakes::FINE1_PARAM + j));
+			addParam(createParam<sp_SmallBlackKnob>	(Vec(x4, y1+(j+1.5)*yh), module, Rakes::GAIN1_PARAM + j));
 		}
 
 
-		addInput(Port::create<sp_Port>	(Vec(x1, y1+8*yh), Port::INPUT, module, Rakes::INL_INPUT));
-		addInput(Port::create<sp_Port>	(Vec(x1, y1+9*yh), Port::INPUT, module, Rakes::INR_INPUT));
+		addInput(createInput<sp_Port>	(Vec(x1, y1+8*yh), module, Rakes::INL_INPUT));
+		addInput(createInput<sp_Port>	(Vec(x1, y1+9*yh), module, Rakes::INR_INPUT));
 
-		addParam(ParamWidget::create<CKSS>( Vec(x2, y1+7.5*yh), module, Rakes::QUANT_PARAM, 0.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>	(Vec((x2+x3)/2., y1+8.5*yh), module, Rakes::MIX_PARAM, 0.0, 1.0, 0.5));
+		addParam(createParam<CKSS>( Vec(x2, y1+7.5*yh), module, Rakes::QUANT_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>	(Vec((x2+x3)/2., y1+8.5*yh), module, Rakes::MIX_PARAM));
 
-		addOutput(Port::create<sp_Port> (Vec(x4, y1+8*yh), Port::OUTPUT, module, Rakes::OUTL_OUTPUT));
-		addOutput(Port::create<sp_Port> (Vec(x4, y1+9*yh), Port::OUTPUT, module, Rakes::OUTR_OUTPUT));
+		addOutput(createOutput<sp_Port> (Vec(x4, y1+8*yh), module, Rakes::OUTL_OUTPUT));
+		addOutput(createOutput<sp_Port> (Vec(x4, y1+9*yh), module, Rakes::OUTR_OUTPUT));
 	}
 };
 
-Model *modelRakes 	= Model::create<Rakes,RakesWidget>(	 "Southpole", "Rakes", 	    "Rakes - resonator bank", FILTER_TAG);
+Model *modelRakes 	= createModel<Rakes,RakesWidget>("Rakes");
 

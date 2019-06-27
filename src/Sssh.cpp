@@ -1,5 +1,4 @@
 #include "Southpole.hpp"
-#include "dsp/digital.hpp"
 
 
 struct Sssh : Module {
@@ -36,22 +35,23 @@ struct Sssh : Module {
 		NUM_LIGHTS
 	};
 
-	SchmittTrigger trigger[4];
+	dsp::SchmittTrigger trigger[4];
 	float sample[4] = { 0.0,0.,0.,0. };
 
-	Sssh() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+	Sssh() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		//trigger.setThresholds(0.0, 0.7);
 	}
-	void reset() override {
+	void reset() {
 
 		for (unsigned int i=0; i<4; i++) sample[i] = 0.;
 	}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
-void Sssh::step() {
+void Sssh::process(const ProcessArgs &args) {
 
 	float in[4], trig[4];
 
@@ -59,7 +59,7 @@ void Sssh::step() {
 
 		// Gaussian noise generator
 		// TO DO: check correlation between calls
-		float noise = 5.0 * randomNormal();
+		float noise = 5.0 * random::normal();
 
 		if ( i==0 ) {
 			trig[0] = inputs[TRIG1_INPUT].normalize(0);
@@ -79,21 +79,22 @@ void Sssh::step() {
 		lights[SH_NEG1_LIGHT+2*i].setBrightness(fmaxf(0.0, -sample[i] / 5.0));
 
 		// outputs
-		outputs[NOISE1_OUTPUT+i].value = noise;
-		outputs[SH1_OUTPUT+i].value = sample[i];
+		outputs[NOISE1_OUTPUT+i].setVoltage(noise);
+		outputs[SH1_OUTPUT+i].setVoltage(sample[i]);
 	}
 }
 
 struct SsshWidget : ModuleWidget {	
 	
-	SsshWidget(Sssh *module) : ModuleWidget(module) {
+	SsshWidget(Sssh *module) {
+		setModule(module);
 
 		box.size = Vec(15*4, 380);
 
 		{
 			SVGPanel *panel = new SVGPanel();
 			panel->box.size = box.size;
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Sssh.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Sssh.svg")));
 			addChild(panel);
 		}
 
@@ -102,14 +103,14 @@ struct SsshWidget : ModuleWidget {
 
 		for (unsigned int i=0; i<4; i++)
 		{
-			addInput(Port::create<sp_Port>(Vec(  5, y1+i*yh), Port::INPUT, module, Sssh::SH1_INPUT + i));
-			addInput(Port::create<sp_Port>(Vec( 34, y1+i*yh), Port::INPUT, module, Sssh::TRIG1_INPUT + i));
-			addOutput(Port::create<sp_Port>(Vec(5, 35+y1+i*yh), Port::OUTPUT, module, Sssh::NOISE1_OUTPUT + i));
-			addOutput(Port::create<sp_Port>(Vec(34, 35+y1+i*yh), Port::OUTPUT, module, Sssh::SH1_OUTPUT + i));
+			addInput(createInput<sp_Port>(Vec(  5, y1+i*yh), module, Sssh::SH1_INPUT + i));
+			addInput(createInput<sp_Port>(Vec( 34, y1+i*yh), module, Sssh::TRIG1_INPUT + i));
+			addOutput(createOutput<sp_Port>(Vec(5, 35+y1+i*yh), module, Sssh::NOISE1_OUTPUT + i));
+			addOutput(createOutput<sp_Port>(Vec(34, 35+y1+i*yh), module, Sssh::SH1_OUTPUT + i));
 
-			addChild(ModuleLightWidget::create<SmallLight<GreenRedLight>>(Vec(26, y1+i*yh-4), module, Sssh::SH_POS1_LIGHT + 2*i));
+			addChild(createLight<SmallLight<GreenRedLight>>(Vec(26, y1+i*yh-4), module, Sssh::SH_POS1_LIGHT + 2*i));
 		}
 	}
 };
 
-Model *modelSssh 	= Model::create<Sssh,SsshWidget>(	 "Southpole", "Sssh", 		"Sssh - noise and S+H", NOISE_TAG, SAMPLE_AND_HOLD_TAG);
+Model *modelSssh 	= createModel<Sssh,SsshWidget>("Sssh");

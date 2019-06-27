@@ -19,37 +19,39 @@ struct Ftagn : Module {
 		NUM_LIGHTS
 	};
 
-	Ftagn() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	Ftagn() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);}
 
-	void step() override;
+	void process(const ProcessArgs &args) override;
 };
 
 
-void Ftagn::step() {
+void Ftagn::process(const ProcessArgs &args) {
 
-	outputs[OUT1_OUTPUT].value = 0.0;
-	outputs[OUT2_OUTPUT].value = 0.0;
+	outputs[OUT1_OUTPUT].setVoltage(0.0);
+	outputs[OUT2_OUTPUT].setVoltage(0.0);
 }
 
 struct FtagnWidget : ModuleWidget { 
 	
-	FtagnWidget(Ftagn *module)  : ModuleWidget(module) {
+	FtagnWidget(Ftagn *module)  {
+		setModule(module);
  
 		box.size = Vec(15*4, 380);
 
 		{
 			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Ftagn.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Ftagn.svg")));
 			panel->box.size = box.size;
 			addChild(panel);	
 		}
 
-		addInput(Port::create<sp_Port>(Vec( 6.,  380./2.-30.), Port::INPUT, module, Ftagn::IN1_INPUT));
-		addInput(Port::create<sp_Port>(Vec( 6.,  380./2.), Port::INPUT, module, Ftagn::IN2_INPUT));
+		addInput(createInput<sp_Port>(Vec( 6.,  380./2.-30.), module, Ftagn::IN1_INPUT));
+		addInput(createInput<sp_Port>(Vec( 6.,  380./2.), module, Ftagn::IN2_INPUT));
 
-		addOutput(Port::create<sp_Port>(Vec(35.,  380./2.-30.), Port::OUTPUT, module, Ftagn::OUT1_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(35.,  380./2.), Port::OUTPUT, module, Ftagn::OUT2_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(35.,  380./2.-30.), module, Ftagn::OUT1_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(35.,  380./2.), module, Ftagn::OUT2_OUTPUT));
 	}
 };
 
-Model *modelFtagn 	= Model::create<Ftagn,FtagnWidget>(	 "Southpole", "Ftagn", 		"Ftagn - no filter", FILTER_TAG);
+Model *modelFtagn 	= createModel<Ftagn,FtagnWidget>("Ftagn");

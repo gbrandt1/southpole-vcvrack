@@ -44,38 +44,50 @@ struct Bandana : Module {
 		NUM_LIGHTS
 	};
 
-	Bandana() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
-	void step() override;
+  Bandana() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+    configParam(Bandana::GAIN1_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::GAIN2_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::GAIN3_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::GAIN4_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::MOD1_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::MOD2_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::MOD3_PARAM, -1.0, 1.0, 0.0, "");
+    configParam(Bandana::MOD4_PARAM, -1.0, 1.0, 0.0, "");
+  }
+	void process(const ProcessArgs &args) override;
 };
 
 
-void Bandana::step() {
+void Bandana::process(const ProcessArgs &args) {
 	float out = 0.0;
 
 	for (int i = 0; i < 4; i++) {
-		float g = params[GAIN1_PARAM + i].value;
-		g += params[MOD1_PARAM + i].value * inputs[CV1_INPUT + i].value / 5.0;
+		float g = params[GAIN1_PARAM + i].getValue();
+		g += params[MOD1_PARAM + i].getValue() * inputs[CV1_INPUT + i].getVoltage() / 5.0;
 		g = clamp(g, -2.0, 2.0);
 		lights[CV1_POS_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, g));
 		lights[CV1_NEG_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, -g));
 		out += g * inputs[IN1_INPUT + i].normalize(5.0);
 		lights[OUT1_POS_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, out / 5.0));
 		lights[OUT1_NEG_LIGHT + 2*i].setBrightnessSmooth(fmaxf(0.0, -out / 5.0));
-		if (outputs[OUT1_OUTPUT + i].active) {
-			outputs[OUT1_OUTPUT + i].value = out;
+		if (outputs[OUT1_OUTPUT + i].isConnected()) {
+			outputs[OUT1_OUTPUT + i].setVoltage(out);
 			out = 0.0;
 		}
 	}
 }
 
 struct BandanaWidget : ModuleWidget { 
-	BandanaWidget(Bandana *module) : ModuleWidget(module) {
+	BandanaWidget(Bandana *module) {
+		setModule(module);
 
 		box.size = Vec(15*4, 380);
 
 		{
 			SVGPanel *panel = new SVGPanel();
-			panel->setBackground(SVG::load(assetPlugin(plugin, "res/Bandana4HP.svg")));
+			panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Bandana4HP.svg")));
 			panel->box.size = box.size;
 			addChild(panel);	
 		}
@@ -84,42 +96,42 @@ struct BandanaWidget : ModuleWidget {
 		const float x2 = 20.;
 		const float x3 = 36.;	
 
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 52+8), module, Bandana::GAIN1_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 131+8), module, Bandana::GAIN2_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 210+8), module, Bandana::GAIN3_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_SmallBlackKnob>(Vec(x2, 288+8), module, Bandana::GAIN4_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 52+8), module, Bandana::GAIN1_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 131+8), module, Bandana::GAIN2_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 210+8), module, Bandana::GAIN3_PARAM));
+		addParam(createParam<sp_SmallBlackKnob>(Vec(x2, 288+8), module, Bandana::GAIN4_PARAM));
 
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x3,  80), module, Bandana::MOD1_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x3, 159), module, Bandana::MOD2_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x3, 238), module, Bandana::MOD3_PARAM, -1.0, 1.0, 0.0));
-		addParam(ParamWidget::create<sp_Trimpot>(Vec(x3, 316), module, Bandana::MOD4_PARAM, -1.0, 1.0, 0.0));
+		addParam(createParam<sp_Trimpot>(Vec(x3,  80), module, Bandana::MOD1_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 159), module, Bandana::MOD2_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 238), module, Bandana::MOD3_PARAM));
+		addParam(createParam<sp_Trimpot>(Vec(x3, 316), module, Bandana::MOD4_PARAM));
 
-		addInput(Port::create<sp_Port>(Vec(x1, 41), Port::INPUT, module, Bandana::IN1_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 120), Port::INPUT, module, Bandana::IN2_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 198), Port::INPUT, module, Bandana::IN3_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 277), Port::INPUT, module, Bandana::IN4_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, 41), module, Bandana::IN1_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, 120), module, Bandana::IN2_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, 198), module, Bandana::IN3_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, 277), module, Bandana::IN4_INPUT));
 
-		addInput(Port::create<sp_Port>(Vec(x1, 80), Port::INPUT, module, Bandana::CV1_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 159), Port::INPUT, module, Bandana::CV2_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 238), Port::INPUT, module, Bandana::CV3_INPUT));
-		addInput(Port::create<sp_Port>(Vec(x1, 316), Port::INPUT, module, Bandana::CV4_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, 80), module, Bandana::CV1_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, 159), module, Bandana::CV2_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, 238), module, Bandana::CV3_INPUT));
+		addInput(createInput<sp_Port>(Vec(x1, 316), module, Bandana::CV4_INPUT));
 
-		addOutput(Port::create<sp_Port>(Vec(x3, 41), Port::OUTPUT, module, Bandana::OUT1_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x3, 120), Port::OUTPUT, module, Bandana::OUT2_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x3, 198), Port::OUTPUT, module, Bandana::OUT3_OUTPUT));
-		addOutput(Port::create<sp_Port>(Vec(x3, 277), Port::OUTPUT, module, Bandana::OUT4_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3, 41), module, Bandana::OUT1_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3, 120), module, Bandana::OUT2_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3, 198), module, Bandana::OUT3_OUTPUT));
+		addOutput(createOutput<sp_Port>(Vec(x3, 277), module, Bandana::OUT4_OUTPUT));
 
-		addChild(ModuleLightWidget::create<SmallLight<GreenRedLight>>(Vec(x2+6,  96-50), module, Bandana::CV1_POS_LIGHT));
-		addChild(ModuleLightWidget::create<SmallLight<GreenRedLight>>(Vec(x2+6, 175-50), module, Bandana::CV2_POS_LIGHT));
-		addChild(ModuleLightWidget::create<SmallLight<GreenRedLight>>(Vec(x2+6, 254-50), module, Bandana::CV3_POS_LIGHT));
-		addChild(ModuleLightWidget::create<SmallLight<GreenRedLight>>(Vec(x2+6, 333-50), module, Bandana::CV4_POS_LIGHT));
+		addChild(createLight<SmallLight<GreenRedLight>>(Vec(x2+6,  96-50), module, Bandana::CV1_POS_LIGHT));
+		addChild(createLight<SmallLight<GreenRedLight>>(Vec(x2+6, 175-50), module, Bandana::CV2_POS_LIGHT));
+		addChild(createLight<SmallLight<GreenRedLight>>(Vec(x2+6, 254-50), module, Bandana::CV3_POS_LIGHT));
+		addChild(createLight<SmallLight<GreenRedLight>>(Vec(x2+6, 333-50), module, Bandana::CV4_POS_LIGHT));
 
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 87-22), module, Bandana::OUT1_POS_LIGHT));
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 166-22), module, Bandana::OUT2_POS_LIGHT));
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 245-22), module, Bandana::OUT3_POS_LIGHT));
-		addChild(ModuleLightWidget::create<MediumLight<GreenRedLight>>(Vec(x3+10, 324-22), module, Bandana::OUT4_POS_LIGHT));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 87-22), module, Bandana::OUT1_POS_LIGHT));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 166-22), module, Bandana::OUT2_POS_LIGHT));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 245-22), module, Bandana::OUT3_POS_LIGHT));
+		addChild(createLight<MediumLight<GreenRedLight>>(Vec(x3+10, 324-22), module, Bandana::OUT4_POS_LIGHT));
 	}
 };
 
-Model *modelBandana = Model::create<Bandana,BandanaWidget>(	 "Southpole", "Bandana", 	"Bandana - quad polarizer", AMPLIFIER_TAG, MIXER_TAG, ATTENUATOR_TAG);
+Model *modelBandana = createModel<Bandana,BandanaWidget>("Bandana");
 

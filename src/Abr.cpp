@@ -61,29 +61,32 @@ struct Abr : Module
 
     bool swState[8] = {};
     
-	Abr() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
-	{
-		reset();
-	}
+    Abr() {
 
-    void step() override;
+      config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+      reset();
 
-    void reset() override 
+      configParam(Abr::SWITCH1_PARAM, 0.0, 1.0, 0.0, "");
+    }
+
+    void process(const ProcessArgs &args) override;
+
+    void reset()
     {
         for (int i = 0; i < 8; i++) 
         {
             swState[i] = false;
 		}
 	}
-    void randomize() override 
+    void randomize()
     {
         for (int i = 0; i < 8; i++) 
         {
-            swState[i] = (randomUniform() < 0.5);
+            swState[i] = (random::uniform() < 0.5);
 		}
     }
     
-    json_t *toJson() override 
+    json_t *dataToJson() override 
     {
 		json_t *rootJ = json_object();
         json_t *swStatesJ = json_array();
@@ -96,7 +99,7 @@ struct Abr : Module
 		return rootJ;
 	}
 
-    void fromJson(json_t *rootJ) override 
+    void dataFromJson(json_t *rootJ) override 
     {
         json_t *swStatesJ = json_object_get(rootJ, "swStates");
         if (swStatesJ) 
@@ -113,48 +116,45 @@ struct Abr : Module
 };
 
 
-void Abr::step() 
+void Abr::process(const ProcessArgs &args) 
 {
     float outa = 0.;
     float outb = 0.;
     float out  = 0.;
     for(int i = 0; i < 8; i++)
     {
-        swState[i] = params[SWITCH1_PARAM + i].value > 0.5;
+        swState[i] = params[SWITCH1_PARAM + i].getValue() > 0.5;
         if ( !swState[i] ) {
-            if(inputs[INA1_INPUT + i].active)
+            if(inputs[INA1_INPUT + i].isConnected())
             {
-                float ina = inputs[INA1_INPUT + i].value;
-                outputs[OUT1_OUTPUT + i].value = ina;
+                float ina = inputs[INA1_INPUT + i].getVoltage();
+                outputs[OUT1_OUTPUT + i].setVoltage(ina);
                 outa += ina;
                 out += ina; 
             }
         } else {
-            if(inputs[INB1_INPUT + i].active)
+            if(inputs[INB1_INPUT + i].isConnected())
             {
-                float inb = inputs[INB1_INPUT + i].value;
-                outputs[OUT1_OUTPUT + i].value = inb;
+                float inb = inputs[INB1_INPUT + i].getVoltage();
+                outputs[OUT1_OUTPUT + i].setVoltage(inb);
                 outb += inb;
                 out += inb; 
             }
         } 
     }
-    outputs[SUMA_OUTPUT].value = outa;
-    outputs[SUMB_OUTPUT].value = outb;
-    outputs[SUM_OUTPUT].value = out;
+    outputs[SUMA_OUTPUT].setVoltage(outa);
+    outputs[SUMB_OUTPUT].setVoltage(outb);
+    outputs[SUM_OUTPUT].setVoltage(out);
 }
 
 struct AbrWidget : ModuleWidget { 
-    AbrWidget(Abr *module) : ModuleWidget(module) 
-    {
+    AbrWidget(Abr *module) {
+
+        setModule(module);
+
         box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 
-        {
-            auto *panel = new SVGPanel();
-            panel->box.size = box.size;
-            panel->setBackground(SVG::load(assetPlugin(plugin, "res/Abr.svg")));
-            addChild(panel);
-        }
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Abr.svg")));
 
         const float x1 = 3.;
         const float x2 = 4.+20.;
@@ -167,21 +167,21 @@ struct AbrWidget : ModuleWidget {
         {
             yPos += 32.;
 
-            addInput(Port::create<sp_Port>(Vec(x1, yPos), Port::INPUT, module, Abr::INA1_INPUT + i));
-            addParam(ParamWidget::create<sp_Switch>(Vec(x2+1, 3 + yPos), module, Abr::SWITCH1_PARAM + i, 0.0, 1.0, 0.0));
-            addInput(Port::create<sp_Port>(Vec(x3, yPos), Port::INPUT, module, Abr::INB1_INPUT + i));
-            addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, Abr::OUT1_OUTPUT + i));
+            addInput(createInput<sp_Port>(Vec(x1, yPos), module, Abr::INA1_INPUT + i));
+            addParam(createParam<sp_Switch>(Vec(x2+1, 3 + yPos), module, Abr::SWITCH1_PARAM + i));
+            addInput(createInput<sp_Port>(Vec(x3, yPos), module, Abr::INB1_INPUT + i));
+            addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, Abr::OUT1_OUTPUT + i));
         }
 
         yPos += 48.;
-        addOutput(Port::create<sp_Port>(Vec(x1, yPos), Port::OUTPUT, module, Abr::SUMA_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x3, yPos), Port::OUTPUT, module, Abr::SUMB_OUTPUT));
-        addOutput(Port::create<sp_Port>(Vec(x4, yPos), Port::OUTPUT, module, Abr::SUM_OUTPUT));
+        addOutput(createOutput<sp_Port>(Vec(x1, yPos), module, Abr::SUMA_OUTPUT));
+        addOutput(createOutput<sp_Port>(Vec(x3, yPos), module, Abr::SUMB_OUTPUT));
+        addOutput(createOutput<sp_Port>(Vec(x4, yPos), module, Abr::SUM_OUTPUT));
     }
 
 };
 
-Model *modelAbr = Model::create<Abr,AbrWidget>("Southpole", "Abr", "Abr - A/B switch", SWITCH_TAG, MIXER_TAG);
+Model *modelAbr = createModel<Abr,AbrWidget>("Abr");
 
 
 
