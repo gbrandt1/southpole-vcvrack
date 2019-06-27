@@ -86,7 +86,7 @@ void Piste::process(const ProcessArgs &args) {
   float scale1 = clamp(params[SCALE1_PARAM].getValue(), 0.0, 1.0);
   float scale2 = scale1 * clamp(params[SCALE2_PARAM].getValue(), 0.0, 1.0);
 
-  bool muted = inputs[MUTE_INPUT].normalize(0.) >= 1.0;
+  bool muted = inputs[MUTE_INPUT].getNormalVoltage(0.) >= 1.0;
 
   if (!muted) {
     if (trigger1.process(inputs[TRIG1_INPUT].getVoltage())) {

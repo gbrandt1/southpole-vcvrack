@@ -419,8 +419,8 @@ void Gnome::process(const ProcessArgs &args) {
 
   outputs[AUDIO_OUTPUT].setVoltage(fout * env);
 
-  lights[PHASE_POS_LIGHT].setBrightnessSmooth(fmaxf(0.0, lfo.light()));
-  lights[PHASE_NEG_LIGHT].setBrightnessSmooth(fmaxf(0.0, -lfo.light()));
+  lights[PHASE_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, lfo.light()), args.sampleTime);
+  lights[PHASE_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -lfo.light()), args.sampleTime);
 }
 
 struct GnomeWidget : ModuleWidget {

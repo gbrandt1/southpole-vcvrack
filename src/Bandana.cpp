@@ -73,11 +73,11 @@ void Bandana::process(const ProcessArgs &args) {
     float g = params[GAIN1_PARAM + i].getValue();
     g += params[MOD1_PARAM + i].getValue() * inputs[CV1_INPUT + i].getVoltage() / 5.0;
     g = clamp(g, -2.0, 2.0);
-    lights[CV1_POS_LIGHT + 2 * i].setBrightnessSmooth(fmaxf(0.0, g));
-    lights[CV1_NEG_LIGHT + 2 * i].setBrightnessSmooth(fmaxf(0.0, -g));
-    out += g * inputs[IN1_INPUT + i].normalize(5.0);
-    lights[OUT1_POS_LIGHT + 2 * i].setBrightnessSmooth(fmaxf(0.0, out / 5.0));
-    lights[OUT1_NEG_LIGHT + 2 * i].setBrightnessSmooth(fmaxf(0.0, -out / 5.0));
+    lights[CV1_POS_LIGHT + 2 * i].setSmoothBrightness(fmaxf(0.0, g), args.sampleTime);
+    lights[CV1_NEG_LIGHT + 2 * i].setSmoothBrightness(fmaxf(0.0, -g), args.sampleTime);
+    out += g * inputs[IN1_INPUT + i].getNormalVoltage(5.0);
+    lights[OUT1_POS_LIGHT + 2 * i].setSmoothBrightness(fmaxf(0.0, out / 5.0), args.sampleTime);
+    lights[OUT1_NEG_LIGHT + 2 * i].setSmoothBrightness(fmaxf(0.0, -out / 5.0), args.sampleTime);
     if (outputs[OUT1_OUTPUT + i].isConnected()) {
       outputs[OUT1_OUTPUT + i].setVoltage(out);
       out = 0.0;

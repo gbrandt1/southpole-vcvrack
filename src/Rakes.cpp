@@ -107,7 +107,7 @@ struct Rakes : Module {
 
 void Rakes::process(const ProcessArgs &args) {
 
-  //float mix  = clamp(params[MIX_PARAM].getValue() + inputs[MIX_INPUT].normalize(0.) / 10.0, 0.0, 1.0);
+  //float mix  = clamp(params[MIX_PARAM].getValue() + inputs[MIX_INPUT].getNormalVoltage(0.) / 10.0, 0.0, 1.0);
   float mix = params[MIX_PARAM].getValue();
   float rate = clamp(params[DECAY_PARAM].getValue() + inputs[DECAY_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, .99f);
 
@@ -120,7 +120,7 @@ void Rakes::process(const ProcessArgs &args) {
   float sumgain = 1.;
 
   for (int j = 0; j < NBUF; j++) {
-    //float gain = clamp(params[GAIN1_PARAM + j].getValue() + inputs[GAIN1_INPUT + j].normalize(0.) / 10.0, 0.0, 1.0);
+    //float gain = clamp(params[GAIN1_PARAM + j].getValue() + inputs[GAIN1_INPUT + j].getNormalVoltage(0.) / 10.0, 0.0, 1.0);
     float gain = params[GAIN1_PARAM + j].getValue();
     if (gain < 1e-3)
       continue;

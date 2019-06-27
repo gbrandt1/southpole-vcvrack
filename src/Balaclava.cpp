@@ -74,8 +74,8 @@ void Balaclava::process(const ProcessArgs &args) {
       in *= crossfade(exponential, linear, params[RESPONSE1_PARAM + i].getValue());
     }
     out += in;
-    lights[OUT1_POS_LIGHT + 2 * i].setBrightnessSmooth(fmaxf(0.0, out / 5.0));
-    lights[OUT1_NEG_LIGHT + 2 * i].setBrightnessSmooth(fmaxf(0.0, -out / 5.0));
+    lights[OUT1_POS_LIGHT + 2 * i].setSmoothBrightness(fmaxf(0.0, out / 5.0), args.sampleTime);
+    lights[OUT1_NEG_LIGHT + 2 * i].setSmoothBrightness(fmaxf(0.0, -out / 5.0), args.sampleTime);
     if (outputs[OUT1_OUTPUT + i].isConnected()) {
       outputs[OUT1_OUTPUT + i].setVoltage(out);
       out = 0.0;

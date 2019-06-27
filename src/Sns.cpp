@@ -308,17 +308,17 @@ void Sns::process(const ProcessArgs &args) {
   }
   outputs[ACCENT_OUTPUT].setVoltage(accOn | apulse ? 10.0 : 0.0);
 
-  par_l = (unsigned int)(1. + 15. * clamp(params[L_PARAM].getValue() + inputs[L_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
-  par_p = (unsigned int)(32. - par_l) * clamp(params[P_PARAM].getValue() + inputs[P_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+  par_l = (unsigned int)(1. + 15. * clamp(params[L_PARAM].getValue() + inputs[L_INPUT].getNormalVoltage(0.) / 9., 0.0f, 1.0f));
+  par_p = (unsigned int)(32. - par_l) * clamp(params[P_PARAM].getValue() + inputs[P_INPUT].getNormalVoltage(0.) / 9., 0.0f, 1.0f);
 
-  par_r = (unsigned int)(par_l + par_p - 1.) * clamp(params[R_PARAM].getValue() + inputs[R_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
-  par_k = (unsigned int)(1. + (par_l - 1.) * clamp(params[K_PARAM].getValue() + inputs[K_INPUT].normalize(0.) / 9., 0.0f, 1.0f));
+  par_r = (unsigned int)(par_l + par_p - 1.) * clamp(params[R_PARAM].getValue() + inputs[R_INPUT].getNormalVoltage(0.) / 9., 0.0f, 1.0f);
+  par_k = (unsigned int)(1. + (par_l - 1.) * clamp(params[K_PARAM].getValue() + inputs[K_INPUT].getNormalVoltage(0.) / 9., 0.0f, 1.0f));
 
-  par_a = (unsigned int)(par_k)*clamp(params[A_PARAM].getValue() + inputs[A_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+  par_a = (unsigned int)(par_k)*clamp(params[A_PARAM].getValue() + inputs[A_INPUT].getNormalVoltage(0.) / 9., 0.0f, 1.0f);
   if (par_a == 0) {
     par_s = 0;
   } else {
-    par_s = (unsigned int)(par_k - 1.) * clamp(params[S_PARAM].getValue() + inputs[S_INPUT].normalize(0.) / 9., 0.0f, 1.0f);
+    par_s = (unsigned int)(par_k - 1.) * clamp(params[S_PARAM].getValue() + inputs[S_INPUT].getNormalVoltage(0.) / 9., 0.0f, 1.0f);
   }
 
   // new sequence in case of change to parameters

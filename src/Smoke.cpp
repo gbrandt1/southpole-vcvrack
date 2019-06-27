@@ -275,14 +275,14 @@ void Smoke::process(const ProcessArgs &args) {
   dsp::Frame<2> lightFrame = p->freeze ? outputFrame : inputFrame;
   vuMeter.setValue(fmaxf(fabsf(lightFrame.samples[0]), fabsf(lightFrame.samples[1])));
   lights[FREEZE_LIGHT].setBrightness(p->freeze ? 0.75 : 0.0);
-  lights[MIX_GREEN_LIGHT].setBrightnessSmooth(vuMeter.getBrightness(3));
-  lights[PAN_GREEN_LIGHT].setBrightnessSmooth(vuMeter.getBrightness(2));
-  lights[FEEDBACK_GREEN_LIGHT].setBrightnessSmooth(vuMeter.getBrightness(1));
+  lights[MIX_GREEN_LIGHT].setSmoothBrightness(vuMeter.getBrightness(3), args.sampleTime);
+  lights[PAN_GREEN_LIGHT].setSmoothBrightness(vuMeter.getBrightness(2), args.sampleTime);
+  lights[FEEDBACK_GREEN_LIGHT].setSmoothBrightness(vuMeter.getBrightness(1), args.sampleTime);
   lights[REVERB_GREEN_LIGHT].setBrightness(0.0);
   lights[MIX_RED_LIGHT].setBrightness(0.0);
   lights[PAN_RED_LIGHT].setBrightness(0.0);
-  lights[FEEDBACK_RED_LIGHT].setBrightnessSmooth(vuMeter.getBrightness(1));
-  lights[REVERB_RED_LIGHT].setBrightnessSmooth(vuMeter.getBrightness(0));
+  lights[FEEDBACK_RED_LIGHT].setSmoothBrightness(vuMeter.getBrightness(1), args.sampleTime);
+  lights[REVERB_RED_LIGHT].setSmoothBrightness(vuMeter.getBrightness(0), args.sampleTime);
 }
 
 struct SmokeWidget : ModuleWidget {

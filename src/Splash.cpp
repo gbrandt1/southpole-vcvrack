@@ -204,8 +204,8 @@ void Splash::process(const ProcessArgs &args) {
 
   if (sample.flags & tides::FLAG_END_OF_ATTACK)
     unif *= -1.0;
-  lights[PHASE_GREEN_LIGHT].setBrightnessSmooth(fmaxf(0.0, unif));
-  lights[PHASE_RED_LIGHT].setBrightnessSmooth(fmaxf(0.0, -unif));
+  lights[PHASE_GREEN_LIGHT].setSmoothBrightness(fmaxf(0.0, unif), args.sampleTime);
+  lights[PHASE_RED_LIGHT].setSmoothBrightness(fmaxf(0.0, -unif), args.sampleTime);
 }
 
 struct SplashWidget : ModuleWidget {

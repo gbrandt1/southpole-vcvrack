@@ -143,7 +143,7 @@ void SplashParasite::process(const ProcessArgs &args) {
     // Pitch
     float pitch = params[FREQUENCY_PARAM].getValue();
     pitch += 12.0 * inputs[PITCH_INPUT].getVoltage();
-    //pitch += params[FM_PARAM].getValue() * inputs[FM_INPUT].normalize(0.1) / 5.0;
+    //pitch += params[FM_PARAM].getValue() * inputs[FM_INPUT].getNormalVoltage(0.1) / 5.0;
     float fm = clamp(inputs[FM_INPUT].getVoltage() / 5.0 * params[FM_PARAM].getValue() / 12.0, -1.0, 1.0) * 0x600;
 
     pitch += 60.0;
@@ -182,7 +182,7 @@ void SplashParasite::process(const ProcessArgs &args) {
   }
 
   // Level
-  uint16_t level = clamp(inputs[LEVEL_INPUT].normalize(8.0) / 8.0, 0.0, 1.0) * 0xffff;
+  uint16_t level = clamp(inputs[LEVEL_INPUT].getNormalVoltage(8.0) / 8.0, 0.0, 1.0) * 0xffff;
   if (level < 32)
     level = 0;
 
@@ -218,8 +218,8 @@ void SplashParasite::process(const ProcessArgs &args) {
 
   if (sample.flags & tides::FLAG_END_OF_ATTACK)
     unif *= -1.0;
-  lights[PHASE_GREEN_LIGHT].setBrightnessSmooth(fmaxf(0.0, unif));
-  lights[PHASE_RED_LIGHT].setBrightnessSmooth(fmaxf(0.0, -unif));
+  lights[PHASE_GREEN_LIGHT].setSmoothBrightness(fmaxf(0.0, unif), args.sampleTime);
+  lights[PHASE_RED_LIGHT].setSmoothBrightness(fmaxf(0.0, -unif), args.sampleTime);
 }
 
 struct SplashParasiteWidget : ModuleWidget {

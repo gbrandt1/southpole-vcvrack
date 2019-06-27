@@ -103,8 +103,8 @@ void Aux::process(const ProcessArgs &args) {
   float inr = 0.;
 
   if (!mute) {
-    inl = inputs[INL_INPUT].normalize(0.);
-    inr = inputs[INR_INPUT].normalize(inl);
+    inl = inputs[INL_INPUT].getNormalVoltage(0.);
+    inr = inputs[INR_INPUT].getNormalVoltage(inl);
   }
 
   float outl = inl;
@@ -116,11 +116,11 @@ void Aux::process(const ProcessArgs &args) {
   float sl2 = params[SEND2_PARAM].getValue() * inl;
   float sr2 = params[SEND2_PARAM].getValue() * inr;
 
-  float rl1 = inputs[RETURN1L_INPUT].normalize(0.);
-  float rr1 = inputs[RETURN1R_INPUT].normalize(rl1);
+  float rl1 = inputs[RETURN1L_INPUT].getNormalVoltage(0.);
+  float rr1 = inputs[RETURN1R_INPUT].getNormalVoltage(rl1);
 
-  float rl2 = inputs[RETURN2L_INPUT].normalize(0.);
-  float rr2 = inputs[RETURN2R_INPUT].normalize(rl2);
+  float rl2 = inputs[RETURN2L_INPUT].getNormalVoltage(0.);
+  float rr2 = inputs[RETURN2R_INPUT].getNormalVoltage(rl2);
 
   float fb1 = params[FEEDBACK1_PARAM].getValue();
   float fb2 = params[FEEDBACK2_PARAM].getValue();

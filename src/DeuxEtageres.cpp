@@ -117,19 +117,19 @@ struct DeuxEtageres : Module {
 void DeuxEtageres::process(const ProcessArgs &args) {
 
   float g_gain = 0.;
-  float gain1 = clamp(g_gain + params[GAIN1_PARAM].getValue() + inputs[GAIN1_INPUT].normalize(0.) / 10.0f, -1.0f, 1.0f);
-  float gain2 = clamp(g_gain + params[GAIN2_PARAM].getValue() + inputs[GAIN2_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
-  float gain3 = clamp(g_gain + params[GAIN3_PARAM].getValue() + inputs[GAIN3_INPUT].normalize(0.) / 10.0, -1.0, 1.0f);
-  float gain4 = clamp(g_gain + params[GAIN4_PARAM].getValue() + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0, 1.0f);
+  float gain1 = clamp(g_gain + params[GAIN1_PARAM].getValue() + inputs[GAIN1_INPUT].getNormalVoltage(0.) / 10.0f, -1.0f, 1.0f);
+  float gain2 = clamp(g_gain + params[GAIN2_PARAM].getValue() + inputs[GAIN2_INPUT].getNormalVoltage(0.) / 10.0, -1.0f, 1.0f);
+  float gain3 = clamp(g_gain + params[GAIN3_PARAM].getValue() + inputs[GAIN3_INPUT].getNormalVoltage(0.) / 10.0, -1.0, 1.0f);
+  float gain4 = clamp(g_gain + params[GAIN4_PARAM].getValue() + inputs[GAIN4_INPUT].getNormalVoltage(0.) / 10.0, -1.0, 1.0f);
 
   float g_cutoff = 0.;
-  float freq1 = clamp(g_cutoff + params[FREQ1_PARAM].getValue() + inputs[FREQ1_INPUT].normalize(0.), -4.0f, 6.0f);
-  float freq2 = clamp(g_cutoff + params[FREQ2_PARAM].getValue() + inputs[FREQ2_INPUT].normalize(0.), -4.0f, 6.0f);
-  float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].getValue() + inputs[FREQ3_INPUT].normalize(0.), -4.0f, 6.0f);
-  float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].getValue() + inputs[FREQ4_INPUT].normalize(0.), -4.0f, 6.0f);
+  float freq1 = clamp(g_cutoff + params[FREQ1_PARAM].getValue() + inputs[FREQ1_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
+  float freq2 = clamp(g_cutoff + params[FREQ2_PARAM].getValue() + inputs[FREQ2_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
+  float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].getValue() + inputs[FREQ3_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
+  float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].getValue() + inputs[FREQ4_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
 
-  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
-  float reso3 = clamp(g_cutoff + params[Q3_PARAM].getValue() + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
+  float reso3 = clamp(g_cutoff + params[Q3_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
 
   for (int i = 0; i < 2; i++) {
     lpFilter[i].setQ(.5); //Resonance(.5);
@@ -178,7 +178,7 @@ void DeuxEtageres::process(const ProcessArgs &args) {
     outputs[OUTL_OUTPUT + i].setVoltage(sumout);
 
     // Lights
-    lights[CLIPL_LIGHT + i].setBrightnessSmooth(fabs(sumout) > 10. ? 1. : 0.);
+    lights[CLIPL_LIGHT + i].setSmoothBrightness(fabs(sumout) > 10. ? 1. : 0., args.sampleTime);
   }
 }
 struct DeuxEtageresWidget : ModuleWidget {

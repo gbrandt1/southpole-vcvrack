@@ -93,14 +93,14 @@ double parCtrlShaper(double input, double bend) {
 //==============================================================================
 
 /**
- Normalizes a range of values to the range 0->1.
+ getNormalVoltages a range of values to the range 0->1.
  (start/end should probably be the range of a parameter)
- - input: the value to be normalized
+ - input: the value to be getNormalVoltaged
  - start: the start of the input's range
  - end: the end of the input's range
  Note: (start < end) and (start > end) are both valid.
  */
-double normalizeRange(double input, double start, double end) {
+double getNormalVoltageRange(double input, double start, double end) {
   return (input - start) / (end - start);
 }
 

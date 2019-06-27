@@ -65,15 +65,15 @@ void Sssh::process(const ProcessArgs &args) {
     float noise = 5.0 * random::normal();
 
     if (i == 0) {
-      trig[0] = inputs[TRIG1_INPUT].normalize(0);
+      trig[0] = inputs[TRIG1_INPUT].getNormalVoltage(0);
     } else {
-      trig[i] = inputs[TRIG1_INPUT + i].normalize(trig[i - 1]);
+      trig[i] = inputs[TRIG1_INPUT + i].getNormalVoltage(trig[i - 1]);
     }
 
-    in[i] = inputs[SH1_INPUT + i].normalize(noise);
+    in[i] = inputs[SH1_INPUT + i].getNormalVoltage(noise);
 
     if (trigger[i].process(trig[i])) {
-      sample[i] = inputs[SH1_INPUT + i].normalize(noise);
+      sample[i] = inputs[SH1_INPUT + i].getNormalVoltage(noise);
     }
 
     // lights

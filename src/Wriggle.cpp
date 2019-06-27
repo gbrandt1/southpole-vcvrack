@@ -47,10 +47,10 @@ void Wriggle::process(const ProcessArgs &args) {
 
   float dt = 1. / args.sampleRate;
 
-  float tens = clamp(params[TENS_PARAM].getValue() + inputs[TENS_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
-  float damp = clamp(params[DAMP_PARAM].getValue() + inputs[DAMP_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
-  float scale = clamp(params[SCALE_PARAM].getValue() + inputs[SCALE_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
-  float offset = clamp(params[OFFSET_PARAM].getValue() + inputs[OFFSET_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+  float tens = clamp(params[TENS_PARAM].getValue() + inputs[TENS_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
+  float damp = clamp(params[DAMP_PARAM].getValue() + inputs[DAMP_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
+  float scale = clamp(params[SCALE_PARAM].getValue() + inputs[SCALE_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
+  float offset = clamp(params[OFFSET_PARAM].getValue() + inputs[OFFSET_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
 
   // semi-parametric Euler... (i know ...)
 

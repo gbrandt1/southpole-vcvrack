@@ -119,7 +119,7 @@ void Fuse::process(const ProcessArgs &args) {
 
     if (params[SWITCH1_PARAM + i].getValue() > 0.)
       armed[i] = true;
-    if (armTrigger[i].process(inputs[ARM1_INPUT + i].normalize(0.)))
+    if (armTrigger[i].process(inputs[ARM1_INPUT + i].getNormalVoltage(0.)))
       armed[i] = true;
 
     lights[ARM1_LIGHT + i].setBrightness(armed[i] ? 1.0 : 0.0);

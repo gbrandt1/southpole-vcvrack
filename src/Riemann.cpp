@@ -160,8 +160,8 @@ void Riemann::reset() {
 
 void Riemann::process(const ProcessArgs &args) {
 
-  x0 = inputs[X_INPUT].normalize(0.) + 6;
-  y0 = inputs[Y_INPUT].normalize(0.) + 1;
+  x0 = inputs[X_INPUT].getNormalVoltage(0.) + 6;
+  y0 = inputs[Y_INPUT].getNormalVoltage(0.) + 1;
 
   //parts   = clamp( inputs[PARTS_INPUT].getVoltage()/10. + params[PARTS_PARAM].getValue(), 0., 1.)*(MAXPARTS-3.)+3.;
   parts = clamp(params[PARTS_PARAM].getValue(), 0.f, 1.f) * (MAXPARTS - 3.) + 3.;

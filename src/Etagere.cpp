@@ -110,20 +110,20 @@ struct Etagere : Module {
 
 void Etagere::process(const ProcessArgs &args) {
 
-  float g_gain = clamp(inputs[GAIN5_INPUT].normalize(0.), -1.0, 1.0);
-  float gain1 = clamp(g_gain + params[GAIN1_PARAM].getValue() + inputs[GAIN1_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
-  float gain2 = clamp(g_gain + params[GAIN2_PARAM].getValue() + inputs[GAIN2_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
-  float gain3 = clamp(g_gain + params[GAIN3_PARAM].getValue() + inputs[GAIN3_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
-  float gain4 = clamp(g_gain + params[GAIN4_PARAM].getValue() + inputs[GAIN4_INPUT].normalize(0.) / 10.0, -1.0f, 1.0f);
+  float g_gain = clamp(inputs[GAIN5_INPUT].getNormalVoltage(0.), -1.0, 1.0);
+  float gain1 = clamp(g_gain + params[GAIN1_PARAM].getValue() + inputs[GAIN1_INPUT].getNormalVoltage(0.) / 10.0, -1.0f, 1.0f);
+  float gain2 = clamp(g_gain + params[GAIN2_PARAM].getValue() + inputs[GAIN2_INPUT].getNormalVoltage(0.) / 10.0, -1.0f, 1.0f);
+  float gain3 = clamp(g_gain + params[GAIN3_PARAM].getValue() + inputs[GAIN3_INPUT].getNormalVoltage(0.) / 10.0, -1.0f, 1.0f);
+  float gain4 = clamp(g_gain + params[GAIN4_PARAM].getValue() + inputs[GAIN4_INPUT].getNormalVoltage(0.) / 10.0, -1.0f, 1.0f);
 
-  float g_cutoff = clamp(inputs[FREQ5_INPUT].normalize(0.), -4.0, 6.0);
-  float freq1 = clamp(g_cutoff + params[FREQ1_PARAM].getValue() + inputs[FREQ1_INPUT].normalize(0.), -4.0f, 6.0f);
-  float freq2 = clamp(g_cutoff + params[FREQ2_PARAM].getValue() + inputs[FREQ2_INPUT].normalize(0.), -4.0f, 6.0f);
-  float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].getValue() + inputs[FREQ3_INPUT].normalize(0.), -4.0f, 6.0f);
-  float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].getValue() + inputs[FREQ4_INPUT].normalize(0.), -4.0f, 6.0f);
+  float g_cutoff = clamp(inputs[FREQ5_INPUT].getNormalVoltage(0.), -4.0, 6.0);
+  float freq1 = clamp(g_cutoff + params[FREQ1_PARAM].getValue() + inputs[FREQ1_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
+  float freq2 = clamp(g_cutoff + params[FREQ2_PARAM].getValue() + inputs[FREQ2_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
+  float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].getValue() + inputs[FREQ3_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
+  float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].getValue() + inputs[FREQ4_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
 
-  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
-  float reso3 = clamp(g_cutoff + params[Q3_PARAM].getValue() + inputs[Q3_INPUT].normalize(0.) / 10.0, 0.0f, 1.0f);
+  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
+  float reso3 = clamp(g_cutoff + params[Q3_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
 
   lpFilter.setQ(.5); //Resonance(.5);
   hpFilter.setQ(.5); //Resonance(.5);
@@ -194,7 +194,7 @@ void Etagere::process(const ProcessArgs &args) {
   outputs[OUT_OUTPUT].setVoltage(sumout);
 
   // Lights
-  lights[CLIP5_LIGHT].setBrightnessSmooth(fabs(sumout) > 10. ? 1. : 0.);
+  lights[CLIP5_LIGHT].setSmoothBrightness(fabs(sumout) > 10. ? 1. : 0., args.sampleTime);
 }
 
 struct EtagereWidget : ModuleWidget {

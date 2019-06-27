@@ -131,7 +131,7 @@ struct Annuli : Module {
 
 void Annuli::process(const ProcessArgs &args) {
   // TODO
-  // "Normalized to a pulse/burst generator that reacts to note changes on the V/OCT input."
+  // "getNormalVoltaged to a pulse/burst generator that reacts to note changes on the V/OCT input."
   // Get input
   if (!inputBuffer.full()) {
     dsp::Frame<1> f;
@@ -189,21 +189,21 @@ void Annuli::process(const ProcessArgs &args) {
 
     // Performance
     rings::PerformanceState performance_state;
-    performance_state.note = 12.0 * inputs[PITCH_INPUT].normalize(1 / 12.0);
+    performance_state.note = 12.0 * inputs[PITCH_INPUT].getNormalVoltage(1 / 12.0);
     float transpose = params[FREQUENCY_PARAM].getValue();
     // Quantize transpose if pitch input is connected
     if (inputs[PITCH_INPUT].isConnected()) {
       transpose = roundf(transpose);
     }
     performance_state.tonic = 12.0 + clamp(transpose, 0.0f, 60.0f);
-    performance_state.fm = clamp(48.0 * 3.3 * dsp::quarticBipolar(params[FREQUENCY_MOD_PARAM].getValue()) * inputs[FREQUENCY_MOD_INPUT].normalize(1.0) / 5.0, -48.0f, 48.0f);
+    performance_state.fm = clamp(48.0 * 3.3 * dsp::quarticBipolar(params[FREQUENCY_MOD_PARAM].getValue()) * inputs[FREQUENCY_MOD_INPUT].getNormalVoltage(1.0) / 5.0, -48.0f, 48.0f);
 
     performance_state.internal_exciter = !inputs[IN_INPUT].isConnected();
     performance_state.internal_strum = !inputs[STRUM_INPUT].isConnected();
     performance_state.internal_note = !inputs[PITCH_INPUT].isConnected();
 
     // TODO
-    // "Normalized to a step detector on the V/OCT input and a transient detector on the IN input."
+    // "getNormalVoltaged to a step detector on the V/OCT input and a transient detector on the IN input."
     performance_state.strum = strum && !lastStrum;
     lastStrum = strum;
     strum = false;
