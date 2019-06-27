@@ -1,5 +1,8 @@
 # Southpole VCV Rack Modules 1.0.0
 
+## under construction - not yet released
+## report issues in the Issue Tracker thread
+
 ![All](./doc/sp-main-0_6_0.png)
 
 
