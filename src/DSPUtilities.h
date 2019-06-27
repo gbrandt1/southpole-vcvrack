@@ -7,7 +7,6 @@
 #ifndef DSPUtilities_h
 #define DSPUtilities_h
 
-
 //==============================================================================
 
 // Calculates the frequency of a given pitch (MIDI) value.
@@ -16,7 +15,6 @@ double pitchToFreq(double pitch);
 //==============================================================================
 // Calculates the pitch (MIDI) of a given frequency value
 double freqToPitch(double freq);
-
 
 //==============================================================================
 
@@ -27,7 +25,6 @@ double freqToPitch(double freq);
  If (in > maxValue), then return maxValue.
  */
 double clipMinMax(double in, double minValue, double maxValue);
-
 
 //==============================================================================
 
@@ -74,10 +71,8 @@ double parCtrlShaper(double input, double bend);
  */
 double normalizeRange(double input, double start, double end);
 
-
 double resonanceToQ(double resonance);
 
 //==============================================================================
-
 
 #endif /* DSPUtilities_h */

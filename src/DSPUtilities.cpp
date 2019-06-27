@@ -14,16 +14,14 @@
 //==============================================================================
 
 // Calculates the frequency of a given pitch (MIDI) value.
-double pitchToFreq(double pitch)
-{
-    return pow(2, (pitch - 69) / 12) * 440;
+double pitchToFreq(double pitch) {
+  return pow(2, (pitch - 69) / 12) * 440;
 }
 
 //==============================================================================
 // Calculates the pitch (MIDI) of a given frequency value
-double freqToPitch(double freq)
-{
-    return 69 + 12 * log2(freq / 440);
+double freqToPitch(double freq) {
+  return 69 + 12 * log2(freq / 440);
 }
 
 //==============================================================================
@@ -34,14 +32,13 @@ double freqToPitch(double freq)
  If (in < minValue), then return minValue.
  If (in > maxValue), then return maxValue.
  */
-double clipMinMax(double in, double minValue, double maxValue)
-{
-    if (in < minValue)
-        return minValue;
-    else if (in > maxValue)
-        return maxValue;
-    else
-        return in;
+double clipMinMax(double in, double minValue, double maxValue) {
+  if (in < minValue)
+    return minValue;
+  else if (in > maxValue)
+    return maxValue;
+  else
+    return in;
 }
 
 //==============================================================================
@@ -51,12 +48,11 @@ double clipMinMax(double in, double minValue, double maxValue)
  Returns the input if (minValue <= in).
  If (in < minValue), then return minValue.
  */
-double clipMin(double in, double minValue)
-{
-    if (in < minValue)
-        return minValue;
-    else
-        return in;
+double clipMin(double in, double minValue) {
+  if (in < minValue)
+    return minValue;
+  else
+    return in;
 }
 
 //==============================================================================
@@ -69,12 +65,11 @@ double clipMin(double in, double minValue)
  - xFadeCtrl = 0.5  (equal mix of in0 and in1)
  - xfadeCtrl = 1    (only in1 comes through)
  */
-double xFadeLin(double xFadeCtrl, double in0, double in1)
-{
-    // Clip the xFade parameter to only have range of 0->1
-    xFadeCtrl = clipMinMax(xFadeCtrl, 0.0, 1.0);
-    // Perform crossfading and return the value
-    return (in0 * (1.0 - xFadeCtrl) + in1 * xFadeCtrl);
+double xFadeLin(double xFadeCtrl, double in0, double in1) {
+  // Clip the xFade parameter to only have range of 0->1
+  xFadeCtrl = clipMinMax(xFadeCtrl, 0.0, 1.0);
+  // Perform crossfading and return the value
+  return (in0 * (1.0 - xFadeCtrl) + in1 * xFadeCtrl);
 }
 
 //==============================================================================
@@ -88,12 +83,11 @@ double xFadeLin(double xFadeCtrl, double in0, double in1)
  - bend = 0 (don't bend)
  - bend = 1 (max bend towards Y axis)
  */
-double parCtrlShaper(double input, double bend)
-{
-    // clip input and bend because the shaper only works in that range.
-    input = clipMinMax(input, -1.0, 1.0);
-    bend = clipMinMax(bend, -1.0, 1.0);
-    return input * ((bend + 1) - fabs(input) * bend);
+double parCtrlShaper(double input, double bend) {
+  // clip input and bend because the shaper only works in that range.
+  input = clipMinMax(input, -1.0, 1.0);
+  bend = clipMinMax(bend, -1.0, 1.0);
+  return input * ((bend + 1) - fabs(input) * bend);
 }
 
 //==============================================================================
@@ -106,17 +100,13 @@ double parCtrlShaper(double input, double bend)
  - end: the end of the input's range
  Note: (start < end) and (start > end) are both valid.
  */
-double normalizeRange(double input, double start, double end)
-{
-    return (input - start) / (end - start);
+double normalizeRange(double input, double start, double end) {
+  return (input - start) / (end - start);
 }
 
-
-double resonanceToQ(double resonance)
-{
-    return 1.0 / (2.0 * (1.0 - resonance));
+double resonanceToQ(double resonance) {
+  return 1.0 / (2.0 * (1.0 - resonance));
 }
 
 //==============================================================================
-#endif  // DSP_UTILITIES
-
+#endif // DSP_UTILITIES
