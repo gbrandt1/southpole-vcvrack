@@ -1,6 +1,6 @@
-# Southpole VCV Rack Modules 1.0
+# Southpole VCV Rack Modules 0.6
 
-## under construction - not yet released
+## 1.0 under construction in branch v1 - not yet released
 ## report issues in the Issue Tracker thread
 
 ![All](./doc/sp-main-0_6_0.png)
