@@ -129,7 +129,9 @@
       "slug": "DeuxEtageres",
       "name": "DeuxEtageres",
       "description": "Stereo EQ",
-      "tags": []
+        "tags": [
+          "Equalizer"
+        ]
     },
     {
       "slug": "Etagere",
