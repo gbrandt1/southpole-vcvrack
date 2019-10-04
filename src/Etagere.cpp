@@ -122,7 +122,7 @@ void Etagere::process(const ProcessArgs &args) {
   float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].getValue() + inputs[FREQ3_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
   float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].getValue() + inputs[FREQ4_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
 
-  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
+  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q2_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
   float reso3 = clamp(g_cutoff + params[Q3_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
 
   lpFilter.setQ(.5); //Resonance(.5);
