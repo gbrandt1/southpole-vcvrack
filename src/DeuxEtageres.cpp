@@ -67,8 +67,8 @@ struct DeuxEtageres : Module {
     const float vfmin = -4.;
     const float vfmax = 6.;
 
-    const float gmax = -1.;
-    const float gmin = 1.;
+    const float gmax = 1.;
+    const float gmin = -1.;
 
     configParam(DeuxEtageres::FREQ4_PARAM, vfmin, vfmax, 0., "");
     configParam(DeuxEtageres::GAIN4_PARAM, gmin, gmax, 0., "");
@@ -128,7 +128,7 @@ void DeuxEtageres::process(const ProcessArgs &args) {
   float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].getValue() + inputs[FREQ3_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
   float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].getValue() + inputs[FREQ4_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
 
-  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
+  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q2_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
   float reso3 = clamp(g_cutoff + params[Q3_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
 
   for (int i = 0; i < 2; i++) {
@@ -168,10 +168,10 @@ void DeuxEtageres::process(const ProcessArgs &args) {
     float bp3out = bp3Filter[i].processAudioSample(dry, 1);
     float hpout = hpFilter[i].processAudioSample(dry, 1);
 
-    float lpgain = pow(20., -gain1);
-    float bp2gain = pow(20., -gain2);
-    float bp3gain = pow(20., -gain3);
-    float hpgain = pow(20., -gain4);
+    float lpgain = pow(20., gain1);
+    float bp2gain = pow(20., gain2);
+    float bp3gain = pow(20., gain3);
+    float hpgain = pow(20., gain4);
 
     float sumout = lpout * lpgain + hpout * hpgain + bp2out * bp2gain + bp3out * bp3gain;
 
