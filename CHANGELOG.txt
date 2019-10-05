@@ -1,4 +1,16 @@
+-- 1.0.0 beta 2 ----
+Noir skin for DeuxEtageres [TODO]
+Added logo to 2HP blank panel
 
+-- 1.0.0 beta 1 ----
+(Windows only)
+
+EQ CV input & Q (Reso2) fixes
+EQ parameters now have labels
+Annuli port and trimpot order fix
+Fixed Sssh noise level
+Fixed Ftagn SVG 
+Added logo to 8HP blank panel
 
 -- 1.0.0 ----
 
