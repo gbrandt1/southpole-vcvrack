@@ -1,6 +1,6 @@
 # Southpole VCV Rack Modules 1.0.0
 
-## Branch v1 - Beta release for Windows available (see Releases)
+## Branch v1 - Beta release for Windows available (see [Releases](https://github.com/SteveRussell33/southpole-vcvrack/releases))
 ## [Changelog](https://github.com/SteveRussell33/southpole-vcvrack/blob/v1/CHANGELOG.txt)
 ## report issues in the Issue Tracker thread
 
