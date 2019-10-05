@@ -62,7 +62,7 @@ void Sssh::process(const ProcessArgs &args) {
 
     // Gaussian noise generator
     // TO DO: check correlation between calls
-    float noise = 5.0 * random::normal();
+    float noise = 2.0 * random::normal();
 
     if (i == 0) {
       trig[0] = inputs[TRIG1_INPUT].getNormalVoltage(0);
