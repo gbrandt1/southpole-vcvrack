@@ -1,7 +1,7 @@
 {
   "slug": "southpole",
   "name": "southpole",
-  "version": "1.0.0",
+  "version": "1.0.0.2019.10",
   "license": "MIT",
   "brand": "southpole",
   "author": "gbrandt1",
@@ -129,7 +129,9 @@
       "slug": "DeuxEtageres",
       "name": "DeuxEtageres",
       "description": "Stereo EQ",
-      "tags": []
+      "tags": [
+        "Equalizer"
+      ]
     },
     {
       "slug": "Etagere",
