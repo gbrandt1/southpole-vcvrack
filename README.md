@@ -1,9 +1,10 @@
 # Southpole VCV Rack Modules 1.0.0
 
-## under construction - not yet released
+## Branch v1 - Beta release for Windows available (see Releases)
+## Changelog: https://github.com/SteveRussell33/southpole-vcvrack/blob/v1/CHANGELOG.txt
 ## report issues in the Issue Tracker thread
 
-![All](./doc/sp-main-0_6_0.png)
+![All](./doc/SP.png)
 
 
 A personal collection of modules I've always wanted for my workflow.
