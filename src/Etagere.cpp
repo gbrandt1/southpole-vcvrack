@@ -77,19 +77,19 @@ struct Etagere : Module {
     const float vfmin = -4.;
     const float vfmax = 6.;
 
-    const float gmax = -1.;
-    const float gmin = 1.;
+    const float gmax = 1.;
+    const float gmin = -1.;
 
-    configParam(Etagere::FREQ4_PARAM, vfmin, vfmax, 0., "");
-    configParam(Etagere::GAIN4_PARAM, gmin, gmax, 0., "");
-    configParam(Etagere::FREQ2_PARAM, vfmin, vfmax, 0., "");
-    configParam(Etagere::GAIN2_PARAM, gmin, gmax, 0., "");
-    configParam(Etagere::Q2_PARAM, 0.0, 1.0, 0., "");
-    configParam(Etagere::FREQ3_PARAM, vfmin, vfmax, 0., "");
-    configParam(Etagere::GAIN3_PARAM, gmin, gmax, 0., "");
-    configParam(Etagere::Q3_PARAM, 0.0, 1.0, 0., "");
-    configParam(Etagere::FREQ1_PARAM, vfmin, vfmax, 0., "");
-    configParam(Etagere::GAIN1_PARAM, gmin, gmax, 0., "");
+    configParam(Etagere::FREQ4_PARAM, vfmin, vfmax, 0., "Freq 4");
+    configParam(Etagere::GAIN4_PARAM, gmin, gmax, 0., "Gain 4");
+    configParam(Etagere::FREQ2_PARAM, vfmin, vfmax, 0., "Freq 2");
+    configParam(Etagere::GAIN2_PARAM, gmin, gmax, 0., "Gain 2");
+    configParam(Etagere::Q2_PARAM, 0.0, 1.0, 0., "Res 2");
+    configParam(Etagere::FREQ3_PARAM, vfmin, vfmax, 0., "Freq 3");
+    configParam(Etagere::GAIN3_PARAM, gmin, gmax, 0., "Gain 3");
+    configParam(Etagere::Q3_PARAM, 0.0, 1.0, 0., "Res 3");
+    configParam(Etagere::FREQ1_PARAM, vfmin, vfmax, 0., "Freq 1");
+    configParam(Etagere::GAIN1_PARAM, gmin, gmax, 0., "Gain 1");
   }
 
   void process(const ProcessArgs &args) override;
@@ -110,7 +110,7 @@ struct Etagere : Module {
 
 void Etagere::process(const ProcessArgs &args) {
 
-  float g_gain = clamp(inputs[GAIN5_INPUT].getNormalVoltage(0.), -1.0, 1.0);
+  float g_gain = clamp(inputs[GAIN5_INPUT].getNormalVoltage(0.), -1.0f, 1.0f);
   float gain1 = clamp(g_gain + params[GAIN1_PARAM].getValue() + inputs[GAIN1_INPUT].getNormalVoltage(0.) / 10.0, -1.0f, 1.0f);
   float gain2 = clamp(g_gain + params[GAIN2_PARAM].getValue() + inputs[GAIN2_INPUT].getNormalVoltage(0.) / 10.0, -1.0f, 1.0f);
   float gain3 = clamp(g_gain + params[GAIN3_PARAM].getValue() + inputs[GAIN3_INPUT].getNormalVoltage(0.) / 10.0, -1.0f, 1.0f);
@@ -122,7 +122,7 @@ void Etagere::process(const ProcessArgs &args) {
   float freq3 = clamp(g_cutoff + params[FREQ3_PARAM].getValue() + inputs[FREQ3_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
   float freq4 = clamp(g_cutoff + params[FREQ4_PARAM].getValue() + inputs[FREQ4_INPUT].getNormalVoltage(0.), -4.0f, 6.0f);
 
-  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
+  float reso2 = clamp(g_cutoff + params[Q2_PARAM].getValue() + inputs[Q2_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
   float reso3 = clamp(g_cutoff + params[Q3_PARAM].getValue() + inputs[Q3_INPUT].getNormalVoltage(0.) / 10.0, 0.0f, 1.0f);
 
   lpFilter.setQ(.5); //Resonance(.5);
@@ -179,10 +179,10 @@ void Etagere::process(const ProcessArgs &args) {
             printf("%f %f %f %f\n", lp_cutoff, bp2_cutoff, bp3_cutoff, hp_cutoff);
         }
 */
-  float lpgain = pow(20., -gain1);
-  float bp2gain = pow(20., -gain2);
-  float bp3gain = pow(20., -gain3);
-  float hpgain = pow(20., -gain4);
+  float lpgain = pow(20., gain1);
+  float bp2gain = pow(20., gain2);
+  float bp3gain = pow(20., gain3);
+  float hpgain = pow(20., gain4);
 
   outputs[LP_OUTPUT].value = lpout * lpgain;
   outputs[BP2_OUTPUT].setVoltage(bp2out * bp2gain);
