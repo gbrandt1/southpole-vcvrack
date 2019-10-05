@@ -288,16 +288,16 @@ struct AnnuliWidget : ModuleWidget {
     addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1 + 5.12 * yh), module, Annuli::DAMPING_PARAM));
     addParam(createParam<sp_SmallBlackKnob>(Vec(x3, y1 + 6.12 * yh), module, Annuli::POSITION_PARAM));
 
-    addParam(createParam<sp_Trimpot>(Vec(x2, y1 + 2 * yh + 6), module, Annuli::BRIGHTNESS_MOD_PARAM));
-    addParam(createParam<sp_Trimpot>(Vec(x2, y1 + 3 * yh + 6), module, Annuli::FREQUENCY_MOD_PARAM));
-    addParam(createParam<sp_Trimpot>(Vec(x2, y1 + 4 * yh + 6), module, Annuli::DAMPING_MOD_PARAM));
-    addParam(createParam<sp_Trimpot>(Vec(x2, y1 + 5 * yh + 6), module, Annuli::STRUCTURE_MOD_PARAM));
+    addParam(createParam<sp_Trimpot>(Vec(x2, y1 + 2 * yh + 6), module, Annuli::FREQUENCY_MOD_PARAM));
+    addParam(createParam<sp_Trimpot>(Vec(x2, y1 + 3 * yh + 6), module, Annuli::STRUCTURE_MOD_PARAM));
+    addParam(createParam<sp_Trimpot>(Vec(x2, y1 + 4 * yh + 6), module, Annuli::BRIGHTNESS_MOD_PARAM));
+    addParam(createParam<sp_Trimpot>(Vec(x2, y1 + 5 * yh + 6), module, Annuli::DAMPING_MOD_PARAM));
     addParam(createParam<sp_Trimpot>(Vec(x2, y1 + 6 * yh + 6), module, Annuli::POSITION_MOD_PARAM));
 
-    addInput(createInput<sp_Port>(Vec(x1, y1 + 2.12 * yh), module, Annuli::BRIGHTNESS_MOD_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1 + 3.12 * yh), module, Annuli::FREQUENCY_MOD_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1 + 4.12 * yh), module, Annuli::DAMPING_MOD_INPUT));
-    addInput(createInput<sp_Port>(Vec(x1, y1 + 5.12 * yh), module, Annuli::STRUCTURE_MOD_INPUT));
+    addInput(createInput<sp_Port>(Vec(x1, y1 + 2.12 * yh), module, Annuli::FREQUENCY_MOD_INPUT));
+    addInput(createInput<sp_Port>(Vec(x1, y1 + 3.12 * yh), module, Annuli::STRUCTURE_MOD_INPUT));
+    addInput(createInput<sp_Port>(Vec(x1, y1 + 4.12 * yh), module, Annuli::BRIGHTNESS_MOD_INPUT));
+    addInput(createInput<sp_Port>(Vec(x1, y1 + 5.12 * yh), module, Annuli::DAMPING_MOD_INPUT));
     addInput(createInput<sp_Port>(Vec(x1, y1 + 6.12 * yh), module, Annuli::POSITION_MOD_INPUT));
 
     addInput(createInput<sp_Port>(Vec(x1 + 10, y1 + 7 * yh), module, Annuli::STRUM_INPUT));
