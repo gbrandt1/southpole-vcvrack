@@ -515,7 +515,7 @@ struct CornrowsXWidget : ModuleWidget {
     const float y1 = 115;
     const float yh = 36.;
 
-    addParam(createParam<sp_Encoder>(Vec(x3 + 4, 78), module, CornrowsX::SHAPE_PARAM));
+    addParam(createParam<sp_Encoder>(Vec(x3 - 5, 68), module, CornrowsX::SHAPE_PARAM));
 
     addInput(createInput<sp_Port>(Vec(x1, y1 - 1 * yh), module, CornrowsX::TRIG_INPUT));
     addParam(createParam<sp_Trimpot>(Vec(x2, y1 - 1 * yh), module, CornrowsX::TRIG_DELAY_PARAM));

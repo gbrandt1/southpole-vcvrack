@@ -52,8 +52,8 @@ struct sp_Switch : app::SvgSwitch {
 
 struct sp_Encoder : app::SvgKnob {
   sp_Encoder() {
-    minAngle = -0.83 * M_PI;
-    maxAngle = 0.83 * M_PI;
+    minAngle = -1.0f * M_PI;
+    maxAngle = 1.0f * M_PI;
     setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/sp-encoder.svg")));
     //sw->svg = APP->window->loadSvg(asset::plugin(pluginInstance, "res/sp-encoder.svg"));
     //sw->wrap();
