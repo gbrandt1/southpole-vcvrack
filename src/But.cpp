@@ -67,7 +67,8 @@ struct But : Module {
 
   bool swState[8] = {};
 
-  But() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+  But() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     reset();
 
     configParam(But::SWITCH1_PARAM, 0.0, 1.0, 0.0, "");
@@ -135,16 +136,9 @@ void But::process(const ProcessArgs &args) {
 }
 
 struct ButWidget : ModuleWidget {
-
-  ButWidget(But *module) : ModuleWidget(module) {
-    box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
-    {
-      auto *panel = new SvgPanel();
-      panel->box.size = box.size;
-      panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/But.svg")));
-      addChild(panel);
-    }
+	ButWidget(But *module) {
+    setModule(module);
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/But.svg")));
 
     const float x1 = 3.;
     const float x2 = 4. + 20.;
