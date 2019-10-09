@@ -465,7 +465,7 @@ struct RiemannDisplay : TransparentWidget {
     }
   }
 
-  void draw(const DrawArgs &args) {
+  void draw(const DrawArgs &args) override {
     if (!module) {
       return;
     }
