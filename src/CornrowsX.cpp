@@ -551,7 +551,7 @@ struct CornrowsXWidget : ModuleWidget {
   }
 
   void appendContextMenu(Menu *menu) override {
-    CornrowsX *braids = dynamic_cast<CornrowsX *>(model);
+    CornrowsX *braids = dynamic_cast<CornrowsX *>(module);
     assert(braids);
 
     struct CornrowsXSettingItem : MenuItem {
