@@ -60,6 +60,8 @@ struct Smoke : Module {
   dsp::SampleRateConverter<2> outputSrc;
   dsp::DoubleRingBuffer<dsp::Frame<2>, 256> inputBuffer;
   dsp::DoubleRingBuffer<dsp::Frame<2>, 256> outputBuffer;
+  dsp::VuMeter2 vuMeter;
+  dsp::ClockDivider lightDivider;
 
   clouds::PlaybackMode playbackmode = clouds::PLAYBACK_MODE_GRANULAR;
 
@@ -90,6 +92,7 @@ struct Smoke : Module {
     block_ccm = new uint8_t[ccmLen]();
     processor = new clouds::GranularProcessor();
     memset(processor, 0, sizeof(*processor));
+    lightDivider.setDivision(512);
 
 #ifdef PARASITES
     reverseTrigger.setThresholds(0.0, 1.0);
@@ -270,19 +273,19 @@ void Smoke::process(const ProcessArgs &args) {
   // Lights
 
   clouds::Parameters *p = processor->mutable_parameters();
-  dsp::VUMeter vuMeter;
-  vuMeter.dBInterval = 6.0;
   dsp::Frame<2> lightFrame = p->freeze ? outputFrame : inputFrame;
-  vuMeter.setValue(fmaxf(fabsf(lightFrame.samples[0]), fabsf(lightFrame.samples[1])));
+  vuMeter.process(args.sampleTime, fmaxf(fabsf(lightFrame.samples[0]), fabsf(lightFrame.samples[1])));
   lights[FREEZE_LIGHT].setBrightness(p->freeze ? 0.75 : 0.0);
-  lights[MIX_GREEN_LIGHT].setSmoothBrightness(vuMeter.getBrightness(3), args.sampleTime);
-  lights[PAN_GREEN_LIGHT].setSmoothBrightness(vuMeter.getBrightness(2), args.sampleTime);
-  lights[FEEDBACK_GREEN_LIGHT].setSmoothBrightness(vuMeter.getBrightness(1), args.sampleTime);
-  lights[REVERB_GREEN_LIGHT].setBrightness(0.0);
-  lights[MIX_RED_LIGHT].setBrightness(0.0);
-  lights[PAN_RED_LIGHT].setBrightness(0.0);
-  lights[FEEDBACK_RED_LIGHT].setSmoothBrightness(vuMeter.getBrightness(1), args.sampleTime);
-  lights[REVERB_RED_LIGHT].setSmoothBrightness(vuMeter.getBrightness(0), args.sampleTime);
+  if (lightDivider.process()) { // Expensive, so call this infrequently
+    lights[MIX_GREEN_LIGHT].setBrightness(vuMeter.getBrightness(-24.f, -18.f));
+    lights[PAN_GREEN_LIGHT].setBrightness(vuMeter.getBrightness(-18.f, -12.f));
+    lights[FEEDBACK_GREEN_LIGHT].setBrightness(vuMeter.getBrightness(-12.f, -6.f));
+    lights[REVERB_GREEN_LIGHT].setBrightness(0.0);
+    lights[MIX_RED_LIGHT].setBrightness(0.0);
+    lights[PAN_RED_LIGHT].setBrightness(0.0);
+    lights[FEEDBACK_RED_LIGHT].setBrightness(vuMeter.getBrightness(-12.f, -6.f));
+    lights[REVERB_RED_LIGHT].setBrightness(vuMeter.getBrightness(-6.f, 0.f));
+  }
 }
 
 struct SmokeWidget : ModuleWidget {
