@@ -98,7 +98,7 @@ struct FlipFlop {
     if (clockTrigger.process(input)) {
       toggle = !toggle;
       out = toggle ? 5.0f : -5.0f;
-      count = ++count % 8;
+      count = (count + 1) % 8;
     }
     return out;
   }
