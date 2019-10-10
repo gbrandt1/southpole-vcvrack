@@ -60,8 +60,8 @@ struct Falls : Module {
 
   Falls() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-
-    configParam(Falls::GAIN1_PARAM, -1.0, 1.0, 0.0, "");
+    for (int i = 0; i < NUMP; i++)
+      configParam(Falls::GAIN1_PARAM + i, -1.0, 1.0, 0.0, "");
     configParam(Falls::RANGE_PARAM, 0.0, 1.0, 0.0, "");
   }
   void process(const ProcessArgs &args) override;
