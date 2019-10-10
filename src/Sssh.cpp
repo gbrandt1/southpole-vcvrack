@@ -45,7 +45,7 @@ struct Sssh : Module {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     //trigger.setThresholds(0.0, 0.7);
   }
-  void reset() {
+  void onReset() override {
 
     for (unsigned int i = 0; i < 4; i++)
       sample[i] = 0.;
@@ -56,7 +56,7 @@ struct Sssh : Module {
 
 void Sssh::process(const ProcessArgs &args) {
 
-  float in[4], trig[4];
+  float trig[4];
 
   for (unsigned int i = 0; i < 4; i++) {
 
@@ -69,8 +69,6 @@ void Sssh::process(const ProcessArgs &args) {
     } else {
       trig[i] = inputs[TRIG1_INPUT + i].getNormalVoltage(trig[i - 1]);
     }
-
-    in[i] = inputs[SH1_INPUT + i].getNormalVoltage(noise);
 
     if (trigger[i].process(trig[i])) {
       sample[i] = inputs[SH1_INPUT + i].getNormalVoltage(noise);
