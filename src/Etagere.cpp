@@ -211,12 +211,14 @@ struct EtagereWidget : ModuleWidget {
       noirPanel = new SvgPanel();
       noirPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Etagere.svg")));
       noirPanel->box.size = box.size;
+      noirPanel->visible = true;
       addChild(noirPanel);
     }
     {
       blancPanel = new SvgPanel();
       blancPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Etagere_blanc.svg")));
       blancPanel->box.size = box.size;
+      blancPanel->visible = false;
       addChild(blancPanel);
     }
 

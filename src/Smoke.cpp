@@ -306,36 +306,42 @@ struct SmokeWidget : ModuleWidget {
       panel1 = new SvgPanel();
       panel1->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Smoke-parasite.svg")));
       panel1->box.size = box.size;
+      panel1->visible = true;
       addChild(panel1);
     }
     {
       panel2 = new SvgPanel();
       panel2->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Espectro-parasite.svg")));
       panel2->box.size = box.size;
+      panel2->visible = false;
       addChild(panel2);
     }
     {
       panel3 = new SvgPanel();
       panel3->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Ritardo-parasite.svg")));
       panel3->box.size = box.size;
+      panel3->visible = false;
       addChild(panel3);
     }
     {
       panel4 = new SvgPanel();
       panel4->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Camilla-parasite.svg")));
       panel4->box.size = box.size;
+      panel4->visible = false;
       addChild(panel4);
     }
     {
       panel5 = new SvgPanel();
       panel5->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Oliverb.svg")));
       panel5->box.size = box.size;
+      panel5->visible = false;
       addChild(panel5);
     }
     {
       panel6 = new SvgPanel();
       panel6->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Resonestor.svg")));
       panel6->box.size = box.size;
+      panel6->visible = false;
       addChild(panel6);
     }
 
@@ -344,24 +350,28 @@ struct SmokeWidget : ModuleWidget {
       panel1 = new SvgPanel();
       panel1->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Smoke.svg")));
       panel1->box.size = box.size;
+      panel1->visible = true;
       addChild(panel1);
     }
     {
       panel2 = new SvgPanel();
       panel2->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Espectro.svg")));
       panel2->box.size = box.size;
+      panel2->visible = false;
       addChild(panel2);
     }
     {
       panel3 = new SvgPanel();
       panel3->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Ritardo.svg")));
       panel3->box.size = box.size;
+      panel3->visible = false;
       addChild(panel3);
     }
     {
       panel4 = new SvgPanel();
       panel4->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Camilla.svg")));
       panel4->box.size = box.size;
+      panel4->visible = false;
       addChild(panel4);
     }
 #endif

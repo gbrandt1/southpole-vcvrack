@@ -264,12 +264,14 @@ struct AnnuliWidget : ModuleWidget {
       panel = new SvgPanel();
       panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Annuli.svg")));
       panel->box.size = box.size;
+      panel->visible = true;
       addChild(panel);
     }
     {
       panel2 = new SvgPanel();
       panel2->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/DisastrousPeace.svg")));
       panel2->box.size = box.size;
+      panel2->visible = false;
       addChild(panel2);
     }
     const float x1 = 5;

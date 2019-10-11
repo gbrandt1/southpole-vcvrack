@@ -221,12 +221,14 @@ struct SplashWidget : ModuleWidget {
       tidesPanel = new SvgPanel();
       tidesPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Splash.svg")));
       tidesPanel->box.size = box.size;
+      tidesPanel->visible = true;
       addChild(tidesPanel);
     }
     {
       sheepPanel = new SvgPanel();
       sheepPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Lambs.svg")));
       sheepPanel->box.size = box.size;
+      sheepPanel->visible = false;
       addChild(sheepPanel);
     }
     const float x1 = 0.5 * RACK_GRID_WIDTH;
