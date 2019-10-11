@@ -84,10 +84,11 @@ struct Rakes : Module {
     }
 
     configParam(Rakes::DECAY_PARAM, 0.0, 1.0, 0.0, "");
-    //    configParam(Rakes::FOLLOW_PARAM, 0.0, 1.0, 0.0, "");
-    configParam(Rakes::TUNE1_PARAM, -5.0, 5.5, 0.0, "");
-    configParam(Rakes::FINE1_PARAM, -1.0, 1.0, 0.0, "");
-    configParam(Rakes::GAIN1_PARAM, 0.0, 1.0, 0.0, "");
+    for (int j = 0; j < NBUF; j++) {
+      configParam(Rakes::TUNE1_PARAM + j, -5.0, 5.5, 0.0, "");
+      configParam(Rakes::FINE1_PARAM + j, -1.0, 1.0, 0.0, "");
+      configParam(Rakes::GAIN1_PARAM + j, 0.0, 1.0, 0.0, "");
+    }
     configParam(Rakes::QUANT_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Rakes::MIX_PARAM, 0.0, 1.0, 0.5, "");
   }
