@@ -331,7 +331,12 @@ void Gnome::process(const ProcessArgs &args) {
   // VCO
 
   float pitchCv = 12.0 * inputs[PITCH_INPUT].getNormalVoltage(0.);
-  float fm = 10. * params[FM_PARAM].getValue() * outputs[LFO_OUTPUT].value;
+  float fm = 0.0f;
+  if (inputs[FM_INPUT].isConnected()) {
+    fm = 10. * params[FM_PARAM].getValue() * inputs[FM_INPUT].getVoltage();
+  } else {
+    fm = 10. * params[FM_PARAM].getValue() * outputs[LFO_OUTPUT].getVoltage();
+  }
   oscillator.setPitch(params[PITCH_PARAM].getValue(), pitchCv + fm);
   oscillator.setPulseWidth(params[PW_PARAM].getValue() + (5.0 + inputs[PW_INPUT].getNormalVoltage(0.)) / 10.0);
 
