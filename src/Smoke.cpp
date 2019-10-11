@@ -492,17 +492,17 @@ struct SmokeWidget : ModuleWidget {
     menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "OLIVERB", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_OLIVERB));
     menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "RESONESTOR", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_RESONESTOR));
 #endif
-    menu->addChild(construct<MenuItem>(&MenuItem::text, "STEREO/MONO"));
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "STEREO/MONO"));
     menu->addChild(construct<CloudsMonoItem>(&MenuItem::text, "STEREO", &CloudsMonoItem::clouds, clouds, &CloudsMonoItem::setting, false));
     menu->addChild(construct<CloudsMonoItem>(&MenuItem::text, "MONO", &CloudsMonoItem::clouds, clouds, &CloudsMonoItem::setting, true));
 
-    menu->addChild(construct<MenuItem>(&MenuItem::text, "HIFI/LOFI"));
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "HIFI/LOFI"));
     menu->addChild(construct<CloudsLofiItem>(&MenuItem::text, "HIFI", &CloudsLofiItem::clouds, clouds, &CloudsLofiItem::setting, false));
     menu->addChild(construct<CloudsLofiItem>(&MenuItem::text, "LOFI", &CloudsLofiItem::clouds, clouds, &CloudsLofiItem::setting, true));
 
 #ifdef BUFFERRESIZING
     // disable by default as it seems to make alternative modes unstable
-    menu->addChild(construct<MenuItem>(&MenuItem::text, "BUFFER SIZE (EXPERIMENTAL)"));
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "BUFFER SIZE (EXPERIMENTAL)"));
     menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "ORIGINAL", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 1));
     menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "2X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 2));
     menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "4X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 4));
