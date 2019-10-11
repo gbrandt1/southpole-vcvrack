@@ -184,10 +184,10 @@ void Etagere::process(const ProcessArgs &args) {
   float bp3gain = pow(20., -gain3);
   float hpgain = pow(20., -gain4);
 
-  outputs[LP_OUTPUT].value = lpout * lpgain;
+  outputs[LP_OUTPUT].setVoltage(lpout * lpgain);
   outputs[BP2_OUTPUT].setVoltage(bp2out * bp2gain);
   outputs[BP3_OUTPUT].setVoltage(bp3out * bp3gain);
-  outputs[HP_OUTPUT].value = hpout * hpgain;
+  outputs[HP_OUTPUT].setVoltage(hpout * hpgain);
 
   float sumout = lpout * lpgain + hpout * hpgain + bp2out * bp2gain + bp3out * bp3gain;
 

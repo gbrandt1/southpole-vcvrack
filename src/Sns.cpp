@@ -302,9 +302,9 @@ void Sns::process(const ProcessArgs &args) {
   bool apulse = accentPulse.process(1.0 / args.sampleRate);
 
   if (gateMode == TURING_MODE) {
-    outputs[GATE_OUTPUT].value = 10.0 * (turing / pow(2., par_l) - 1.);
+    outputs[GATE_OUTPUT].setVoltage(10.0 * (turing / pow(2., par_l) - 1.));
   } else {
-    outputs[GATE_OUTPUT].value = gateOn | gpulse ? 10.0 : 0.0;
+    outputs[GATE_OUTPUT].setVoltage(gateOn | gpulse ? 10.0 : 0.0);
   }
   outputs[ACCENT_OUTPUT].setVoltage(accOn | apulse ? 10.0 : 0.0);
 

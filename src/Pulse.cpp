@@ -176,11 +176,11 @@ void Pulse::process(const ProcessArgs &args) {
   }
 
   outputs[CLOCK_OUTPUT].setVoltage(10. * clkPulse.process(1.0 / args.sampleRate));
-  outputs[EOC_OUTPUT].value = 10. * eocPulse.process(1.0 / args.sampleRate);
-  outputs[GATE_OUTPUT].value = clamp(10.f * level * amp, -10.f, 10.f);
+  outputs[EOC_OUTPUT].setVoltage(10. * eocPulse.process(1.0 / args.sampleRate));
+  outputs[GATE_OUTPUT].setVoltage(clamp(10.f * level * amp, -10.f, 10.f));
 
-  lights[EOC_LIGHT].setSmoothBrightness(outputs[EOC_OUTPUT].value, args.sampleTime);
-  lights[GATE_LIGHT].setSmoothBrightness(outputs[GATE_OUTPUT].value, args.sampleTime);
+  lights[EOC_LIGHT].setSmoothBrightness(outputs[EOC_OUTPUT].getVoltage(), args.sampleTime);
+  lights[GATE_LIGHT].setSmoothBrightness(outputs[GATE_OUTPUT].getVoltage(), args.sampleTime);
 }
 
 struct PulseWidget : ModuleWidget {
