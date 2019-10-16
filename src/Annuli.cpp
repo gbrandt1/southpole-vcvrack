@@ -341,8 +341,8 @@ struct AnnuliWidget : ModuleWidget {
       }
     };
 
-    menu->addChild(construct<MenuItem>());
-    menu->addChild(construct<MenuItem>(&MenuItem::text, "Resonator"));
+    menu->addChild(construct<MenuLabel>());
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Resonator"));
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Modal resonator", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_MODAL));
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Sympathetic strings", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_SYMPATHETIC_STRING));
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Modulated/inharmonic string", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_STRING));
@@ -350,7 +350,7 @@ struct AnnuliWidget : ModuleWidget {
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Quantized sympathetic strings", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_SYMPATHETIC_STRING_QUANTIZED));
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Reverb string", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_STRING_AND_REVERB));
 
-    menu->addChild(construct<MenuItem>());
+    menu->addChild(construct<MenuLabel>());
     menu->addChild(construct<AnnuliEasterEggItem>(&MenuItem::text, "Disastrous Peace", &AnnuliEasterEggItem::rings, rings));
   }
 
