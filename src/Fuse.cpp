@@ -35,7 +35,7 @@ struct Fuse : Module {
     NUM_LIGHTS
   };
 
-  bool gateMode;
+  bool gateMode = false;
 
   Fuse() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
