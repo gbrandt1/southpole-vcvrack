@@ -59,19 +59,19 @@ struct Abr : Module {
   Abr() {
 
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-    reset();
+    onReset();
 
     configParam(Abr::SWITCH1_PARAM, 0.0, 1.0, 0.0, "");
   }
 
   void process(const ProcessArgs &args) override;
 
-  void reset() {
+  void onReset() override {
     for (int i = 0; i < 8; i++) {
       swState[i] = false;
     }
   }
-  void randomize() {
+  void onRandomize() override {
     for (int i = 0; i < 8; i++) {
       swState[i] = (random::uniform() < 0.5);
     }

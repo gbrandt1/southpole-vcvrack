@@ -64,13 +64,13 @@ struct SplashParasite : Module {
   }
   void process(const ProcessArgs &args) override;
 
-  void reset() {
+  void onReset() {
     generator.set_range(tides::GENERATOR_RANGE_MEDIUM);
     generator.set_mode(tides::GENERATOR_MODE_LOOPING);
     sheep = false;
   }
 
-  void randomize() {
+  void onRandomize() {
     generator.set_range((tides::GeneratorRange)(random::u32() % 3));
     generator.set_mode((tides::GeneratorMode)(random::u32() % 3));
   }

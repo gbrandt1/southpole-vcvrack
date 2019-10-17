@@ -94,7 +94,7 @@ struct Sns : Module {
 
     sequence.fill(0);
     accents.fill(0);
-    reset();
+    onReset();
 
     configParam(Sns::K_PARAM, 0., 1., .25, "");
     configParam(Sns::L_PARAM, 0., 1., 1., "");
@@ -105,7 +105,7 @@ struct Sns : Module {
   }
 
   void process(const ProcessArgs &args) override;
-  void reset();
+  void onReset() override;
 
   unsigned int fib(unsigned int n) {
     return (n < 2) ? n : fib(n - 1) + fib(n - 2);
@@ -130,7 +130,7 @@ struct Sns : Module {
   }
 };
 
-void Sns::reset() {
+void Sns::onReset() {
 
   if (par_l_last != par_l) {
     std::fill(seq0.begin(), seq0.end(), 0);
@@ -458,7 +458,7 @@ struct SnsDisplay : TransparentWidget {
 
     // i know ... shouldn't be here at all
     if (module->calculate) {
-      module->reset();
+      module->onReset();
       module->par_k_last = module->par_k;
       module->par_l_last = module->par_l;
       module->par_a_last = module->par_a;
@@ -571,7 +571,7 @@ struct SnsWidget : ModuleWidget {
       Sns::patternStyle ps;
       void onAction(const event::Action &e) override {
         sns->style = ps;
-        sns->reset();
+        sns->onReset();
       }
       void step() override {
         rightText = (sns->style == ps) ? "✔" : "";

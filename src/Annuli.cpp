@@ -118,12 +118,12 @@ struct Annuli : Module {
     }
   }
 
-  void reset() {
+  void onReset() override {
     polyphonyMode = 0;
     model = rings::RESONATOR_MODEL_MODAL;
   }
 
-  void randomize() {
+  void onRandomize() override {
     polyphonyMode = random::u32() % 3;
     model = (rings::ResonatorModel)(random::u32() % 3);
   }
