@@ -184,10 +184,10 @@ void Etagere::process(const ProcessArgs &args) {
   float bp3gain = pow(20., -gain3);
   float hpgain = pow(20., -gain4);
 
-  outputs[LP_OUTPUT].value = lpout * lpgain;
+  outputs[LP_OUTPUT].setVoltage(lpout * lpgain);
   outputs[BP2_OUTPUT].setVoltage(bp2out * bp2gain);
   outputs[BP3_OUTPUT].setVoltage(bp3out * bp3gain);
-  outputs[HP_OUTPUT].value = hpout * hpgain;
+  outputs[HP_OUTPUT].setVoltage(hpout * hpgain);
 
   float sumout = lpout * lpgain + hpout * hpgain + bp2out * bp2gain + bp3out * bp3gain;
 
@@ -211,12 +211,14 @@ struct EtagereWidget : ModuleWidget {
       noirPanel = new SvgPanel();
       noirPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Etagere.svg")));
       noirPanel->box.size = box.size;
+      noirPanel->visible = true;
       addChild(noirPanel);
     }
     {
       blancPanel = new SvgPanel();
       blancPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Etagere_blanc.svg")));
       blancPanel->box.size = box.size;
+      blancPanel->visible = false;
       addChild(blancPanel);
     }
 

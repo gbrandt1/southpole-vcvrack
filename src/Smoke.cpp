@@ -60,6 +60,8 @@ struct Smoke : Module {
   dsp::SampleRateConverter<2> outputSrc;
   dsp::DoubleRingBuffer<dsp::Frame<2>, 256> inputBuffer;
   dsp::DoubleRingBuffer<dsp::Frame<2>, 256> outputBuffer;
+  dsp::VuMeter2 vuMeter;
+  dsp::ClockDivider lightDivider;
 
   clouds::PlaybackMode playbackmode = clouds::PLAYBACK_MODE_GRANULAR;
 
@@ -90,6 +92,7 @@ struct Smoke : Module {
     block_ccm = new uint8_t[ccmLen]();
     processor = new clouds::GranularProcessor();
     memset(processor, 0, sizeof(*processor));
+    lightDivider.setDivision(512);
 
 #ifdef PARASITES
     reverseTrigger.setThresholds(0.0, 1.0);
@@ -270,19 +273,19 @@ void Smoke::process(const ProcessArgs &args) {
   // Lights
 
   clouds::Parameters *p = processor->mutable_parameters();
-  dsp::VUMeter vuMeter;
-  vuMeter.dBInterval = 6.0;
   dsp::Frame<2> lightFrame = p->freeze ? outputFrame : inputFrame;
-  vuMeter.setValue(fmaxf(fabsf(lightFrame.samples[0]), fabsf(lightFrame.samples[1])));
+  vuMeter.process(args.sampleTime, fmaxf(fabsf(lightFrame.samples[0]), fabsf(lightFrame.samples[1])));
   lights[FREEZE_LIGHT].setBrightness(p->freeze ? 0.75 : 0.0);
-  lights[MIX_GREEN_LIGHT].setSmoothBrightness(vuMeter.getBrightness(3), args.sampleTime);
-  lights[PAN_GREEN_LIGHT].setSmoothBrightness(vuMeter.getBrightness(2), args.sampleTime);
-  lights[FEEDBACK_GREEN_LIGHT].setSmoothBrightness(vuMeter.getBrightness(1), args.sampleTime);
-  lights[REVERB_GREEN_LIGHT].setBrightness(0.0);
-  lights[MIX_RED_LIGHT].setBrightness(0.0);
-  lights[PAN_RED_LIGHT].setBrightness(0.0);
-  lights[FEEDBACK_RED_LIGHT].setSmoothBrightness(vuMeter.getBrightness(1), args.sampleTime);
-  lights[REVERB_RED_LIGHT].setSmoothBrightness(vuMeter.getBrightness(0), args.sampleTime);
+  if (lightDivider.process()) { // Expensive, so call this infrequently
+    lights[MIX_GREEN_LIGHT].setBrightness(vuMeter.getBrightness(-24.f, -18.f));
+    lights[PAN_GREEN_LIGHT].setBrightness(vuMeter.getBrightness(-18.f, -12.f));
+    lights[FEEDBACK_GREEN_LIGHT].setBrightness(vuMeter.getBrightness(-12.f, -6.f));
+    lights[REVERB_GREEN_LIGHT].setBrightness(0.0);
+    lights[MIX_RED_LIGHT].setBrightness(0.0);
+    lights[PAN_RED_LIGHT].setBrightness(0.0);
+    lights[FEEDBACK_RED_LIGHT].setBrightness(vuMeter.getBrightness(-12.f, -6.f));
+    lights[REVERB_RED_LIGHT].setBrightness(vuMeter.getBrightness(-6.f, 0.f));
+  }
 }
 
 struct SmokeWidget : ModuleWidget {
@@ -303,36 +306,42 @@ struct SmokeWidget : ModuleWidget {
       panel1 = new SvgPanel();
       panel1->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Smoke-parasite.svg")));
       panel1->box.size = box.size;
+      panel1->visible = true;
       addChild(panel1);
     }
     {
       panel2 = new SvgPanel();
       panel2->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Espectro-parasite.svg")));
       panel2->box.size = box.size;
+      panel2->visible = false;
       addChild(panel2);
     }
     {
       panel3 = new SvgPanel();
       panel3->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Ritardo-parasite.svg")));
       panel3->box.size = box.size;
+      panel3->visible = false;
       addChild(panel3);
     }
     {
       panel4 = new SvgPanel();
       panel4->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Camilla-parasite.svg")));
       panel4->box.size = box.size;
+      panel4->visible = false;
       addChild(panel4);
     }
     {
       panel5 = new SvgPanel();
       panel5->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Oliverb.svg")));
       panel5->box.size = box.size;
+      panel5->visible = false;
       addChild(panel5);
     }
     {
       panel6 = new SvgPanel();
       panel6->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Resonestor.svg")));
       panel6->box.size = box.size;
+      panel6->visible = false;
       addChild(panel6);
     }
 
@@ -341,24 +350,28 @@ struct SmokeWidget : ModuleWidget {
       panel1 = new SvgPanel();
       panel1->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Smoke.svg")));
       panel1->box.size = box.size;
+      panel1->visible = true;
       addChild(panel1);
     }
     {
       panel2 = new SvgPanel();
       panel2->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Espectro.svg")));
       panel2->box.size = box.size;
+      panel2->visible = false;
       addChild(panel2);
     }
     {
       panel3 = new SvgPanel();
       panel3->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Ritardo.svg")));
       panel3->box.size = box.size;
+      panel3->visible = false;
       addChild(panel3);
     }
     {
       panel4 = new SvgPanel();
       panel4->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Camilla.svg")));
       panel4->box.size = box.size;
+      panel4->visible = false;
       addChild(panel4);
     }
 #endif
@@ -489,17 +502,17 @@ struct SmokeWidget : ModuleWidget {
     menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "OLIVERB", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_OLIVERB));
     menu->addChild(construct<CloudsModeItem>(&MenuItem::text, "RESONESTOR", &CloudsModeItem::clouds, clouds, &CloudsModeItem::mode, clouds::PLAYBACK_MODE_RESONESTOR));
 #endif
-    menu->addChild(construct<MenuItem>(&MenuItem::text, "STEREO/MONO"));
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "STEREO/MONO"));
     menu->addChild(construct<CloudsMonoItem>(&MenuItem::text, "STEREO", &CloudsMonoItem::clouds, clouds, &CloudsMonoItem::setting, false));
     menu->addChild(construct<CloudsMonoItem>(&MenuItem::text, "MONO", &CloudsMonoItem::clouds, clouds, &CloudsMonoItem::setting, true));
 
-    menu->addChild(construct<MenuItem>(&MenuItem::text, "HIFI/LOFI"));
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "HIFI/LOFI"));
     menu->addChild(construct<CloudsLofiItem>(&MenuItem::text, "HIFI", &CloudsLofiItem::clouds, clouds, &CloudsLofiItem::setting, false));
     menu->addChild(construct<CloudsLofiItem>(&MenuItem::text, "LOFI", &CloudsLofiItem::clouds, clouds, &CloudsLofiItem::setting, true));
 
 #ifdef BUFFERRESIZING
     // disable by default as it seems to make alternative modes unstable
-    menu->addChild(construct<MenuItem>(&MenuItem::text, "BUFFER SIZE (EXPERIMENTAL)"));
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "BUFFER SIZE (EXPERIMENTAL)"));
     menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "ORIGINAL", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 1));
     menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "2X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 2));
     menu->addChild(construct<CloudsBufferItem>(&MenuItem::text, "4X", &CloudsBufferItem::clouds, clouds, &CloudsBufferItem::setting, 4));

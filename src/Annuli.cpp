@@ -118,12 +118,12 @@ struct Annuli : Module {
     }
   }
 
-  void reset() {
+  void onReset() override {
     polyphonyMode = 0;
     model = rings::RESONATOR_MODEL_MODAL;
   }
 
-  void randomize() {
+  void onRandomize() override {
     polyphonyMode = random::u32() % 3;
     model = (rings::ResonatorModel)(random::u32() % 3);
   }
@@ -264,12 +264,14 @@ struct AnnuliWidget : ModuleWidget {
       panel = new SvgPanel();
       panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Annuli.svg")));
       panel->box.size = box.size;
+      panel->visible = true;
       addChild(panel);
     }
     {
       panel2 = new SvgPanel();
       panel2->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/DisastrousPeace.svg")));
       panel2->box.size = box.size;
+      panel2->visible = false;
       addChild(panel2);
     }
     const float x1 = 5;
@@ -339,8 +341,8 @@ struct AnnuliWidget : ModuleWidget {
       }
     };
 
-    menu->addChild(construct<MenuItem>());
-    menu->addChild(construct<MenuItem>(&MenuItem::text, "Resonator"));
+    menu->addChild(construct<MenuLabel>());
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Resonator"));
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Modal resonator", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_MODAL));
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Sympathetic strings", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_SYMPATHETIC_STRING));
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Modulated/inharmonic string", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_STRING));
@@ -348,7 +350,7 @@ struct AnnuliWidget : ModuleWidget {
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Quantized sympathetic strings", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_SYMPATHETIC_STRING_QUANTIZED));
     menu->addChild(construct<AnnuliModelItem>(&MenuItem::text, "Reverb string", &AnnuliModelItem::rings, rings, &AnnuliModelItem::model, rings::RESONATOR_MODEL_STRING_AND_REVERB));
 
-    menu->addChild(construct<MenuItem>());
+    menu->addChild(construct<MenuLabel>());
     menu->addChild(construct<AnnuliEasterEggItem>(&MenuItem::text, "Disastrous Peace", &AnnuliEasterEggItem::rings, rings));
   }
 

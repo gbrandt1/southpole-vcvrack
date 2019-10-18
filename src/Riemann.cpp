@@ -52,7 +52,7 @@ struct Riemann : Module {
 
   Riemann() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-    reset();
+    onReset();
 
     configParam(Riemann::GROUP_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Riemann::SUS_PARAM, 0.0, 1.0, 0.0, "");
@@ -62,7 +62,7 @@ struct Riemann : Module {
   }
 
   void process(const ProcessArgs &args) override;
-  void reset();
+  void onReset() override;
 
   // circle of fifths
   const int cof[12] = {0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5};
@@ -118,7 +118,7 @@ struct Riemann : Module {
   float y0;
 };
 
-void Riemann::reset() {
+void Riemann::onReset() {
   /*
 	float ratio = pow(2., 1./12.);
 	for (int i=0; i<12; i++) {
@@ -465,7 +465,7 @@ struct RiemannDisplay : TransparentWidget {
     }
   }
 
-  void draw(const DrawArgs &args) {
+  void draw(const DrawArgs &args) override {
     if (!module) {
       return;
     }

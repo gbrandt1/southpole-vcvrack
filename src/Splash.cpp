@@ -62,7 +62,7 @@ struct Splash : Module {
     memset(&generator, 0, sizeof(generator));
     generator.Init();
     generator.set_sync(false);
-    reset();
+    onReset();
 
     configParam(Splash::MODE_PARAM, 0.0, 1.0, 0.0, "");
     configParam(Splash::RANGE_PARAM, 0.0, 1.0, 0.0, "");
@@ -74,13 +74,13 @@ struct Splash : Module {
   }
   void process(const ProcessArgs &args) override;
 
-  void reset() {
+  void onReset() override {
     generator.set_range(tides::GENERATOR_RANGE_MEDIUM);
     generator.set_mode(tides::GENERATOR_MODE_LOOPING);
     sheep = false;
   }
 
-  void randomize() {
+  void onRandomize() override {
     generator.set_range((tides::GeneratorRange)(random::u32() % 3));
     generator.set_mode((tides::GeneratorMode)(random::u32() % 3));
   }
@@ -221,12 +221,14 @@ struct SplashWidget : ModuleWidget {
       tidesPanel = new SvgPanel();
       tidesPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Splash.svg")));
       tidesPanel->box.size = box.size;
+      tidesPanel->visible = true;
       addChild(tidesPanel);
     }
     {
       sheepPanel = new SvgPanel();
       sheepPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Lambs.svg")));
       sheepPanel->box.size = box.size;
+      sheepPanel->visible = false;
       addChild(sheepPanel);
     }
     const float x1 = 0.5 * RACK_GRID_WIDTH;

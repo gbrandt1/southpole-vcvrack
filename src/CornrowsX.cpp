@@ -407,7 +407,6 @@ struct CornrowsXDisplay : TransparentWidget {
       }
     }
     if (module && module->last_setting_changed == braids::SETTING_META_MODULATION) {
-      shape = module->settings.ad_timbre;
       text = "META";
     }
     if (module && module->last_setting_changed == braids::SETTING_RESOLUTION) {
@@ -419,7 +418,6 @@ struct CornrowsXDisplay : TransparentWidget {
       text = rates_values[shape];
     }
     if (module && module->last_setting_changed == braids::SETTING_TRIG_SOURCE) {
-      shape = module->settings.ad_timbre;
       text = "AUTO";
     }
     if (module && module->last_setting_changed == braids::SETTING_TRIG_DELAY) {
@@ -439,7 +437,7 @@ struct CornrowsXDisplay : TransparentWidget {
       text = zero_to_fifteen_values[shape];
     }
     if (module && module->last_setting_changed == braids::SETTING_AD_TIMBRE) {
-      shape = module->settings.ad_color;
+      shape = module->settings.ad_timbre;
       text = zero_to_fifteen_values[shape];
     }
     if (module && module->last_setting_changed == braids::SETTING_AD_COLOR) {
@@ -447,7 +445,6 @@ struct CornrowsXDisplay : TransparentWidget {
       text = zero_to_fifteen_values[shape];
     }
     if (module && module->last_setting_changed == braids::SETTING_AD_VCA) {
-      shape = module->settings.ad_color;
       text = "\\VCA";
     }
     if (module && module->last_setting_changed == braids::SETTING_PITCH_RANGE) {
@@ -467,15 +464,12 @@ struct CornrowsXDisplay : TransparentWidget {
       text = note_values[shape];
     }
     if (module && module->last_setting_changed == braids::SETTING_VCO_FLATTEN) {
-      shape = module->settings.quantizer_scale;
       text = "FLAT";
     }
     if (module && module->last_setting_changed == braids::SETTING_VCO_DRIFT) {
-      shape = module->settings.quantizer_scale;
       text = "DRFT";
     }
     if (module && module->last_setting_changed == braids::SETTING_SIGNATURE) {
-      shape = module->settings.quantizer_scale;
       text = "SIGN";
     }
     nvgText(args.vg, textPos.x, textPos.y, text, NULL);
@@ -515,7 +509,7 @@ struct CornrowsXWidget : ModuleWidget {
     const float y1 = 115;
     const float yh = 36.;
 
-    addParam(createParam<sp_Encoder>(Vec(x3 + 4, 78), module, CornrowsX::SHAPE_PARAM));
+    addParam(createParam<sp_Encoder>(Vec(x3 - 5, 68), module, CornrowsX::SHAPE_PARAM));
 
     addInput(createInput<sp_Port>(Vec(x1, y1 - 1 * yh), module, CornrowsX::TRIG_INPUT));
     addParam(createParam<sp_Trimpot>(Vec(x2, y1 - 1 * yh), module, CornrowsX::TRIG_DELAY_PARAM));
@@ -551,7 +545,7 @@ struct CornrowsXWidget : ModuleWidget {
   }
 
   void appendContextMenu(Menu *menu) override {
-    CornrowsX *braids = dynamic_cast<CornrowsX *>(model);
+    CornrowsX *braids = dynamic_cast<CornrowsX *>(module);
     assert(braids);
 
     struct CornrowsXSettingItem : MenuItem {

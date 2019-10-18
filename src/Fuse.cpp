@@ -35,7 +35,7 @@ struct Fuse : Module {
     NUM_LIGHTS
   };
 
-  bool gateMode;
+  bool gateMode = false;
 
   Fuse() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -73,22 +73,24 @@ struct Fuse : Module {
       gateMode = json_boolean_value(gateModeJ);
     }
   }
+
+  void onReset() override {
+    curstep = maxsteps;
+    for (unsigned int i = 0; i < 4; i++) {
+      armTrigger[i].reset();
+      armed[i] = false;
+      gateOn[i] = false;
+    }
+  }
 };
 
 void Fuse::process(const ProcessArgs &args) {
 
   bool nextStep = false;
 
-  if (inputs[RESET_INPUT].isConnected()) {
-    if (resetTrigger.process(inputs[RESET_INPUT].getVoltage())) {
-      curstep = maxsteps;
-      for (unsigned int i = 0; i < 4; i++) {
-        armTrigger[i].reset();
-        armed[i] = false;
-        gateOn[i] = false;
-      }
-    }
-  }
+  if (inputs[RESET_INPUT].isConnected())
+    if (resetTrigger.process(inputs[RESET_INPUT].getVoltage()))
+      onReset();
 
   if (inputs[CLK_INPUT].isConnected()) {
     if (clockTrigger.process(inputs[CLK_INPUT].getVoltage())) {
