@@ -109,7 +109,7 @@ void Pulse::process(const ProcessArgs &args) {
   }
 
   float dt = 1e-3 * args.sampleRate;
-  float sr = args.sampleRate;
+  int sr = (int)args.sampleRate;
 
   amp = clamp(params[AMP_PARAM].getValue() + inputs[AMP_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
   slew = clamp(params[SLEW_PARAM].getValue() + inputs[SLEW_INPUT].getNormalVoltage(0.) / 10.0f, 0.0f, 1.0f);
