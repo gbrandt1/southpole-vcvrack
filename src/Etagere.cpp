@@ -80,16 +80,16 @@ struct Etagere : Module {
     const float gmax = -1.;
     const float gmin = 1.;
 
-    configParam(Etagere::FREQ4_PARAM, vfmin, vfmax, 0., "");
-    configParam(Etagere::GAIN4_PARAM, gmin, gmax, 0., "");
-    configParam(Etagere::FREQ2_PARAM, vfmin, vfmax, 0., "");
-    configParam(Etagere::GAIN2_PARAM, gmin, gmax, 0., "");
-    configParam(Etagere::Q2_PARAM, 0.0, 1.0, 0., "");
-    configParam(Etagere::FREQ3_PARAM, vfmin, vfmax, 0., "");
-    configParam(Etagere::GAIN3_PARAM, gmin, gmax, 0., "");
-    configParam(Etagere::Q3_PARAM, 0.0, 1.0, 0., "");
-    configParam(Etagere::FREQ1_PARAM, vfmin, vfmax, 0., "");
-    configParam(Etagere::GAIN1_PARAM, gmin, gmax, 0., "");
+    configParam(Etagere::FREQ4_PARAM, vfmin, vfmax, 0., "Freq 4");
+    configParam(Etagere::GAIN4_PARAM, gmin, gmax, 0., "Gain 4");
+    configParam(Etagere::FREQ2_PARAM, vfmin, vfmax, 0., "Freq 2");
+    configParam(Etagere::GAIN2_PARAM, gmin, gmax, 0., "Gain 2");
+    configParam(Etagere::Q2_PARAM, 0.0, 1.0, 0., "Res 2");
+    configParam(Etagere::FREQ3_PARAM, vfmin, vfmax, 0., "Freq 3");
+    configParam(Etagere::GAIN3_PARAM, gmin, gmax, 0., "Gain 3");
+    configParam(Etagere::Q3_PARAM, 0.0, 1.0, 0., "Res 3");
+    configParam(Etagere::FREQ1_PARAM, vfmin, vfmax, 0., "Freq 1");
+    configParam(Etagere::GAIN1_PARAM, gmin, gmax, 0., "Gain 1");
   }
 
   void process(const ProcessArgs &args) override;
@@ -284,7 +284,7 @@ struct EtagereWidget : ModuleWidget {
     };
 
     menu->addChild(construct<MenuLabel>());
-    menu->addChild(construct<EtagereBlancItem>(&MenuItem::text, "blanc", &EtagereBlancItem::etagere, etagere));
+    menu->addChild(construct<EtagereBlancItem>(&MenuItem::text, "Blanc", &EtagereBlancItem::etagere, etagere));
   }
 
   void step() override {
