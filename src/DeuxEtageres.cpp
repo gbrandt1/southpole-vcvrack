@@ -44,6 +44,8 @@ struct DeuxEtageres : Module {
     NUM_LIGHTS
   };
 
+  bool noir;
+
   VAStateVariableFilter lpFilter[2];
   VAStateVariableFilter bp2Filter[2];
   VAStateVariableFilter bp3Filter[2];
@@ -64,22 +66,24 @@ struct DeuxEtageres : Module {
       bp3Filter[i].setFilterType(SVFBandpass);
     }
 
+    noir = true;
+
     const float vfmin = -4.;
     const float vfmax = 6.;
 
     const float gmax = -1.;
     const float gmin = 1.;
 
-    configParam(DeuxEtageres::FREQ4_PARAM, vfmin, vfmax, 0., "");
-    configParam(DeuxEtageres::GAIN4_PARAM, gmin, gmax, 0., "");
-    configParam(DeuxEtageres::FREQ2_PARAM, vfmin, vfmax, 0., "");
-    configParam(DeuxEtageres::GAIN2_PARAM, gmin, gmax, 0., "");
-    configParam(DeuxEtageres::Q2_PARAM, 0.0, 1.0, 0., "");
-    configParam(DeuxEtageres::FREQ3_PARAM, vfmin, vfmax, 0., "");
-    configParam(DeuxEtageres::GAIN3_PARAM, gmin, gmax, 0., "");
-    configParam(DeuxEtageres::Q3_PARAM, 0.0, 1.0, 0., "");
-    configParam(DeuxEtageres::FREQ1_PARAM, vfmin, vfmax, 0., "");
-    configParam(DeuxEtageres::GAIN1_PARAM, gmin, gmax, 0., "");
+    configParam(DeuxEtageres::FREQ4_PARAM, vfmin, vfmax, 0., "Freq 4");
+    configParam(DeuxEtageres::GAIN4_PARAM, gmin, gmax, 0., "Gain 4");
+    configParam(DeuxEtageres::FREQ2_PARAM, vfmin, vfmax, 0., "Freq 2");
+    configParam(DeuxEtageres::GAIN2_PARAM, gmin, gmax, 0., "Gain 2");
+    configParam(DeuxEtageres::Q2_PARAM, 0.0, 1.0, 0., "Res 2");
+    configParam(DeuxEtageres::FREQ3_PARAM, vfmin, vfmax, 0., "Freq 3");
+    configParam(DeuxEtageres::GAIN3_PARAM, gmin, gmax, 0., "Gain 3");
+    configParam(DeuxEtageres::Q3_PARAM, 0.0, 1.0, 0., "Res 3");
+    configParam(DeuxEtageres::FREQ1_PARAM, vfmin, vfmax, 0., "Freq 1");
+    configParam(DeuxEtageres::GAIN1_PARAM, gmin, gmax, 0., "Gain 1");
   }
   void process(const ProcessArgs &args) override;
 
@@ -90,6 +94,8 @@ struct DeuxEtageres : Module {
 
   json_t *dataToJson() override {
     json_t *rootJ = json_object();
+    json_object_set_new(rootJ, "noir", json_boolean(noir));
+    return rootJ;
     // states
     //json_t *statesJ = json_array();
     //for (int i = 0; i < NUM_CHANNELS; i++) {
@@ -97,9 +103,12 @@ struct DeuxEtageres : Module {
     //    json_array_append_new(statesJ, stateJ);
     //}
     //json_object_set_new(rootJ, "states", statesJ);
-    return rootJ;
   }
   void dataFromJson(json_t *rootJ) override {
+    json_t *noirJ = json_object_get(rootJ, "noir");
+    if (noirJ) {
+      noir = json_boolean_value(noirJ);
+    }
     // states
     //json_t *statesJ = json_object_get(rootJ, "states");
     //if (statesJ) {
@@ -181,7 +190,11 @@ void DeuxEtageres::process(const ProcessArgs &args) {
     lights[CLIPL_LIGHT + i].setSmoothBrightness(fabs(sumout) > 10. ? 1. : 0., args.sampleTime);
   }
 }
+
 struct DeuxEtageresWidget : ModuleWidget {
+
+  SvgPanel *bluePanel;
+  SvgPanel *noirPanel;
 
   DeuxEtageresWidget(DeuxEtageres *module) {
     setModule(module);
@@ -189,10 +202,16 @@ struct DeuxEtageresWidget : ModuleWidget {
     box.size = Vec(15 * 6, 380);
 
     {
-      SvgPanel *panel = new SvgPanel();
-      panel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/DeuxEtageres.svg")));
-      panel->box.size = box.size;
-      addChild(panel);
+      bluePanel = new SvgPanel();
+      bluePanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/DeuxEtageres.svg")));
+      bluePanel->box.size = box.size;
+      addChild(bluePanel);
+    }
+    {
+      noirPanel = new SvgPanel();
+      noirPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/DeuxEtageres_noir.svg")));
+      noirPanel->box.size = box.size;
+      addChild(noirPanel);
     }
 
     const float x1 = 8;
@@ -234,6 +253,37 @@ struct DeuxEtageresWidget : ModuleWidget {
     addInput(createInput<sp_Port>(Vec(x1, y1 + 13 * yh), module, DeuxEtageres::INR_INPUT));
     addOutput(createOutput<sp_Port>(Vec(x2, y1 + 13 * yh), module, DeuxEtageres::OUTR_OUTPUT));
     addChild(createLight<SmallLight<RedLight>>(Vec(x2 - 10., y1 + 13.2 * yh), module, DeuxEtageres::CLIPR_LIGHT));
+  }
+
+  void appendContextMenu(Menu *menu) override {
+    DeuxEtageres *deuxetageres = dynamic_cast<DeuxEtageres *>(module);
+    assert(deuxetageres);
+
+    struct DeuxEtageresNoirItem : MenuItem {
+      DeuxEtageres *deuxetageres;
+
+      void onAction(const event::Action &e) override {
+        deuxetageres->noir ^= true;
+      }
+
+      void step() override {
+        rightText = (!deuxetageres->noir) ? "✔" : "";
+        MenuItem::step();
+      }
+    };
+
+    menu->addChild(construct<MenuLabel>());
+    menu->addChild(construct<DeuxEtageresNoirItem>(&MenuItem::text, "Noir", &DeuxEtageresNoirItem::deuxetageres, deuxetageres));
+  }
+
+  void step() override {
+    DeuxEtageres *deuxetageres = dynamic_cast<DeuxEtageres *>(module);
+    if (deuxetageres) {
+      noirPanel->visible = !deuxetageres->noir;
+      bluePanel->visible = deuxetageres->noir;
+    }
+
+    ModuleWidget::step();
   }
 };
 

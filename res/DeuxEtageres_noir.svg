@@ -13,7 +13,7 @@
    viewBox="0 0 23.813 100.542"
    version="1.1"
    id="svg139"
-   sodipodi:docname="DeuxEtageres.svg"
+   sodipodi:docname="DeuxEtageres_noir.svg"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <metadata
      id="metadata143">
@@ -39,9 +39,9 @@
      inkscape:window-height="715"
      id="namedview141"
      showgrid="false"
-     inkscape:zoom="11.043092"
+     inkscape:zoom="12.272499"
      inkscape:cx="45"
-     inkscape:cy="101.00834"
+     inkscape:cy="101.03157"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -107,20 +107,23 @@
   <path
      d="M-.043 7.14l23.898-.12v13.517H.043z"
      fill="#2c2781"
-     id="path21" />
+     id="path21"
+     style="fill:#545454;fill-opacity:1" />
   <path
      d="M0 20.537h23.813v19.22H0z"
      fill="#1f1e64"
-     id="path23" />
+     id="path23"
+     style="fill:#414141;fill-opacity:1" />
   <path
      d="M0 39.757h23.813v20.327H0z"
      fill="#1b1f59"
-     id="path25" />
+     id="path25"
+     style="fill:#3a3a3a;fill-opacity:1" />
   <path
-     d="M 23.81,74.28773 0.252,74.22669 0.003,59.69699 23.754,59.573 Z"
+     d="M 23.81,74.311097 0.252,74.249958 0.003,59.697187 23.754,59.573 Z"
      id="path27"
-     inkscape:connector-curvature="0"
-     style="fill:#181741;fill-rule:evenodd;stroke-width:0.97661042" />
+     style="fill:#2c2c2c;fill-opacity:1;fill-rule:evenodd;stroke-width:0.97738546"
+     inkscape:connector-curvature="0" />
   <g
      clip-path="url(#c)"
      transform="translate(0 -196.458)"
