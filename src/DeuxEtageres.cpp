@@ -205,12 +205,14 @@ struct DeuxEtageresWidget : ModuleWidget {
       bluePanel = new SvgPanel();
       bluePanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/DeuxEtageres.svg")));
       bluePanel->box.size = box.size;
+      bluePanel->visible = true;
       addChild(bluePanel);
     }
     {
       noirPanel = new SvgPanel();
       noirPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/DeuxEtageres_noir.svg")));
       noirPanel->box.size = box.size;
+      noirPanel->visible = false;      
       addChild(noirPanel);
     }
 
