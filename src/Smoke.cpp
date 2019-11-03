@@ -152,6 +152,10 @@ struct Smoke : Module {
     if (buffersizeJ) {
       buffersize = json_integer_value(buffersizeJ);
     }
+    json_t *reverseJ = json_object_get(rootJ, "reverse");
+		if (reverseJ) {
+			reverse = json_integer_value(reverseJ);
+		}
   }
 };
 
