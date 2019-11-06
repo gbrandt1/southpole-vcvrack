@@ -10,7 +10,7 @@ A personal collection of modules I've always wanted for my workflow.
 
 - Some of the modules are simply reskins of the existing Audible Instruments VCV Rack versions of Mutable Instruments eurorack modules.
   - The skins are inspired by hardware micro versions of various MI modules.
-  - Some skins are additonal modes of firmware with appropriate labels for knobs and ports to make usage easier.
+  - Some skins are additional modes of firmware with appropriate labels for knobs and ports to make usage easier.
   - Some skins do not exist yet in hardware.
 - Some modules did not yet exist in VCV Rack versions.
 - Some modules are new.
