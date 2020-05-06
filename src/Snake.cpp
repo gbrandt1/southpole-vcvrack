@@ -1,7 +1,12 @@
 #include "Southpole.hpp"
 #include "dsp/digital.hpp"
 
-#define NSNAKEBUSS  16
+#define NSBUSS_NUM_INTEGERS 10
+#define NSBUSS_NUM_CHARS 26
+
+#define NSBUSS_CHAR_START 65
+
+#define NSNAKEBUSS  NSBUSS_NUM_INTEGERS + NSBUSS_NUM_CHARS
 #define NSNAKEPORTS 10
 
 struct Snake : Module {
@@ -190,8 +195,20 @@ struct SnakeDisplay : TransparentWidget {
 		nvgFillColor(vg, nvgTransRGBA(textColor, 16));
 		nvgText(vg, textPos.x, textPos.y, "~~~~", NULL);
 		nvgFillColor(vg, textColor);
+
+		/* Orignally the buss values was being converted to hex.
+		 * We want 0...9, A...Z
+		 * So for buss values greater then 9, we need to convert
+		 * the bus value to its equivalent ascii-char value.
+		 */
 		char strbuss[4];
-		sprintf(strbuss,"%1x",module->buss);
+		if (module->buss < NSBUSS_NUM_INTEGERS) {
+			sprintf(strbuss,"%1x",module->buss);
+		} else if (module->buss < NSNAKEBUSS+1) {
+			/* assumes that a buss value of 10 equates to 65 'A' */
+			int ch = NSBUSS_CHAR_START + (module->buss - NSBUSS_NUM_INTEGERS);
+			sprintf(strbuss,"%c",ch);
+		}
 		nvgText(vg, textPos.x, textPos.y, strbuss, NULL);
 	}
 };
